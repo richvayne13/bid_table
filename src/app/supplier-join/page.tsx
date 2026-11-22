@@ -95,12 +95,12 @@ export default function SupplierJoinPage() {
             >
               고수 가입 상담받기
             </button>
-            <button
-              onClick={handleInstantJoin}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white font-extrabold text-sm shadow-md transition-all"
+            <Link
+              href="/supplier/register"
+              className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white font-extrabold text-sm shadow-md transition-all text-center"
             >
               판매자 가입하기
-            </button>
+            </Link>
           </div>
         </div>
 

@@ -1,93 +1,68 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { UserRole, Profile } from "@/types/database";
+import { UserRole } from "@/types/database";
+import {
+  UserAccount,
+  DEFAULT_ACCOUNTS,
+  getRegisteredUsers,
+  getCurrentSession,
+  setCurrentSession,
+} from "@/lib/auth-storage";
 
-export interface DemoUser {
-  id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-  description: string;
-  badge: string;
-}
-
-export const DEMO_USERS: DemoUser[] = [
-  {
-    id: "b0000000-0000-0000-0000-000000000001",
-    email: "bistro@bidplate.com",
-    name: "청주 파스타공방",
-    role: "RESTAURANT",
-    description: "충북 청주시 흥덕구 복대동 / 이탈리안 다이닝",
-    badge: "식당 업주",
-  },
-  {
-    id: "c0000000-0000-0000-0000-000000000001",
-    email: "supplier1@bidplate.com",
-    name: "A종합유통 (대성푸드)",
-    role: "SUPPLIER",
-    description: "충북 청주 전역 / 공산품, 유제품, 식자재 종합 유통",
-    badge: "종합 유통사",
-  },
-  {
-    id: "c0000000-0000-0000-0000-000000000002",
-    email: "supplier2@bidplate.com",
-    name: "B미트 육류전문 (하나미트)",
-    role: "SUPPLIER",
-    description: "청주 흥덕구·청원구 / 수입육·한우·돈육 전문 공급",
-    badge: "육류 전문",
-  },
-  {
-    id: "c0000000-0000-0000-0000-000000000003",
-    email: "supplier3@bidplate.com",
-    name: "C프레시 신선/유제품 (청주 프레시원)",
-    role: "SUPPLIER",
-    description: "청주 흥덕구·서원구 / 신선채소, 유제품, 해산물",
-    badge: "신선/유제품",
-  },
-  {
-    id: "a0000000-0000-0000-0000-000000000001",
-    email: "admin@bidplate.com",
-    name: "견적식탁 운영본부",
-    role: "ADMIN",
-    description: "시스템 관리자 / 표준 품목, 가상 유통사, 단가 모니터링",
-    badge: "플랫폼 관리자",
-  },
-];
+export type DemoUser = UserAccount;
+export const DEMO_USERS = DEFAULT_ACCOUNTS;
 
 interface RoleContextType {
-  currentUser: DemoUser;
-  setCurrentUser: (user: DemoUser) => void;
+  currentUser: UserAccount;
+  setCurrentUser: (user: UserAccount) => void;
   switchRole: (role: UserRole) => void;
+  logout: () => void;
 }
 
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export function RoleProvider({ children }: { children: React.ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<DemoUser>(DEMO_USERS[0]);
+  const [currentUser, setCurrentUser] = useState<UserAccount>(DEFAULT_ACCOUNTS[0]);
 
   useEffect(() => {
+    // 1. 현재 저장된 세션이 있는지 확인
+    const session = getCurrentSession();
+    if (session) {
+      setCurrentUser(session);
+      return;
+    }
+
+    // 2. 과거 bidplate_demo_user 키 fallback 확인
     const saved = localStorage.getItem("bidplate_demo_user");
     if (saved) {
-      try {
-        const found = DEMO_USERS.find((u) => u.id === saved);
-        if (found) setCurrentUser(found);
-      } catch (e) {
-        console.error(e);
+      const users = getRegisteredUsers();
+      const found = users.find((u) => u.id === saved);
+      if (found) {
+        setCurrentUser(found);
+        setCurrentSession(found);
       }
     }
   }, []);
 
-  const handleSetUser = (user: DemoUser) => {
+  const handleSetUser = (user: UserAccount) => {
     setCurrentUser(user);
+    setCurrentSession(user);
     localStorage.setItem("bidplate_demo_user", user.id);
   };
 
   const switchRole = (role: UserRole) => {
-    const target = DEMO_USERS.find((u) => u.role === role);
+    const users = getRegisteredUsers();
+    const target = users.find((u) => u.role === role) || DEFAULT_ACCOUNTS.find((u) => u.role === role);
     if (target) {
       handleSetUser(target);
     }
+  };
+
+  const logout = () => {
+    setCurrentSession(null);
+    localStorage.removeItem("bidplate_demo_user");
+    setCurrentUser(DEFAULT_ACCOUNTS[0]);
   };
 
   return (
@@ -96,6 +71,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
         currentUser,
         setCurrentUser: handleSetUser,
         switchRole,
+        logout,
       }}
     >
       {children}

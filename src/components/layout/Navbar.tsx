@@ -22,7 +22,7 @@ import {
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { currentUser, setCurrentUser, switchRole } = useRole();
+  const { currentUser, setCurrentUser, switchRole, logout } = useRole();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -83,6 +83,19 @@ export function Navbar() {
               >
                 둘러보기
               </Link>
+              {currentUser.role === "SUPPLIER" && (
+                <Link
+                  href="/supplier/rfqs"
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
+                    isActive("/supplier/rfqs")
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                  }`}
+                >
+                  <Truck className="w-3.5 h-3.5" />
+                  <span>내 입찰공고함</span>
+                </Link>
+              )}
             </nav>
           </div>
 
@@ -120,7 +133,7 @@ export function Navbar() {
             </Link>
 
             <Link
-              href="/supplier-join"
+              href="/supplier/register"
               className="px-3.5 py-1.5 rounded-lg text-sm font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-sm transition-all"
             >
               판매자 가입
@@ -187,6 +200,18 @@ export function Navbar() {
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                       <span>운영 관리자 페이지로 이동</span>
                     </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logout();
+                        setDropdownOpen(false);
+                        router.push("/login");
+                      }}
+                      className="w-full text-left px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 flex items-center space-x-1.5 transition-colors"
+                    >
+                      <span>로그아웃</span>
+                    </button>
                   </div>
                 </div>
               )}
@@ -249,7 +274,7 @@ export function Navbar() {
                 로그인 / 회원가입
               </Link>
               <Link
-                href="/supplier-join"
+                href="/supplier/register"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-sm font-bold text-indigo-600"
               >

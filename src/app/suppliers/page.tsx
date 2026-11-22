@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { getRegisteredUsers } from "@/lib/auth-storage";
 import {
   Search,
   Star,
@@ -138,14 +139,49 @@ const SUPPLIERS_DATA: Supplier[] = [
 ];
 
 export default function SuppliersPage() {
+  const [suppliersList, setSuppliersList] = useState<Supplier[]>(SUPPLIERS_DATA);
   const [searchWord, setSearchWord] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [selectedRegion, setSelectedRegion] = useState("전체");
   const [consultModalSupplier, setConsultModalSupplier] = useState<Supplier | null>(null);
   const [consultSuccess, setConsultSuccess] = useState(false);
 
+  useEffect(() => {
+    try {
+      const users = getRegisteredUsers();
+      const customSuppliers: Supplier[] = users
+        .filter((u) => u.role === "SUPPLIER" && !SUPPLIERS_DATA.some((s) => s.id === u.id))
+        .map((u) => ({
+          id: u.id,
+          name: u.name,
+          badge: "신규 등록 인증 유통사",
+          rating: 5.0,
+          reviews: 1,
+          experience: "직거래 공급 파트너",
+          activeClients: "신규 입점 유통사",
+          trustScore: "단가준수율 100%",
+          moq: u.moq || "10만원 (무료배송)",
+          region: u.regions && u.regions.length > 0 ? u.regions.join(", ") : "전국 택배 및 수도권 직배송",
+          coldChain: `냉장/냉동 탑차 ${u.trucks || 2}대 보유 (새벽 직배송)`,
+          intro: u.description || `${u.name} 정기 납품 직거래 공식 파트너`,
+          tags: u.categories && u.categories.length > 0 ? u.categories : ["식자재종합"],
+          photos: [
+            "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=500&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&auto=format&fit=crop&q=80",
+          ],
+        }));
+
+      if (customSuppliers.length > 0) {
+        setSuppliersList([...customSuppliers, ...SUPPLIERS_DATA]);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   const filteredSuppliers = useMemo(() => {
-    return SUPPLIERS_DATA.filter((sup) => {
+    return suppliersList.filter((sup) => {
       const matchKeyword =
         !searchWord ||
         sup.name.includes(searchWord) ||
