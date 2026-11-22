@@ -47,7 +47,7 @@ function RfqListContent() {
       const query = supabase
         .from("rfqs")
         .select(
-          "*, rfq_items(id, monthly_qty, current_unit_price, standard_items(item_name, base_unit)), bids(id, status, supplier_id)"
+          "*, rfq_items(id, monthly_qty, current_unit_price, standard_items(item_name, base_unit)), bids(id, status, supplier_id), contracts(id, supplier_id, profiles(company_name))"
         )
         .order("created_at", { ascending: false });
 
@@ -340,12 +340,23 @@ function RfqListContent() {
                       </button>
                     )}
                     <Link
-                      href="/#matrix"
+                      href={`/rfq/${rfq.id}/compare`}
                       className="px-4 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200 flex items-center space-x-1.5 transition-colors"
                     >
                       <Scale className="w-3.5 h-3.5 text-orange-600" />
                       <span>입찰 비교 매트릭스</span>
                     </Link>
+                    {Array.isArray(rfq.contracts) && rfq.contracts.length > 0 && (
+                      <Link
+                        href={`/contracts/${rfq.contracts[0].id}/audit`}
+                        className="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold border border-rose-200 flex items-center space-x-1.5 transition-colors"
+                      >
+                        <FileCheck2 className="w-3.5 h-3.5 text-rose-600" />
+                        <span>
+                          단가 감시 ({rfq.contracts[0].profiles?.company_name || "계약"})
+                        </span>
+                      </Link>
+                    )}
                   </div>
                 </div>
 

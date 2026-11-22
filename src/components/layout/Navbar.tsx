@@ -123,15 +123,23 @@ export function Navbar() {
                   <span>견적 요청서 작성</span>
                 </Link>
                 <Link
-                  href="/#matrix"
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors flex items-center space-x-1"
+                  href="/rfq/20000000-0000-0000-0000-000000000001/compare"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    pathname.includes("/compare")
+                      ? "bg-orange-50 text-orange-700 font-bold"
+                      : "text-gray-700 hover:text-orange-600 hover:bg-orange-50"
+                  }`}
                 >
                   <Scale className="w-4 h-4 text-orange-500" />
                   <span>비교 매트릭스</span>
                 </Link>
                 <Link
-                  href="/#audits"
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors flex items-center space-x-1"
+                  href="/contracts/40000000-0000-0000-0000-000000000001/audit"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    pathname.includes("/audit")
+                      ? "bg-rose-50 text-rose-700 font-bold"
+                      : "text-gray-700 hover:text-rose-600 hover:bg-rose-50"
+                  }`}
                 >
                   <Receipt className="w-4 h-4 text-rose-500" />
                   <span>단가 감시</span>
@@ -341,6 +349,20 @@ export function Navbar() {
               className="block px-3 py-2 rounded-lg text-sm font-bold text-blue-700 bg-blue-50"
             >
               🚚 유통사 입찰 공고함 (/supplier/rfqs)
+            </Link>
+            <Link
+              href="/rfq/20000000-0000-0000-0000-000000000001/compare"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-orange-50"
+            >
+              ⚖️ 가로×세로 비교 매트릭스
+            </Link>
+            <Link
+              href="/contracts/40000000-0000-0000-0000-000000000001/audit"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-rose-700 hover:bg-rose-50"
+            >
+              🛡️ 거래명세서 단가 감시
             </Link>
           </div>
         )}

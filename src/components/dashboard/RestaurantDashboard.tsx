@@ -298,7 +298,7 @@ export function RestaurantDashboard() {
           </div>
 
           {rfqs.length > 0 && (
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-2">
               <label className="text-xs font-semibold text-gray-500 shrink-0">
                 비교 공고:
               </label>
@@ -313,6 +313,14 @@ export function RestaurantDashboard() {
                   </option>
                 ))}
               </select>
+              {activeRfq && (
+                <Link
+                  href={`/rfq/${activeRfq.id}/compare`}
+                  className="px-3.5 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition-colors"
+                >
+                  상세 시뮬레이터 열기 →
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -529,11 +537,21 @@ export function RestaurantDashboard() {
               </p>
             </div>
           </div>
-          {totalViolations > 0 && (
-            <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-100 text-rose-700">
-              🚨 무단 인상 {totalViolations}건 감지
-            </span>
-          )}
+          <div className="flex items-center space-x-2">
+            {totalViolations > 0 && (
+              <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-100 text-rose-700">
+                🚨 무단 인상 {totalViolations}건 감지
+              </span>
+            )}
+            {contracts[0]?.id && (
+              <Link
+                href={`/contracts/${contracts[0].id}/audit`}
+                className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors"
+              >
+                OCR 대조 센터 열기 →
+              </Link>
+            )}
+          </div>
         </div>
 
         {audits.length === 0 ? (
