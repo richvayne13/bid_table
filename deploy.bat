@@ -1,38 +1,36 @@
 @echo off
 chcp 65001 > nul
 echo ========================================================
-echo   견적식탁 (BidPlate) 온라인 GitHub Pages 자동 배포
+echo   견적식탁 (BidPlate) 온라인 배포 스크립트
 echo ========================================================
 echo.
 
-git status > nul 2>&1
+echo [1/4] Next.js 정적 사이트 최적화 빌드 중...
+call npm run build
 if %errorlevel% neq 0 (
-    echo [1/3] Git 저장소를 초기화합니다...
-    git init
-    git branch -M main
-) else (
-    echo [1/3] Git 저장소 확인 완료.
+    echo [!] 빌드 실패! 코드를 점검해주세요.
+    pause
+    exit /b 1
 )
 
 echo.
-echo [2/3] 변경 사항을 스테이징 및 커밋합니다...
-git add .
-git commit -m "Deploy BidPlate update: %date% %time%"
+echo [2/4] .nojekyll 보호 파일 생성...
+copy /y nul out\.nojekyll > nul
 
 echo.
-echo [3/3] GitHub에 푸시 중... (GitHub Actions가 온라인 자동 배포를 실행합니다)
+echo [3/4] gh-pages 브랜치에 온라인 배포본 푸시 중...
+powershell -Command "$outDir = '%~dp0out'; git --work-tree=$outDir add --all; $tree = git --work-tree=$outDir write-tree; $commit = git commit-tree $tree -m 'Deploy update to gh-pages: %date% %time%'; git update-ref refs/heads/gh-pages $commit; git push origin gh-pages --force"
+
+echo.
+echo [4/4] main 소스코드 저장소 푸시 중...
+git add .
+git commit -m "Update source: %date% %time%"
 git push origin main
 
-if %errorlevel% equ 0 (
-    echo.
-    echo ========================================================
-    echo  [성공] GitHub 푸시가 완료되었습니다!
-    echo  온라인 배포 주소: https://richvayne13.github.io/bid_table/
-    echo ========================================================
-) else (
-    echo.
-    echo [!] 푸시 중 문제가 발생했습니다. 네트워크 및 GitHub 권한을 확인해주세요.
-)
-
+echo.
+echo ========================================================
+echo  [성공] 온라인 배포 푸시가 완료되었습니다!
+echo  접속 주소: https://richvayne13.github.io/bid_table/
+echo ========================================================
 echo.
 pause
