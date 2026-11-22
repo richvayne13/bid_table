@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRole, DEMO_USERS, DemoUser } from "@/contexts/RoleContext";
 import { isRegionMatched } from "@/lib/regions";
+import { getUnifiedRfqs } from "@/lib/unified-rfq-store";
 import { formatNumber } from "@/lib/utils";
 import {
   Truck,
@@ -33,7 +34,7 @@ function SupplierRfqsContent() {
   const supabase = useMemo(() => createClient(), []);
 
   const activeSupplier = useMemo(() => {
-    if (currentUser.role === "SUPPLIER") return currentUser;
+    if (currentUser?.role === "SUPPLIER") return currentUser;
     return SUPPLIER_DEMO_USERS[0];
   }, [currentUser]);
 
@@ -49,44 +50,69 @@ function SupplierRfqsContent() {
       setLoading(true);
       setErrorMsg(null);
 
-      const [profileRes, catRes, rfqRes, bidsRes] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", activeSupplier.id)
-          .single(),
-        supabase
-          .from("supplier_catalogs")
-          .select("id", { count: "exact", head: true })
-          .eq("supplier_id", activeSupplier.id),
-        supabase
-          .from("rfqs")
-          .select(
-            "*, profiles(company_name, address), rfq_items(id, monthly_qty, standard_items(item_name, base_unit, category))"
-          )
-          .eq("status", "OPEN")
-          .order("deadline", { ascending: true }),
-        supabase
-          .from("bids")
-          .select("*, bid_items(id)")
-          .eq("supplier_id", activeSupplier.id),
-      ]);
+      // 로컬 통합 스토어의 공고들 (구매자가 올린 최신 공고 즉각 포함)
+      const unifiedList = getUnifiedRfqs();
 
-      if (profileRes.error) throw profileRes.error;
-      if (rfqRes.error) throw rfqRes.error;
+      let supabaseRfqs: any[] = [];
+      try {
+        const [profileRes, catRes, rfqRes, bidsRes] = await Promise.all([
+          supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", activeSupplier.id)
+            .single(),
+          supabase
+            .from("supplier_catalogs")
+            .select("id", { count: "exact", head: true })
+            .eq("supplier_id", activeSupplier.id),
+          supabase
+            .from("rfqs")
+            .select(
+              "*, profiles(company_name, address), rfq_items(id, monthly_qty, standard_items(item_name, base_unit, category))"
+            )
+            .eq("status", "OPEN")
+            .order("deadline", { ascending: true }),
+          supabase
+            .from("bids")
+            .select("*, bid_items(id)")
+            .eq("supplier_id", activeSupplier.id),
+        ]);
 
-      setSupplierProfile(profileRes.data);
-      setCatalogCount(catRes.count ?? 0);
-      setAllOpenRfqs(rfqRes.data || []);
+        if (profileRes.data) setSupplierProfile(profileRes.data);
+        if (catRes.count !== null) setCatalogCount(catRes.count);
+        supabaseRfqs = rfqRes.data || [];
 
-      const bidMap: Record<string, any> = {};
-      (bidsRes.data || []).forEach((b: any) => {
-        bidMap[b.rfq_id] = b;
+        const bidMap: Record<string, any> = {};
+        (bidsRes.data || []).forEach((b: any) => {
+          bidMap[b.rfq_id] = b;
+        });
+        setMyBidsByRfq(bidMap);
+      } catch (subErr) {
+        console.warn("Supabase load failed, using unified store:", subErr);
+      }
+
+      // Supabase 공고와 로컬 통합 공고를 ID 기준으로 완전 병합
+      const combinedMap = new Map<string, any>();
+      unifiedList.forEach((r) => combinedMap.set(r.id, r));
+      supabaseRfqs.forEach((r) => combinedMap.set(r.id, r));
+
+      const mergedList = Array.from(combinedMap.values());
+      setAllOpenRfqs(mergedList);
+
+      // 통합 스토어 내 본인 입찰 상태 동기화
+      const updatedBidMap: Record<string, any> = {};
+      mergedList.forEach((r) => {
+        const foundBid = (r.bids || []).find((b: any) => b.supplier_id === activeSupplier.id);
+        if (foundBid) {
+          updatedBidMap[r.id] = foundBid;
+        }
       });
-      setMyBidsByRfq(bidMap);
+      setMyBidsByRfq((prev) => ({ ...prev, ...updatedBidMap }));
     } catch (err: any) {
       console.error("Failed to load supplier RFQs:", err);
-      setErrorMsg(err?.message || "오픈 견적 요청서를 불러오지 못했습니다.");
+      // 에러 발생 시에도 통합 스토어 데이터로 안전 표시
+      const unifiedList = getUnifiedRfqs();
+      setAllOpenRfqs(unifiedList);
     } finally {
       setLoading(false);
     }

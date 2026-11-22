@@ -31,12 +31,13 @@ export function SupplierDashboard() {
     async function loadSupplierData() {
       try {
         setLoading(true);
+        const supplierId = currentUser?.id || "s0000000-0000-0000-0000-000000000001";
         const [profRes, catRes, rfqRes] = await Promise.all([
-          supabase.from("profiles").select("*").eq("id", currentUser.id).single(),
+          supabase.from("profiles").select("*").eq("id", supplierId).single(),
           supabase
             .from("supplier_catalogs")
             .select("*, standard_items(*)")
-            .eq("supplier_id", currentUser.id),
+            .eq("supplier_id", supplierId),
           supabase
             .from("rfqs")
             .select("*, rfq_items(*, standard_items(*)), profiles(*)")
@@ -62,7 +63,7 @@ export function SupplierDashboard() {
     }
 
     loadSupplierData();
-  }, [currentUser.id, supabase]);
+  }, [currentUser?.id, supabase]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -72,7 +73,7 @@ export function SupplierDashboard() {
           <div className="space-y-2">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs font-semibold">
               <Truck className="w-3.5 h-3.5" />
-              <span>유통사 공급자 모드 · {currentUser.name}</span>
+              <span>유통사 공급자 모드 · {currentUser?.name || "유통사"}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
               유통 공급 및 입찰 관리 센터

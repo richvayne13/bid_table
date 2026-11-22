@@ -13,6 +13,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { formatPrice, formatNumber } from "@/lib/utils";
 import { getStoredDemoRfqs } from "@/lib/mock-storage";
+import { getUnifiedRfqById } from "@/lib/unified-rfq-store";
 import {
   CompareBid,
   CompareRfqItem,
@@ -99,7 +100,16 @@ export default function RfqComparePage() {
         let rfqData = rfqRes.data;
         let bidsData = bidsRes.data || [];
 
-        // Fallback: Supabase에 없으면 로컬 데모 스토리지 조회
+        // 통합 스토어에서 조회 (구매자가 올린 공고 및 판매자가 제출한 실시간 입찰 통합)
+        const unified = getUnifiedRfqById(rfqId);
+        if (unified) {
+          if (!rfqData) rfqData = unified as any;
+          if (bidsData.length === 0 && unified.bids?.length) {
+            bidsData = unified.bids as any;
+          }
+        }
+
+        // Fallback: Supabase 및 통합에 없으면 로컬 데모 스토리지 조회
         if (!rfqData) {
           const stored = getStoredDemoRfqs();
           const found = stored.find((s) => s.id === rfqId) || stored[0];

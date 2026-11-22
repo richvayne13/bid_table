@@ -14,6 +14,7 @@ import {
   Info,
   X,
 } from "lucide-react";
+import { BidTableLogoIcon } from "@/components/layout/BidTableLogo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,11 +44,11 @@ export default function LoginPage() {
 
     // 역할별 페이지 이동
     if (result.user.role === "SUPPLIER") {
-      router.push("/supplier/rfqs");
+      router.push("/mypage");
     } else if (result.user.role === "ADMIN") {
       router.push("/admin");
     } else {
-      router.push("/");
+      router.push("/mypage");
     }
   };
 
@@ -67,7 +68,8 @@ export default function LoginPage() {
     <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 py-12 bg-gray-50/50">
       <div className="w-full max-w-sm bg-white rounded-3xl border border-gray-200 shadow-xl p-8 space-y-6">
         {/* 타이틀 (숨고 캡처 6 디자인 매칭) */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
+          <BidTableLogoIcon size="md" className="mb-2 shadow-md" />
           <span className="text-xs font-bold text-[#6366F1] uppercase tracking-wider">
             BIDPLATE LOGIN
           </span>

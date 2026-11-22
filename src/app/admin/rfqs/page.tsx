@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { formatPrice, formatNumber } from "@/lib/utils";
+import { getUnifiedRfqs } from "@/lib/unified-rfq-store";
 import {
   Gavel,
   MapPin,
@@ -14,6 +15,7 @@ import {
   Scale,
   RefreshCw,
   Building2,
+  Truck,
 } from "lucide-react";
 
 export default function AdminProxyBidPage() {
@@ -43,43 +45,57 @@ export default function AdminProxyBidPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [rfqRes, supRes, catRes] = await Promise.all([
-        supabase
-          .from("rfqs")
-          .select(
-            "*, profiles(company_name), rfq_items(*, standard_items(*)), bids(id, supplier_id, moq_amount, price_lock_type, profiles(company_name, is_admin_managed))"
-          )
-          .eq("status", "OPEN")
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("profiles")
-          .select("*")
-          .eq("role", "SUPPLIER")
-          .order("is_admin_managed", { ascending: false })
-          .order("company_name", { ascending: true }),
-        supabase.from("supplier_catalogs").select("*"),
-      ]);
 
-      if (rfqRes.error) throw rfqRes.error;
-      if (supRes.error) throw supRes.error;
+      const unifiedList = getUnifiedRfqs();
 
-      const rfqList = rfqRes.data || [];
-      const supList = supRes.data || [];
-      setRfqs(rfqList);
+      let rfqList: any[] = [];
+      let supList: any[] = [];
+
+      try {
+        const [rfqRes, supRes, catRes] = await Promise.all([
+          supabase
+            .from("rfqs")
+            .select(
+              "*, profiles(company_name), rfq_items(*, standard_items(*)), bids(id, supplier_id, moq_amount, price_lock_type, profiles(company_name, is_admin_managed))"
+            )
+            .eq("status", "OPEN")
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("profiles")
+            .select("*")
+            .eq("role", "SUPPLIER")
+            .order("is_admin_managed", { ascending: false })
+            .order("company_name", { ascending: true }),
+          supabase.from("supplier_catalogs").select("*"),
+        ]);
+
+        rfqList = rfqRes.data || [];
+        supList = supRes.data || [];
+
+        const catMap: Record<
+          string,
+          Record<string, { package_weight: number; package_price: number }>
+        > = {};
+        (catRes.data || []).forEach((c: any) => {
+          if (!catMap[c.supplier_id]) catMap[c.supplier_id] = {};
+          catMap[c.supplier_id][c.standard_item_id] = {
+            package_weight: Number(c.package_weight),
+            package_price: Number(c.package_price),
+          };
+        });
+        setCatalogsBySupplier(catMap);
+      } catch (subErr) {
+        console.warn("Supabase load failed in admin, using unified store:", subErr);
+      }
+
+      // Supabase 데이터와 통합 스토어 데이터 병합
+      const combinedMap = new Map<string, any>();
+      unifiedList.forEach((r) => combinedMap.set(r.id, r));
+      rfqList.forEach((r) => combinedMap.set(r.id, r));
+
+      const mergedRfqs = Array.from(combinedMap.values());
+      setRfqs(mergedRfqs);
       setSuppliers(supList);
-
-      const catMap: Record<
-        string,
-        Record<string, { package_weight: number; package_price: number }>
-      > = {};
-      (catRes.data || []).forEach((c: any) => {
-        if (!catMap[c.supplier_id]) catMap[c.supplier_id] = {};
-        catMap[c.supplier_id][c.standard_item_id] = {
-          package_weight: Number(c.package_weight),
-          package_price: Number(c.package_price),
-        };
-      });
-      setCatalogsBySupplier(catMap);
 
       // Default select first virtual supplier (or first non-bidding supplier) for each RFQ
       const defaultSel: Record<string, string> = {};
@@ -338,13 +354,22 @@ export default function AdminProxyBidPage() {
                     </div>
                   </div>
 
-                  <Link
-                    href={`/rfq/${rfq.id}/compare`}
-                    className="px-4 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 text-xs font-bold inline-flex items-center space-x-1.5 self-start lg:self-auto"
-                  >
-                    <Scale className="w-3.5 h-3.5" />
-                    <span>매트릭스 비교 ({existingBids.length}개사 참여 중)</span>
-                  </Link>
+                  <div className="flex flex-wrap gap-2 self-start lg:self-auto">
+                    <Link
+                      href={`/rfq/${rfq.id}/compare`}
+                      className="px-3.5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 text-xs font-bold inline-flex items-center space-x-1.5 transition-colors"
+                    >
+                      <Scale className="w-3.5 h-3.5" />
+                      <span>매트릭스 비교 ({existingBids.length}개사)</span>
+                    </Link>
+                    <Link
+                      href={`/supplier/rfqs/${rfq.id}/bid`}
+                      className="px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 text-xs font-bold inline-flex items-center space-x-1.5 transition-colors"
+                    >
+                      <Truck className="w-3.5 h-3.5" />
+                      <span>판매자 입찰서 보기</span>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Current Bidders Badges */}

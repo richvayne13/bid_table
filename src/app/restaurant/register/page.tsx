@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { registerUser } from "@/lib/auth-storage";
+import { registerUser, isEmailRegistered } from "@/lib/auth-storage";
 import { useRole } from "@/contexts/RoleContext";
 import {
   UtensilsCrossed,
@@ -16,7 +16,9 @@ import {
   ArrowRight,
   AlertCircle,
   MapPin,
-  TrendingDown,
+  Send,
+  Timer,
+  Check,
 } from "lucide-react";
 
 const CUISINE_OPTIONS = [
@@ -30,7 +32,7 @@ const CUISINE_OPTIONS = [
 ];
 
 const REGION_OPTIONS = [
-  "서울 종로/중구",
+  "서울 종로/중구 (익선동 포함)",
   "서울 강남/서초/송파",
   "서울 마포/영등포/용산",
   "서울 성동/광진/동대문",
@@ -53,12 +55,66 @@ export default function RestaurantRegisterPage() {
   const [repName, setRepName] = useState("");
   const [phone, setPhone] = useState("");
   const [cuisine, setCuisine] = useState("양식/파스타/와인바");
-  const [region, setRegion] = useState("서울 종로/중구");
+  const [region, setRegion] = useState("서울 종로/중구 (익선동 포함)");
   const [monthlySpend, setMonthlySpend] = useState("500만원 ~ 1,000만원");
   const [agreed, setAgreed] = useState(true);
 
+  // 이메일 인증 상태
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [inputCode, setInputCode] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(180);
+  const [emailAlert, setEmailAlert] = useState<string | null>(null);
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // 3분 카운트다운 타이머
+  useEffect(() => {
+    let timer: any;
+    if (isVerifying && timeLeft > 0 && !isEmailVerified) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsVerifying(false);
+    }
+    return () => clearInterval(timer);
+  }, [isVerifying, timeLeft, isEmailVerified]);
+
+  const handleSendVerificationCode = () => {
+    if (!email.trim() || !email.includes("@")) {
+      setErrorMsg("유효한 이메일 주소를 입력해 주세요.");
+      return;
+    }
+    if (isEmailRegistered(email)) {
+      setErrorMsg("이미 등록된 이메일 계정입니다. 로그인 페이지를 이용해 주세요.");
+      return;
+    }
+    setErrorMsg(null);
+    // 6자리 랜덤 인증코드 생성
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setVerificationCode(code);
+    setIsVerifying(true);
+    setTimeLeft(180);
+    setIsEmailVerified(false);
+
+    // 모의 이메일 발송 팝업 안내
+    setEmailAlert(
+      `[견적식탁 인증메일 발송 안내]\n\n${email} 주소로 6자리 인증번호가 발송되었습니다.\n\n👉 인증번호: [ ${code} ]\n(유효시간 3분)`
+    );
+  };
+
+  const handleConfirmCode = () => {
+    if (inputCode.trim() === verificationCode) {
+      setIsEmailVerified(true);
+      setIsVerifying(false);
+      setErrorMsg(null);
+    } else {
+      setErrorMsg("인증번호가 일치하지 않습니다. 다시 확인해 주세요.");
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +123,10 @@ export default function RestaurantRegisterPage() {
     // 유효성 검사
     if (!email.trim() || !password) {
       setErrorMsg("아이디(이메일)와 비밀번호를 모두 입력해 주세요.");
+      return;
+    }
+    if (!isEmailVerified) {
+      setErrorMsg("이메일 인증을 완료해 주세요.");
       return;
     }
     if (password !== passwordConfirm) {
@@ -113,9 +173,9 @@ export default function RestaurantRegisterPage() {
     setCurrentUser(regResult.user);
     setIsSuccess(true);
 
-    // 1.5초 후 견적 요청서 작성 페이지로 바로 이동
+    // 1.5초 후 마이페이지로 이동
     setTimeout(() => {
-      router.push("/rfq/new");
+      router.push("/mypage");
     }, 1500);
   };
 
@@ -131,14 +191,14 @@ export default function RestaurantRegisterPage() {
           </h2>
           <p className="text-sm text-gray-600">
             <strong>{restaurantName}</strong> 사장님 계정으로 자동 로그인되었습니다.<br />
-            실시간 식자재 비교 견적 요청서 작성으로 이동합니다...
+            실시간 식당 마이페이지로 이동합니다...
           </p>
           <div className="pt-2">
             <Link
-              href="/rfq/new"
+              href="/mypage"
               className="inline-flex items-center space-x-1.5 px-6 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-md transition-all"
             >
-              <span>견적 요청서 작성 바로가기</span>
+              <span>내 마이페이지 바로가기</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -173,31 +233,81 @@ export default function RestaurantRegisterPage() {
             </div>
           )}
 
-          {/* 1. 로그인 계정 정보 */}
+          {/* 1. 로그인 계정 정보 & 이메일 인증 */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2 pb-2 border-b border-gray-100">
               <Mail className="w-4 h-4 text-orange-500" />
               <h2 className="text-sm font-black text-gray-900">
-                1. 로그인 계정 정보
+                1. 로그인 계정 정보 &amp; 이메일 인증
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 text-xs">
+            <div className="space-y-3 text-xs">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">
-                  아이디 (이메일 주소) <span className="text-rose-500">*</span>
+                  이메일 주소 (아이디) <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="예: boss@pasta.co.kr"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 text-sm"
-                />
+                <div className="flex space-x-2">
+                  <input
+                    type="email"
+                    required
+                    disabled={isEmailVerified}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="예: boss@soonra.com"
+                    className="flex-1 p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 text-sm disabled:bg-gray-100"
+                  />
+                  <button
+                    type="button"
+                    disabled={isEmailVerified}
+                    onClick={handleSendVerificationCode}
+                    className="px-4 py-3 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs whitespace-nowrap disabled:bg-emerald-600 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isEmailVerified ? "✓ 인증완료" : isVerifying ? "인증번호 재발송" : "인증번호 발송"}
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* 이메일 인증코드 입력창 */}
+              {isVerifying && !isEmailVerified && (
+                <div className="p-4 rounded-2xl bg-orange-50/70 border border-orange-200 space-y-3 animate-in fade-in">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-orange-800">
+                      인증번호 6자리를 입력해 주세요.
+                    </span>
+                    <span className="font-mono font-bold text-rose-600 flex items-center">
+                      <Timer className="w-3.5 h-3.5 mr-1" />
+                      {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={inputCode}
+                      onChange={(e) => setInputCode(e.target.value)}
+                      placeholder="6자리 숫자"
+                      className="flex-1 p-2.5 rounded-lg border border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 font-mono text-center tracking-widest text-base font-bold bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleConfirmCode}
+                      className="px-4 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs"
+                    >
+                      인증 확인
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {isEmailVerified && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>이메일 주소({email}) 인증이 성공적으로 완료되었습니다.</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
                   <label className="block font-bold text-gray-700 mb-1">
                     비밀번호 <span className="text-rose-500">*</span>
@@ -274,7 +384,7 @@ export default function RestaurantRegisterPage() {
                   type="text"
                   value={repName}
                   onChange={(e) => setRepName(e.target.value)}
-                  placeholder="예: 김사장"
+                  placeholder="예: 김순라"
                   className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 text-sm"
                 />
               </div>
@@ -378,7 +488,7 @@ export default function RestaurantRegisterPage() {
             type="submit"
             className="w-full py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black text-base shadow-lg transition-all"
           >
-            식당 사장님 회원가입 완료 및 견적 받기 →
+            식당 사장님 회원가입 완료 및 시작하기 →
           </button>
 
           <div className="text-center text-xs text-gray-400">
@@ -389,6 +499,41 @@ export default function RestaurantRegisterPage() {
           </div>
         </form>
       </div>
+
+      {/* 이메일 발송 시뮬레이션 알림 모달 */}
+      {emailAlert && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 space-y-4">
+            <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mx-auto">
+              <Mail className="w-6 h-6" />
+            </div>
+            <div className="text-center space-y-1">
+              <h3 className="text-base font-black text-gray-900">
+                인증 메일이 발송되었습니다
+              </h3>
+              <p className="text-xs text-gray-500">
+                입력하신 이메일로 6자리 인증코드가 전송되었습니다.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 text-center space-y-1">
+              <span className="text-[11px] text-gray-400">인증번호</span>
+              <p className="text-2xl font-mono font-black text-orange-600 tracking-widest">
+                {verificationCode}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setInputCode(verificationCode);
+                setEmailAlert(null);
+              }}
+              className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-sm transition-colors"
+            >
+              인증번호 자동 입력 및 닫기
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRole, DEMO_USERS, DemoUser } from "@/contexts/RoleContext";
 import { formatPrice, formatNumber } from "@/lib/utils";
 import { parseCatalogExcel } from "@/lib/client-api";
+import { getUnifiedRfqById, submitUnifiedBid } from "@/lib/unified-rfq-store";
 import {
   ArrowLeft,
   Truck,
@@ -53,7 +54,7 @@ export default function SupplierBidPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const activeSupplier = useMemo(() => {
-    if (currentUser.role === "SUPPLIER") return currentUser;
+    if (currentUser?.role === "SUPPLIER") return currentUser;
     return SUPPLIER_DEMO_USERS[0];
   }, [currentUser]);
 
@@ -80,35 +81,56 @@ export default function SupplierBidPage() {
         setErrorMsg(null);
         setAutoFillNotice(null);
 
-        const [rfqRes, catRes, bidRes] = await Promise.all([
-          supabase
-            .from("rfqs")
-            .select(
-              "*, profiles(company_name, address), rfq_items(*, standard_items(*))"
-            )
-            .eq("id", rfqId)
-            .single(),
-          supabase
-            .from("supplier_catalogs")
-            .select("standard_item_id, package_weight, package_price")
-            .eq("supplier_id", activeSupplier.id),
-          supabase
-            .from("bids")
-            .select("*, bid_items(*)")
-            .eq("rfq_id", rfqId)
-            .eq("supplier_id", activeSupplier.id)
-            .maybeSingle(),
-        ]);
+        let rfqData: any = null;
+        let catData: any[] = [];
+        let existingBid: any = null;
 
-        if (rfqRes.error) throw rfqRes.error;
-        const rfqData = rfqRes.data;
+        try {
+          const [rfqRes, catRes, bidRes] = await Promise.all([
+            supabase
+              .from("rfqs")
+              .select(
+                "*, profiles(company_name, address), rfq_items(*, standard_items(*))"
+              )
+              .eq("id", rfqId)
+              .single(),
+            supabase
+              .from("supplier_catalogs")
+              .select("standard_item_id, package_weight, package_price")
+              .eq("supplier_id", activeSupplier.id),
+            supabase
+              .from("bids")
+              .select("*, bid_items(*)")
+              .eq("rfq_id", rfqId)
+              .eq("supplier_id", activeSupplier.id)
+              .maybeSingle(),
+          ]);
+
+          if (rfqRes.data) rfqData = rfqRes.data;
+          if (catRes.data) catData = catRes.data;
+          if (bidRes.data) existingBid = bidRes.data;
+        } catch (subErr) {
+          console.warn("Supabase load failed in BidClient, using unified store:", subErr);
+        }
+
+        // Supabase에서 없거나 실패 시 통합 스토어에서 조회
+        if (!rfqData) {
+          rfqData = getUnifiedRfqById(rfqId);
+          if (rfqData) {
+            existingBid = (rfqData.bids || []).find((b: any) => b.supplier_id === activeSupplier.id);
+          }
+        }
+
+        if (!rfqData) {
+          throw new Error("견적 요청서를 찾을 수 없습니다.");
+        }
         setRfq(rfqData);
 
         const catLookup: Record<
           string,
           { package_weight: number; package_price: number }
         > = {};
-        (catRes.data || []).forEach((c: any) => {
+        catData.forEach((c: any) => {
           catLookup[c.standard_item_id] = {
             package_weight: Number(c.package_weight),
             package_price: Number(c.package_price),
@@ -116,7 +138,6 @@ export default function SupplierBidPage() {
         });
         setCatalogMap(catLookup);
 
-        const existingBid = bidRes.data;
         const existingBidItemsByRfqItem: Record<string, any> = {};
         if (existingBid) {
           setExistingBidId(existingBid.id);
@@ -369,44 +390,69 @@ export default function SupplierBidPage() {
       setSubmitting(true);
       setErrorMsg(null);
 
-      // 1. Upsert into bids on (rfq_id, supplier_id)
-      const { data: savedBid, error: bidError } = await supabase
-        .from("bids")
-        .upsert(
-          {
-            rfq_id: rfqId,
-            supplier_id: activeSupplier.id,
-            moq_amount: Math.max(0, Number(moqAmount) || 0),
-            price_lock_type: priceLockType,
-            status: "SUBMITTED",
-          },
-          { onConflict: "rfq_id,supplier_id" }
-        )
-        .select()
-        .single();
+      // 통합 스토어에 즉각 입찰 반영 (구매자 매트릭스 및 관리자 전역 즉시 연동)
+      submitUnifiedBid(
+        rfqId,
+        {
+          id: activeSupplier.id,
+          name: currentUser?.name || activeSupplier.name,
+          businessNumber: (currentUser as any)?.businessNumber || "123-45-67890",
+          phone: (currentUser as any)?.phone || "010-1234-5678",
+          description: currentUser?.description || "식자재 유통 전문",
+        },
+        {
+          moq_amount: Math.max(0, Number(moqAmount) || 0),
+          price_lock_type: priceLockType,
+          items: handledRows.map((row) => ({
+            rfq_item_id: row.rfq_item_id,
+            package_weight: Number(row.package_weight),
+            package_price: Number(row.package_price),
+          })),
+        }
+      );
 
-      if (bidError) throw bidError;
+      try {
+        // 1. Upsert into bids on (rfq_id, supplier_id)
+        const { data: savedBid, error: bidError } = await supabase
+          .from("bids")
+          .upsert(
+            {
+              rfq_id: rfqId,
+              supplier_id: activeSupplier.id,
+              moq_amount: Math.max(0, Number(moqAmount) || 0),
+              price_lock_type: priceLockType,
+              status: "SUBMITTED",
+            },
+            { onConflict: "rfq_id,supplier_id" }
+          )
+          .select()
+          .single();
 
-      // 2. Replace bid_items cleanly for this bid
-      const { error: deleteErr } = await supabase
-        .from("bid_items")
-        .delete()
-        .eq("bid_id", savedBid.id);
+        if (bidError) throw bidError;
 
-      if (deleteErr) throw deleteErr;
+        // 2. Replace bid_items cleanly for this bid
+        const { error: deleteErr } = await supabase
+          .from("bid_items")
+          .delete()
+          .eq("bid_id", savedBid.id);
 
-      const bidItemsPayload = handledRows.map((row) => ({
-        bid_id: savedBid.id,
-        rfq_item_id: row.rfq_item_id,
-        package_weight: Number(row.package_weight),
-        package_price: Number(row.package_price),
-      }));
+        if (deleteErr) throw deleteErr;
 
-      const { error: insertErr } = await supabase
-        .from("bid_items")
-        .insert(bidItemsPayload);
+        const bidItemsPayload = handledRows.map((row) => ({
+          bid_id: savedBid.id,
+          rfq_item_id: row.rfq_item_id,
+          package_weight: Number(row.package_weight),
+          package_price: Number(row.package_price),
+        }));
 
-      if (insertErr) throw insertErr;
+        const { error: insertErr } = await supabase
+          .from("bid_items")
+          .insert(bidItemsPayload);
+
+        if (insertErr) throw insertErr;
+      } catch (subErr) {
+        console.warn("Supabase submit failed, continuing with unified store:", subErr);
+      }
 
       router.push(`/supplier/rfqs?submitted=${rfqId}`);
     } catch (err: any) {

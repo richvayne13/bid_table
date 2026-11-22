@@ -35,7 +35,7 @@ export function RestaurantDashboard() {
           supabase
             .from("rfqs")
             .select("*, rfq_items(*, standard_items(*))")
-            .eq("restaurant_id", currentUser.id)
+            .eq("restaurant_id", currentUser?.id || "b0000000-0000-0000-0000-000000000001")
             .order("created_at", { ascending: false }),
           supabase.from("contracts").select("*, profiles(*)").limit(5),
           supabase
@@ -63,7 +63,7 @@ export function RestaurantDashboard() {
     }
 
     loadData();
-  }, [supabase, currentUser.id]);
+  }, [supabase, currentUser?.id]);
 
   useEffect(() => {
     async function loadBids() {
@@ -154,7 +154,7 @@ export function RestaurantDashboard() {
           <div className="space-y-2.5">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs font-semibold">
               <UtensilsCrossed className="w-3.5 h-3.5" />
-              <span>식당 업주 모드 · {currentUser.name}</span>
+              <span>식당 업주 모드 · {currentUser?.name || "식당 업주"}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
               식자재 역경매 및 단가방어 대시보드

@@ -10,6 +10,7 @@ import { formatPrice, formatNumber } from "@/lib/utils";
 import { parseItemsFromImage } from "@/lib/client-api";
 import { DEFAULT_STANDARD_ITEMS } from "@/lib/default-items";
 import { saveDemoRfq } from "@/lib/mock-storage";
+import { createUnifiedRfq } from "@/lib/unified-rfq-store";
 import { REGION_TREE } from "@/lib/regions";
 import {
   ArrowLeft,
@@ -366,7 +367,7 @@ export default function NewRfqPage() {
   ).length;
 
   const activeRestaurantId =
-    currentUser.role === "RESTAURANT"
+    currentUser?.role === "RESTAURANT"
       ? currentUser.id
       : DEFAULT_RESTAURANT_USER.id;
 
@@ -418,11 +419,8 @@ export default function NewRfqPage() {
 
       if (itemsError) throw itemsError;
 
-      router.push(`/rfq?created=${newRfq.id}`);
-    } catch (err: any) {
-      console.warn("Supabase submit failed, saving to local demo storage:", err?.message);
-      // Fallback: Supabase 키 미설정 또는 네트워크 오류 시 로컬 데모 스토리지에 안전 저장
-      const demoRfq = saveDemoRfq(
+      // 로컬 통합 스토어에도 상시 동기화 저장 (판매자 및 관리자 즉각 연동)
+      createUnifiedRfq(
         {
           restaurant_id: activeRestaurantId,
           title: title.trim(),
@@ -431,6 +429,35 @@ export default function NewRfqPage() {
           delivery_days: deliveryDays,
           payment_terms: paymentTerms,
           deadline: new Date(`${deadline}T23:59:59+09:00`).toISOString(),
+        },
+        {
+          company_name: currentUser?.name || "살롱순라",
+          address: currentUser?.description || fullRegion,
+          business_number: currentUser?.businessNumber || "222-32-16745",
+          phone: currentUser?.phone || "010-8888-9999",
+        },
+        selectedItems
+      );
+
+      router.push(`/rfq?created=${newRfq.id}`);
+    } catch (err: any) {
+      console.warn("Supabase submit failed, saving to local demo storage:", err?.message);
+      // Fallback: Supabase 키 미설정 또는 네트워크 오류 시 로컬 데모 스토리지에 안전 저장
+      const demoRfq = createUnifiedRfq(
+        {
+          restaurant_id: activeRestaurantId,
+          title: title.trim(),
+          region: fullRegion,
+          contract_months: contractMonths,
+          delivery_days: deliveryDays,
+          payment_terms: paymentTerms,
+          deadline: new Date(`${deadline}T23:59:59+09:00`).toISOString(),
+        },
+        {
+          company_name: currentUser?.name || "살롱순라",
+          address: currentUser?.description || fullRegion,
+          business_number: currentUser?.businessNumber || "222-32-16745",
+          phone: currentUser?.phone || "010-8888-9999",
         },
         selectedItems
       );
@@ -468,7 +495,7 @@ export default function NewRfqPage() {
         <div className="text-xs text-gray-500">
           발주 식당:{" "}
           <span className="font-bold text-gray-900">
-            {currentUser.role === "RESTAURANT"
+            {currentUser?.role === "RESTAURANT"
               ? currentUser.name
               : DEFAULT_RESTAURANT_USER.name}
           </span>
@@ -476,7 +503,7 @@ export default function NewRfqPage() {
       </div>
 
       {/* Role Notice if currently in SUPPLIER or ADMIN mode */}
-      {currentUser.role !== "RESTAURANT" && (
+      {currentUser && currentUser.role !== "RESTAURANT" && (
         <div className="p-4 rounded-2xl bg-orange-50 border border-orange-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-2 text-orange-900">
             <UtensilsCrossed className="w-4 h-4 text-orange-600 shrink-0" />

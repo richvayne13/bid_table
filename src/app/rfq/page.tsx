@@ -37,7 +37,7 @@ function RfqListContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const activeRestaurantId =
-    currentUser.role === "RESTAURANT"
+    currentUser?.role === "RESTAURANT"
       ? currentUser.id
       : DEFAULT_RESTAURANT_USER.id;
 
@@ -52,7 +52,7 @@ function RfqListContent() {
         )
         .order("created_at", { ascending: false });
 
-      if (currentUser.role === "RESTAURANT") {
+      if (currentUser?.role === "RESTAURANT") {
         query.eq("restaurant_id", activeRestaurantId);
       }
 
@@ -83,7 +83,7 @@ function RfqListContent() {
   useEffect(() => {
     loadRfqs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser.id, currentUser.role]);
+  }, [currentUser?.id, currentUser?.role]);
 
   const handleToggleClose = async (rfqId: string, nextStatus: "OPEN" | "CLOSED") => {
     try {
@@ -158,7 +158,7 @@ function RfqListContent() {
               내 견적 요청서 (RFQ) 목록
             </h1>
             <span className="px-2 py-0.5 rounded-md bg-orange-100 text-orange-800 text-xs font-semibold">
-              {currentUser.role === "RESTAURANT" ? currentUser.name : "전체 공고 보기"}
+              {currentUser?.role === "RESTAURANT" ? currentUser.name : "전체 공고 보기"}
             </span>
           </div>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">

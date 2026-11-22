@@ -4,7 +4,7 @@ import { UserRole } from "@/types/database";
 
 export interface UserAccount {
   id: string;
-  email: string;
+  email: string; // 아이디 또는 이메일
   password?: string;
   name: string; // 상호명 또는 식당명
   role: UserRole;
@@ -20,10 +20,31 @@ export interface UserAccount {
   createdAt: string;
 }
 
-const STORAGE_USERS_KEY = "bidplate_registered_users_v2";
-const STORAGE_SESSION_KEY = "bidplate_current_session_v2";
+const STORAGE_USERS_KEY = "bidplate_registered_users_v3";
+const STORAGE_SESSION_KEY = "bidplate_current_session_v3";
+const STORAGE_ACTIVE_TOKENS_KEY = "bidplate_active_session_tokens_v3";
+
+export interface ActiveSessionInfo {
+  email: string;
+  sessionToken: string;
+  loginAt: string;
+  userAgent?: string;
+}
+
+export const ADMIN_ACCOUNT: UserAccount = {
+  id: "admin-richman2561",
+  email: "richman2561",
+  password: "11qqaazz..",
+  name: "운영관리자 (richman2561)",
+  role: "ADMIN",
+  description: "견적식탁 플랫폼 최고 운영관리자 본부",
+  badge: "운영관리자",
+  phone: "010-0000-0000",
+  createdAt: "2026-01-01",
+};
 
 export const DEFAULT_ACCOUNTS: UserAccount[] = [
+  ADMIN_ACCOUNT,
   {
     id: "b0000000-0000-0000-0000-000000000001",
     email: "salon@soonra.com",
@@ -32,7 +53,11 @@ export const DEFAULT_ACCOUNTS: UserAccount[] = [
     role: "RESTAURANT",
     description: "서울 종로구 율곡로 8길 75 (익선동) / 유러피안 다이닝 & 펍",
     badge: "식당 업주",
+    businessNumber: "222-32-16745",
+    representative: "살롱순라 대표",
     phone: "010-8888-9999",
+    categories: ["양식/파스타/와인바"],
+    regions: ["서울 종로구 익선동"],
     createdAt: "2026-01-01",
   },
   {
@@ -69,16 +94,6 @@ export const DEFAULT_ACCOUNTS: UserAccount[] = [
     moq: "7만원",
     createdAt: "2026-01-01",
   },
-  {
-    id: "a0000000-0000-0000-0000-000000000001",
-    email: "admin@bidplate.com",
-    password: "password123",
-    name: "견적식탁 운영본부",
-    role: "ADMIN",
-    description: "시스템 관리자 / 표준 품목 및 단가 감시",
-    badge: "플랫폼 관리자",
-    createdAt: "2026-01-01",
-  },
 ];
 
 export function getRegisteredUsers(): UserAccount[] {
@@ -90,6 +105,17 @@ export function getRegisteredUsers(): UserAccount[] {
       return DEFAULT_ACCOUNTS;
     }
     const list = JSON.parse(raw) as UserAccount[];
+    // 항상 ADMIN_ACCOUNT가 최신 비밀번호(11qqaazz..)로 존재하도록 보장
+    const adminIdx = list.findIndex(
+      (u) => u.email.toLowerCase() === "richman2561" || u.id === "admin-richman2561"
+    );
+    if (adminIdx === -1) {
+      list.unshift(ADMIN_ACCOUNT);
+      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(list));
+    } else {
+      list[adminIdx] = { ...list[adminIdx], ...ADMIN_ACCOUNT };
+      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(list));
+    }
     return list;
   } catch (e) {
     console.error("Failed to read registered users:", e);
@@ -105,21 +131,28 @@ export function registerUser(
   }
 
   const users = getRegisteredUsers();
-  const existing = users.find(
-    (u) => u.email.toLowerCase() === data.email.trim().toLowerCase()
-  );
+  const inputEmail = data.email.trim().toLowerCase();
 
+  // 관리자 아이디 충돌 방지
+  if (inputEmail === "richman2561" || inputEmail === "admin") {
+    return {
+      success: false,
+      error: "해당 아이디는 예약된 관리자 전용 아이디입니다.",
+    };
+  }
+
+  const existing = users.find((u) => u.email.toLowerCase() === inputEmail);
   if (existing) {
     return {
       success: false,
-      error: "이미 가입된 이메일(아이디)입니다. 다른 이메일을 사용해 주세요.",
+      error: "이미 가입된 아이디(이메일)입니다. 다른 아이디를 사용해 주세요.",
     };
   }
 
   const newAccount: UserAccount = {
     ...data,
     id: "usr-" + Date.now().toString(36) + "-" + Math.random().toString(36).substring(2, 7),
-    email: data.email.trim().toLowerCase(),
+    email: inputEmail,
     createdAt: new Date().toISOString().split("T")[0],
   };
 
@@ -132,27 +165,104 @@ export function registerUser(
   return { success: true, user: newAccount };
 }
 
+export function getActiveSessionMap(): Record<string, ActiveSessionInfo> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(STORAGE_ACTIVE_TOKENS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+export function registerActiveSession(email: string): { sessionToken: string; hadPreviousSession: boolean } {
+  if (typeof window === "undefined") return { sessionToken: "", hadPreviousSession: false };
+  const map = getActiveSessionMap();
+  const normalized = email.trim().toLowerCase();
+  const hadPreviousSession = !!map[normalized];
+
+  const sessionToken = "tok_" + Date.now().toString(36) + "_" + Math.random().toString(36).substring(2, 8);
+  map[normalized] = {
+    email: normalized,
+    sessionToken,
+    loginAt: new Date().toISOString(),
+    userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+  };
+
+  try {
+    localStorage.setItem(STORAGE_ACTIVE_TOKENS_KEY, JSON.stringify(map));
+  } catch (e) {
+    console.error("Failed to store active session:", e);
+  }
+
+  return { sessionToken, hadPreviousSession };
+}
+
+export function isSessionValid(email: string, token: string): boolean {
+  if (typeof window === "undefined" || !email || !token) return true;
+  const map = getActiveSessionMap();
+  const current = map[email.trim().toLowerCase()];
+  if (!current) return true;
+  return current.sessionToken === token;
+}
+
+export function clearActiveSession(email: string) {
+  if (typeof window === "undefined" || !email) return;
+  const map = getActiveSessionMap();
+  delete map[email.trim().toLowerCase()];
+  try {
+    localStorage.setItem(STORAGE_ACTIVE_TOKENS_KEY, JSON.stringify(map));
+  } catch (e) {}
+}
+
+export function isEmailRegistered(email: string): boolean {
+  if (typeof window === "undefined") return false;
+  const normalized = email.trim().toLowerCase();
+  if (normalized === "richman2561" || normalized === "admin") return true;
+  const users = getRegisteredUsers();
+  return users.some((u) => u.email.toLowerCase() === normalized);
+}
+
 export function loginUser(
-  email: string,
+  loginId: string,
   pass: string
-): { success: boolean; user?: UserAccount; error?: string } {
+): { success: boolean; user?: UserAccount; error?: string; hadPreviousSession?: boolean } {
   if (typeof window === "undefined") {
     return { success: false, error: "브라우저 환경이 아닙니다." };
   }
 
+  const normalized = loginId.trim().toLowerCase();
+
+  // 1. 운영관리자 전용 계정 인증 (아이디: richman2561, 비밀번호: 11qqaazz..)
+  if (normalized === "richman2561" || normalized === "richman2561@bidplate.com") {
+    if (pass === "11qqaazz..") {
+      const { sessionToken, hadPreviousSession } = registerActiveSession(ADMIN_ACCOUNT.email);
+      setCurrentSession({ ...ADMIN_ACCOUNT, sessionToken });
+      return { success: true, user: ADMIN_ACCOUNT, hadPreviousSession };
+    } else {
+      return {
+        success: false,
+        error: "운영관리자 비밀번호가 일치하지 않습니다. (지정된 관리자 암호를 입력하세요)",
+      };
+    }
+  }
+
+  // 2. 일반 구매자/판매자 계정 인증
   const users = getRegisteredUsers();
   const target = users.find(
-    (u) => u.email.toLowerCase() === email.trim().toLowerCase()
+    (u) =>
+      u.email.toLowerCase() === normalized ||
+      u.email.toLowerCase().split("@")[0] === normalized
   );
 
   if (!target) {
     return {
       success: false,
-      error: "등록되지 않은 이메일입니다. 이메일을 확인하거나 회원가입을 진행해 주세요.",
+      error: "등록되지 않은 아이디(이메일)입니다. 아이디를 확인하거나 회원가입을 진행해 주세요.",
     };
   }
 
-  // 비밀번호 일치 검사 (비밀번호가 없는 초기 계정은 어떤 비밀번호든 허용)
+  // 비밀번호 일치 검사
   if (target.password && target.password !== pass) {
     return {
       success: false,
@@ -160,11 +270,15 @@ export function loginUser(
     };
   }
 
-  setCurrentSession(target);
-  return { success: true, user: target };
+  // 이메일 기준 중복 로그인 감지 및 고유 세션 발급
+  const { sessionToken, hadPreviousSession } = registerActiveSession(target.email);
+  const userWithToken = { ...target, sessionToken };
+  setCurrentSession(userWithToken);
+
+  return { success: true, user: userWithToken, hadPreviousSession };
 }
 
-export function getCurrentSession(): UserAccount | null {
+export function getCurrentSession(): (UserAccount & { sessionToken?: string }) | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_SESSION_KEY);
@@ -175,9 +289,13 @@ export function getCurrentSession(): UserAccount | null {
   }
 }
 
-export function setCurrentSession(user: UserAccount | null) {
+export function setCurrentSession(user: (UserAccount & { sessionToken?: string }) | null) {
   if (typeof window === "undefined") return;
   if (!user) {
+    const prev = getCurrentSession();
+    if (prev?.email) {
+      clearActiveSession(prev.email);
+    }
     localStorage.removeItem(STORAGE_SESSION_KEY);
   } else {
     localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(user));
