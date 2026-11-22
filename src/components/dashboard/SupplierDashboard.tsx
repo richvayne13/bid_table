@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { formatPrice, formatNumber } from "@/lib/utils";
+import { isRegionMatched } from "@/lib/regions";
 import {
   Truck,
   Package,
@@ -19,30 +21,39 @@ import {
 
 export function SupplierDashboard() {
   const { currentUser } = useRole();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [catalogs, setCatalogs] = useState<any[]>([]);
   const [rfqs, setRfqs] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadSupplierData() {
       try {
         setLoading(true);
-        // Load Catalog
-        const { data: catData } = await supabase
-          .from("supplier_catalogs")
-          .select("*, standard_items(*)")
-          .eq("supplier_id", currentUser.id);
+        const [profRes, catRes, rfqRes] = await Promise.all([
+          supabase.from("profiles").select("*").eq("id", currentUser.id).single(),
+          supabase
+            .from("supplier_catalogs")
+            .select("*, standard_items(*)")
+            .eq("supplier_id", currentUser.id),
+          supabase
+            .from("rfqs")
+            .select("*, rfq_items(*, standard_items(*)), profiles(*)")
+            .eq("status", "OPEN")
+            .order("deadline", { ascending: true }),
+        ]);
 
-        setCatalogs(catData || []);
+        setProfile(profRes.data || null);
+        setCatalogs(catRes.data || []);
 
-        // Load RFQs
-        const { data: rfqData } = await supabase
-          .from("rfqs")
-          .select("*, rfq_items(*, standard_items(*)), profiles(*)")
-          .eq("status", "OPEN");
-
-        setRfqs(rfqData || []);
+        const regions: string[] = Array.isArray(profRes.data?.delivery_regions)
+          ? profRes.data.delivery_regions
+          : [];
+        const matched = (rfqRes.data || []).filter((r: any) =>
+          regions.length > 0 ? isRegionMatched(regions, r.region) : true
+        );
+        setRfqs(matched);
       } catch (e) {
         console.error(e);
       } finally {
@@ -51,7 +62,7 @@ export function SupplierDashboard() {
     }
 
     loadSupplierData();
-  }, [currentUser.id]);
+  }, [currentUser.id, supabase]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -138,9 +149,17 @@ export function SupplierDashboard() {
               식당에서 요청한 품목에 대해 1회 최소주문금액(MOQ)과 포장 단위 공급가를 제출하세요.
             </p>
           </div>
-          <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full">
-            신규 공고 {rfqs.length}건
-          </span>
+          <div className="flex items-center space-x-2">
+            <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full">
+              권역 일치 {rfqs.length}건
+            </span>
+            <Link
+              href="/supplier/rfqs"
+              className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors"
+            >
+              전체 공고함 열기 →
+            </Link>
+          </div>
         </div>
 
         {rfqs.map((r) => (
@@ -167,10 +186,13 @@ export function SupplierDashboard() {
                 </div>
               </div>
 
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors self-start sm:self-auto flex items-center space-x-1">
+              <Link
+                href={`/supplier/rfqs/${r.id}/bid`}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors self-start sm:self-auto flex items-center space-x-1"
+              >
                 <span>입찰서 작성 / 수정</span>
                 <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
             </div>
 
             {/* Requested Items Preview */}
