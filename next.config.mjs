@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
-const isGithubActions = process.env.GITHUB_ACTIONS === "true";
-const basePath = isGithubActions ? "/bid_table" : "";
+const isProd = process.env.NODE_ENV === "production";
+const basePath = isProd ? "/bid_table" : "";
 
 const nextConfig = {
   output: "export",
   basePath: basePath,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
   trailingSlash: true,
   images: {
     unoptimized: true,
