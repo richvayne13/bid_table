@@ -332,20 +332,22 @@ export default function HomePage() {
                   점수를 중앙에서 관리합니다.
                 </p>
               </div>
-              <div className="flex gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    switchRole("ADMIN");
-                    document
-                      .getElementById("role-dashboard")
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }}
+              <div className="flex flex-wrap gap-2 pt-1">
+                <Link
+                  href="/admin"
+                  onClick={() => switchRole("ADMIN")}
                   className="flex-1 inline-flex items-center justify-center space-x-1 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
                 >
-                  <span>관리자 센터 이동</span>
+                  <span>관리자 콘솔 (/admin)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </Link>
+                <Link
+                  href="/admin/rfqs"
+                  onClick={() => switchRole("ADMIN")}
+                  className="inline-flex items-center justify-center space-x-1 px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50 text-emerald-800 text-xs font-bold transition-colors"
+                >
+                  <span>대리 입찰</span>
+                </Link>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRole, DEMO_USERS } from "@/contexts/RoleContext";
 import {
   UtensilsCrossed,
@@ -24,9 +24,17 @@ import {
 
 export function Navbar() {
   const pathname = usePathname();
-  const { currentUser, setCurrentUser } = useRole();
+  const router = useRouter();
+  const { currentUser, setCurrentUser, switchRole } = useRole();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleGoAdmin = () => {
+    switchRole("ADMIN");
+    setDropdownOpen(false);
+    setMobileMenuOpen(false);
+    router.push("/admin");
+  };
 
   const getRoleIcon = (role: string) => {
     switch (role) {
@@ -187,42 +195,67 @@ export function Navbar() {
             {currentUser.role === "ADMIN" && (
               <>
                 <Link
-                  href="/"
+                  href="/admin"
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive("/")
+                    pathname === "/admin"
                       ? "bg-emerald-50 text-emerald-700 font-bold"
                       : "text-gray-700 hover:text-emerald-600 hover:bg-emerald-50"
                   }`}
                 >
-                  관리자 홈
+                  운영 대시보드
                 </Link>
                 <Link
-                  href="/#standards"
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors flex items-center space-x-1"
+                  href="/admin/items"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    pathname === "/admin/items"
+                      ? "bg-emerald-50 text-emerald-700 font-bold"
+                      : "text-gray-700 hover:text-emerald-600 hover:bg-emerald-50"
+                  }`}
                 >
                   <FileSpreadsheet className="w-4 h-4 text-emerald-500" />
-                  <span>표준 품목 마스터</span>
+                  <span>표준 품목 관리</span>
                 </Link>
                 <Link
-                  href="/#suppliers"
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors flex items-center space-x-1"
+                  href="/admin/suppliers"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    pathname === "/admin/suppliers"
+                      ? "bg-emerald-50 text-emerald-700 font-bold"
+                      : "text-gray-700 hover:text-emerald-600 hover:bg-emerald-50"
+                  }`}
                 >
                   <Building2 className="w-4 h-4 text-emerald-500" />
-                  <span>가상 유통업체</span>
+                  <span>가상 유통사 &amp; 단가표</span>
                 </Link>
                 <Link
-                  href="/rfq"
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors flex items-center space-x-1"
+                  href="/admin/rfqs"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    pathname === "/admin/rfqs"
+                      ? "bg-emerald-50 text-emerald-700 font-bold"
+                      : "text-gray-700 hover:text-emerald-600 hover:bg-emerald-50"
+                  }`}
                 >
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <span>전체 RFQ 현황</span>
+                  <span>대리 입찰 실행</span>
                 </Link>
               </>
             )}
           </nav>
 
-          {/* Quick Switcher Dropdown & Mobile Toggle */}
+          {/* Quick Switcher Dropdown, Direct Admin Button & Mobile Toggle */}
           <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              onClick={handleGoAdmin}
+              className={`hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-extrabold transition-all shadow-sm ${
+                pathname.startsWith("/admin")
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>관리자 모드 (Admin)</span>
+            </button>
+
             <div className="relative">
               <button
                 type="button"
@@ -269,6 +302,9 @@ export function Navbar() {
                             onClick={() => {
                               setCurrentUser(user);
                               setDropdownOpen(false);
+                              if (user.role === "ADMIN") {
+                                router.push("/admin");
+                              }
                             }}
                             className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start space-x-3 transition-colors ${
                               isSelected
@@ -364,6 +400,13 @@ export function Navbar() {
             >
               🛡️ 거래명세서 단가 감시
             </Link>
+            <button
+              type="button"
+              onClick={handleGoAdmin}
+              className="w-full text-left block px-3 py-2 rounded-lg text-sm font-bold text-emerald-800 bg-emerald-50"
+            >
+              🛡️ 관리자 모드 (Admin) → /admin
+            </button>
           </div>
         )}
       </div>
