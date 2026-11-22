@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRole, DEMO_USERS } from "@/contexts/RoleContext";
 import { StandardItem } from "@/types/database";
 import { formatPrice, formatNumber } from "@/lib/utils";
+import { parseItemsFromImage } from "@/lib/client-api";
 import { REGION_TREE } from "@/lib/regions";
 import {
   ArrowLeft,
@@ -225,20 +226,11 @@ export default function NewRfqPage() {
         setPreviewUrl(URL.createObjectURL(file));
       }
 
-      const formData = new FormData();
-      if (file) formData.append("file", file);
-      if (forceMock) formData.append("mock", "true");
-
-      const res = await fetch("/api/parse-items", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
+      const data = await parseItemsFromImage(file || null, forceMock);
+      if (!data.success) {
         setOcrNotice({
           type: "error",
-          text: data.error || "이미지 분석에 실패했습니다.",
+          text: "이미지 분석에 실패했습니다.",
         });
         return;
       }

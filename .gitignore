@@ -14,5 +14,6 @@ npm-debug.log*
 # Node
 node_modules/
 .next/
+out/
 dist/
 *.tsbuildinfo

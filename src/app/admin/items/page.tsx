@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { parseItemsExcel } from "@/lib/client-api";
 import { StandardItem, ItemCategory, BaseUnit } from "@/types/database";
 import {
   Plus,
@@ -227,17 +228,9 @@ export default function AdminItemsPage() {
       setUploading(true);
       setNotice(null);
 
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/admin/parse-items-excel", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "파일 파싱 실패");
+      const data = await parseItemsExcel(file);
+      if (!data.success) {
+        throw new Error("파일 파싱 실패");
       }
 
       const parsed: Array<{

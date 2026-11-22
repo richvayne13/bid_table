@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { parseCatalogExcel } from "@/lib/client-api";
 import { StandardItem } from "@/types/database";
 import { formatPrice } from "@/lib/utils";
 import {
@@ -288,16 +289,9 @@ export default function AdminSuppliersPage() {
       setUploading(true);
       setNotice(null);
 
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/parse-catalog", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "파일 파싱 실패");
+      const data = await parseCatalogExcel(file);
+      if (!data.success) {
+        throw new Error("파일 파싱 실패");
       }
 
       const parsed: Array<{ name: string; weight: number; price: number }> =
