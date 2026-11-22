@@ -69,7 +69,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm bg-white rounded-3xl border border-gray-200 shadow-xl p-8 space-y-6">
         {/* 타이틀 (숨고 캡처 6 디자인 매칭) */}
         <div className="text-center flex flex-col items-center">
-          <BidTableLogoIcon size="md" className="mb-2 shadow-md" />
+          <BidTableLogoIcon size="lg" className="mb-2 shadow-lg" />
           <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">
             BIDTABLE LOGIN
           </span>
