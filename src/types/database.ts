@@ -22,8 +22,8 @@ export interface StandardItem {
   item_name: string;
   spec: string;
   base_unit: BaseUnit;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface SupplierCatalog {

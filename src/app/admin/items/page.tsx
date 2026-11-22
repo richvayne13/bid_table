@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { parseItemsExcel } from "@/lib/client-api";
+import { DEFAULT_STANDARD_ITEMS } from "@/lib/default-items";
 import { StandardItem, ItemCategory, BaseUnit } from "@/types/database";
 import {
   Plus,
@@ -30,8 +31,8 @@ export default function AdminItemsPage() {
   const supabase = useMemo(() => createClient(), []);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [items, setItems] = useState<StandardItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<StandardItem[]>(DEFAULT_STANDARD_ITEMS);
+  const [loading, setLoading] = useState(false);
   const [selectedCat, setSelectedCat] = useState<string>("ALL");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -53,19 +54,22 @@ export default function AdminItemsPage() {
 
   const loadItems = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from("standard_items")
         .select("*")
         .order("category", { ascending: true })
         .order("item_name", { ascending: true });
-      if (error) throw error;
-      setItems((data || []) as StandardItem[]);
+      if (error) {
+        console.warn("Using default standard items in admin:", error.message);
+      } else if (data && data.length > 0) {
+        const existingNames = new Set(data.map((d: any) => d.item_name));
+        const extraDefaults = DEFAULT_STANDARD_ITEMS.filter(
+          (def) => !existingNames.has(def.item_name)
+        );
+        setItems([...(data as StandardItem[]), ...extraDefaults]);
+      }
     } catch (err: any) {
-      setNotice({
-        type: "error",
-        text: err?.message || "표준 품목 목록을 불러오지 못했습니다.",
-      });
+      console.warn("loadItems fallback:", err?.message);
     } finally {
       setLoading(false);
     }

@@ -8,6 +8,7 @@ import { useRole, DEMO_USERS } from "@/contexts/RoleContext";
 import { StandardItem } from "@/types/database";
 import { formatPrice, formatNumber } from "@/lib/utils";
 import { parseItemsFromImage } from "@/lib/client-api";
+import { DEFAULT_STANDARD_ITEMS } from "@/lib/default-items";
 import { REGION_TREE } from "@/lib/regions";
 import {
   ArrowLeft,
@@ -53,8 +54,8 @@ export default function NewRfqPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [standardItems, setStandardItems] = useState<StandardItem[]>([]);
-  const [loadingItems, setLoadingItems] = useState(true);
+  const [standardItems, setStandardItems] = useState<StandardItem[]>(DEFAULT_STANDARD_ITEMS);
+  const [loadingItems, setLoadingItems] = useState(false);
 
   // Step 1: 기본 계약 조건
   const [title, setTitle] = useState("청주 파스타공방 정기 양식 식자재 견적 요청");
@@ -113,11 +114,10 @@ export default function NewRfqPage() {
     setDong(nextDongs[0] || "");
   };
 
-  // Load standard_items from Supabase
+  // Load standard_items from Supabase (fallback to DEFAULT_STANDARD_ITEMS)
   useEffect(() => {
     async function loadStandards() {
       try {
-        setLoadingItems(true);
         const { data, error } = await supabase
           .from("standard_items")
           .select("*")
@@ -125,14 +125,18 @@ export default function NewRfqPage() {
           .order("item_name");
 
         if (error) {
-          console.error("Failed to load standard_items:", error);
-          setErrorMsg(`표준 품목 조회 실패: ${error.message}`);
-        } else if (data) {
-          setStandardItems(data as StandardItem[]);
+          // Supabase 연결 없어도 내장된 85종 기본 품목 유지
+          console.warn("Using embedded default standard items:", error.message);
+        } else if (data && data.length > 0) {
+          // Merge Supabase items with defaults
+          const existingNames = new Set(data.map((d: any) => d.item_name));
+          const extraDefaults = DEFAULT_STANDARD_ITEMS.filter(
+            (def) => !existingNames.has(def.item_name)
+          );
+          setStandardItems([...(data as StandardItem[]), ...extraDefaults]);
         }
       } catch (err: any) {
-        console.error(err);
-        setErrorMsg(err?.message || "표준 품목을 불러오지 못했습니다.");
+        console.warn("Supabase fetch fallback:", err?.message);
       } finally {
         setLoadingItems(false);
       }
@@ -793,7 +797,9 @@ export default function NewRfqPage() {
                           : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-100"
                       }`}
                     >
-                      {c === "ALL" ? `전체 (${standardItems.length})` : c}
+                      {c === "ALL"
+                        ? `전체 (${standardItems.length})`
+                        : `${c} (${standardItems.filter((i) => i.category === c).length})`}
                     </button>
                   ))}
                 </div>
@@ -819,7 +825,7 @@ export default function NewRfqPage() {
                   검색 조건에 맞는 표준 품목이 없습니다.
                 </div>
               ) : (
-                <div className="max-h-60 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pr-1">
+                <div className="max-h-80 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pr-1">
                   {filteredStandardItems.map((item) => {
                     const isSelected = selectedItems.some(
                       (s) => s.standard_item_id === item.id
