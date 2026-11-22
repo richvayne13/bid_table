@@ -8,7 +8,7 @@ interface BidTableLogoProps {
 }
 
 export function BidTableLogoIcon({ size = "md", className = "" }: { size?: "sm" | "md" | "lg"; className?: string }) {
-  const dim = size === "sm" ? 32 : size === "lg" ? 54 : 42;
+  const dim = size === "sm" ? 34 : size === "lg" ? 56 : 44;
 
   return (
     <div
@@ -16,7 +16,7 @@ export function BidTableLogoIcon({ size = "md", className = "" }: { size?: "sm" 
       style={{
         width: dim,
         height: dim,
-        background: "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)",
+        background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
       }}
       title="견적식탁 (BidTable)"
     >
@@ -24,66 +24,83 @@ export function BidTableLogoIcon({ size = "md", className = "" }: { size?: "sm" 
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-[84%] h-[84%]"
+        className="w-[88%] h-[88%]"
       >
-        {/* 1. 도톰한 고기/스테이크 덩어리 베이스 (Juicy Meat Cut) */}
-        {/* 고기 하단 두께감 음영 */}
+        {/* 1. 고기 위의 귀여운 불꽃 / 훈연 향기 (첫 번째 유첨 스타일) */}
         <path
-          d="M22 66 C22 56 32 50 48 49 C65 48 80 54 80 65 C80 74 68 80 50 80 C32 80 22 75 22 66 Z"
+          d="M44 14 C44 9 48 7 49 5 C51 8 50 11 48 13 C49 13 51 12 52 11 C52 14 50 17 46 17 C44 17 44 15 44 14 Z"
           fill="white"
-          fillOpacity="0.25"
+          opacity="0.95"
         />
-        {/* 고기 본체 (스테이크 단면 실루엣) */}
         <path
-          d="M20 60 C18 48 30 42 46 41 C64 40 82 46 82 58 C82 70 68 76 50 76 C28 76 22 71 20 60 Z"
+          d="M55 15 C55 11 58 9 59 7 C61 10 59 13 58 14 C59 14 61 13 62 12 C62 15 60 17 57 17 C55 17 55 16 55 15 Z"
           fill="white"
+          opacity="0.85"
         />
-        {/* 고기 단면 안쪽 마블링/그릴 라인 (파란색 포인트 디테일) */}
+
+        {/* 2. 단순하고 귀여운 스테이크 고기 (첫 번째 유첨 스타일, 소시지 위치에 배치) */}
+        {/* 고기 덩어리 외곽 라인 및 면 */}
         <path
-          d="M32 54 Q44 50 58 52"
-          stroke="#1D4ED8"
+          d="M29 36 C24 33 26 23 35 20 C46 17 62 18 71 24 C78 29 77 37 70 41 C62 45 44 45 35 43 C30 42 27 39 29 36 Z"
+          fill="white"
+          stroke="white"
           strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        {/* 고기 표면 대각선 사선 그릴 자국 (첫 번째 이미지의 시그니처 빗금 3개) */}
+        <line
+          x1="39"
+          y1="37"
+          x2="48"
+          y2="24"
+          stroke="#1D4ED8"
+          strokeWidth="3.2"
           strokeLinecap="round"
         />
-        <path
-          d="M36 62 Q50 58 66 60"
+        <line
+          x1="49"
+          y1="39"
+          x2="58"
+          y2="26"
           stroke="#1D4ED8"
-          strokeWidth="2.5"
+          strokeWidth="3.2"
           strokeLinecap="round"
         />
-        {/* 고기 측면 두께 입체감 라인 */}
-        <path
-          d="M20 60 C20 69 28 76 48 76 C68 76 82 69 82 58 L82 64 C82 73 68 80 48 80 C28 80 20 73 20 64 Z"
-          fill="white"
-          fillOpacity="0.85"
+        <line
+          x1="59"
+          y1="40"
+          x2="67"
+          y2="29"
+          stroke="#1D4ED8"
+          strokeWidth="3.2"
+          strokeLinecap="round"
         />
 
-        {/* 2. 고기에 비스듬히 콕 찔려있는 포크 (Fork stabbed into meat) */}
-        <g transform="rotate(-18 52 46)">
-          {/* 포크 손잡이 (Handle) */}
-          <rect x="50" y="8" width="4.5" height="34" rx="2.25" fill="white" />
-          {/* 포크 손잡이 상단 장식 원 */}
-          <circle cx="52.25" cy="9" r="3.2" fill="white" />
-
-          {/* 포크 숄더 / 넥 (Shoulder) */}
-          <path
-            d="M44 38 Q52.25 44 60.5 38 L58.5 44 Q52.25 49 46 44 Z"
-            fill="white"
-          />
-
-          {/* 포크 3개 갈래 (Tines) - 고기 표면(y:46~56) 속으로 푹 들어간 형태 */}
-          <rect x="44.5" y="38" width="2.5" height="18" rx="1" fill="white" />
-          <rect x="51" y="38" width="2.5" height="19" rx="1" fill="white" />
-          <rect x="57.5" y="38" width="2.5" height="18" rx="1" fill="white" />
-        </g>
-
-        {/* 3. 포크가 찔린 자리 맛있는 스파클 임팩트 (Impact Star / Freshness) */}
+        {/* 3. 하단에서 고기를 콕 찍고 있는 포크 (두 번째 유첨의 포크 100% 동일한 형태) */}
+        {/* 포크 손잡이 (Handle): 아래쪽이 둥글고 도톰하다가 위로 가면서 부드럽게 잘록해짐 */}
         <path
-          d="M72 32 L74 27 L76 32 L81 34 L76 36 L74 41 L72 36 L67 34 Z"
+          d="M48 68 L48 88 C48 91 52 91 52 88 L52 68 C52 62 50 60 48 68 Z"
           fill="white"
-          opacity="0.9"
         />
-        <circle cx="28" cy="30" r="2" fill="white" opacity="0.8" />
+        {/* 포크 손잡이 하단 바디 둥근 캡 */}
+        <rect x="47" y="68" width="6" height="23" rx="3" fill="white" />
+
+        {/* 포크 목(Neck) 및 어깨(Shoulder): 잘록하게 좁아졌다가 3갈래로 넓어지는 유려한 곡선 */}
+        <path
+          d="M47 70 C47 62 45 56 40 50 C38 48 40 45 42 45 C44 45 45 47 47 50 L47 42 C47 40.5 49 40.5 49 42 L49 48 L51 48 L51 42 C51 40.5 53 40.5 53 42 L53 50 C55 47 56 45 58 45 C60 45 62 48 60 50 C55 56 53 62 53 70 Z"
+          fill="white"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+
+        {/* 포크 갈래 3개 (Tines) - 고기 밑면(y:42~44)에 콕 박혀있는 디테일 */}
+        {/* 좌측 갈래 */}
+        <line x1="42" y1="46" x2="42" y2="39" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
+        {/* 중앙 갈래 */}
+        <line x1="50" y1="46" x2="50" y2="38" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
+        {/* 우측 갈래 */}
+        <line x1="58" y1="46" x2="58" y2="39" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
       </svg>
     </div>
   );

@@ -88,13 +88,16 @@ export default function LoginPage() {
 
         <form onSubmit={handleLoginSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="block text-xs font-bold text-gray-700">이메일</label>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-gray-700">아이디 또는 이메일</label>
+              <span className="text-[10px] text-blue-600 font-bold">관리자 ID: richman2561</span>
+            </div>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@bidtable.com"
-              className="w-full px-3.5 py-3 border border-gray-200 focus:border-indigo-500 rounded-xl text-sm focus:outline-none transition-all placeholder:text-gray-300"
+              placeholder="richman2561 또는 가입하신 이메일"
+              className="w-full px-3.5 py-3 border border-gray-200 focus:border-blue-500 rounded-xl text-sm focus:outline-none transition-all placeholder:text-gray-300"
             />
           </div>
 
@@ -105,15 +108,15 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호를 입력해 주세요."
-              className="w-full px-3.5 py-3 border border-gray-200 focus:border-indigo-500 rounded-xl text-sm focus:outline-none transition-all placeholder:text-gray-300"
+              className="w-full px-3.5 py-3 border border-gray-200 focus:border-blue-500 rounded-xl text-sm focus:outline-none transition-all placeholder:text-gray-300"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white font-black text-sm shadow-md transition-all"
+            className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-sm shadow-md transition-all"
           >
-            이메일 로그인
+            로그인
           </button>
         </form>
 
@@ -164,18 +167,24 @@ export default function LoginPage() {
           <p className="text-[11px] font-bold text-gray-400 text-center mb-2">
             체험용 계정 원클릭 즉시 접속
           </p>
-          <div className="grid grid-cols-2 gap-1.5 text-center">
+          <div className="grid grid-cols-3 gap-1.5 text-center">
             <button
               onClick={() => handleQuickLogin("salon@soonra.com")}
               className="p-2 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-700 text-[11px] font-bold transition-colors"
             >
-              🍝 식당 (살롱순라)
+              🍝 살롱순라
             </button>
             <button
               onClick={() => handleQuickLogin("supplier1@bidtable.com")}
               className="p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-bold transition-colors"
             >
-              🥩 유통사 (한결축산)
+              🥩 한결축산
+            </button>
+            <button
+              onClick={() => handleQuickLogin("richman2561", "11qqaazz..")}
+              className="p-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold transition-colors border border-emerald-200"
+            >
+              👑 관리자
             </button>
           </div>
 
