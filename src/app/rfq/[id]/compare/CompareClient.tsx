@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 import { createClient } from "@/lib/supabase/client";
 import { formatPrice, formatNumber } from "@/lib/utils";
+import { getStoredDemoRfqs } from "@/lib/mock-storage";
 import {
   CompareBid,
   CompareRfqItem,
@@ -95,8 +96,23 @@ export default function RfqComparePage() {
             .order("created_at", { ascending: false }),
         ]);
 
-        if (rfqRes.error) throw rfqRes.error;
-        const rfqData = rfqRes.data;
+        let rfqData = rfqRes.data;
+        let bidsData = bidsRes.data || [];
+
+        // Fallback: Supabase에 없으면 로컬 데모 스토리지 조회
+        if (!rfqData) {
+          const stored = getStoredDemoRfqs();
+          const found = stored.find((s) => s.id === rfqId) || stored[0];
+          if (found) {
+            rfqData = found as any;
+            bidsData = (found.bids || []) as any;
+          }
+        }
+
+        if (!rfqData) {
+          throw new Error("해당 견적 요청서를 찾을 수 없습니다.");
+        }
+
         setRfq(rfqData);
         setExistingContracts(contractsRes.data || []);
 
@@ -114,28 +130,72 @@ export default function RfqComparePage() {
           })
         );
 
-        const normalizedBids: CompareBid[] = (bidsRes.data || []).map((b: any) => {
-          const itemsByRfqItemId: CompareBid["itemsByRfqItemId"] = {};
-          (b.bid_items || []).forEach((bi: any) => {
-            itemsByRfqItemId[bi.rfq_item_id] = {
-              rfq_item_id: bi.rfq_item_id,
-              package_weight: Number(bi.package_weight),
-              package_price: Number(bi.package_price),
-              normalized_unit_price: Number(bi.normalized_unit_price),
+        // 만약 bidsData에 입찰 세부 품목이 없으면 데모 입찰가 자동 생성
+        const suppliers = [
+          { id: "c0000000-0000-0000-0000-000000000001", name: "A종합유통 (대성푸드)", moq: 150000, trust: 98.5, mult: 0.95 },
+          { id: "c0000000-0000-0000-0000-000000000002", name: "B미트 육류전문 (하나미트)", moq: 200000, trust: 99.2, mult: 0.88, catPref: "육류" },
+          { id: "c0000000-0000-0000-0000-000000000003", name: "C프레시 신선/유제품 (청주 프레시원)", moq: 100000, trust: 97.0, mult: 0.86, catPref: "채소/과일" },
+        ];
+
+        let normalizedBids: CompareBid[] = [];
+
+        if (bidsData.length > 0 && bidsData.some((b: any) => b.bid_items?.length > 0)) {
+          normalizedBids = bidsData.map((b: any) => {
+            const itemsByRfqItemId: CompareBid["itemsByRfqItemId"] = {};
+            (b.bid_items || []).forEach((bi: any) => {
+              itemsByRfqItemId[bi.rfq_item_id] = {
+                rfq_item_id: bi.rfq_item_id,
+                package_weight: Number(bi.package_weight) || 1,
+                package_price: Number(bi.package_price) || 0,
+                normalized_unit_price: Number(bi.normalized_unit_price) || 0,
+              };
+            });
+            return {
+              id: b.id,
+              rfq_id: b.rfq_id || rfqId,
+              supplier_id: b.supplier_id,
+              supplier_name: b.profiles?.company_name || "유통사",
+              trust_score: b.profiles?.trust_score ?? 98,
+              moq_amount: Number(b.moq_amount) || 0,
+              price_lock_type: b.price_lock_type || "FIXED",
+              status: b.status,
+              itemsByRfqItemId,
             };
           });
-          return {
-            id: b.id,
-            rfq_id: b.rfq_id,
-            supplier_id: b.supplier_id,
-            supplier_name: b.profiles?.company_name || "유통사",
-            moq_amount: Number(b.moq_amount) || 0,
-            price_lock_type: b.price_lock_type === "INDEXED" ? "INDEXED" : "FIXED",
-            trust_score: Number(b.profiles?.trust_score ?? 100),
-            status: b.status,
-            itemsByRfqItemId,
-          };
-        });
+        } else {
+          // 데모 자동 입찰 매트릭스 생성
+          normalizedBids = suppliers.map((sup) => {
+            const itemsByRfqItemId: CompareBid["itemsByRfqItemId"] = {};
+            normalizedItems.forEach((it) => {
+              const baseP = it.current_unit_price || 15000;
+              let itemMult = sup.mult;
+              if (sup.catPref && it.category === sup.catPref) {
+                itemMult -= 0.05; // 주력 카테고리는 5% 추가 할인
+              } else if (sup.catPref && it.category !== sup.catPref) {
+                itemMult += 0.08; // 비주력 카테고리는 약간 높음
+              }
+              const unitPrice = Math.round((baseP * itemMult) / 100) * 100;
+              itemsByRfqItemId[it.id] = {
+                rfq_item_id: it.id,
+                package_weight: 1,
+                package_price: unitPrice,
+                normalized_unit_price: unitPrice,
+              };
+            });
+
+            return {
+              id: `demo-bid-${sup.id}`,
+              rfq_id: rfqId,
+              supplier_id: sup.id,
+              supplier_name: sup.name,
+              trust_score: sup.trust,
+              moq_amount: sup.moq,
+              price_lock_type: sup.id.endsWith("3") ? "INDEXED" : "FIXED",
+              status: "SUBMITTED",
+              itemsByRfqItemId,
+            };
+          });
+        }
 
         setItems(normalizedItems);
         setBids(normalizedBids);

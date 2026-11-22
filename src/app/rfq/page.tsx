@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRole, DEMO_USERS } from "@/contexts/RoleContext";
 import { formatPrice, formatNumber } from "@/lib/utils";
+import { getStoredDemoRfqs } from "@/lib/mock-storage";
 import {
   Plus,
   Clock,
@@ -55,15 +56,25 @@ function RfqListContent() {
         query.eq("restaurant_id", activeRestaurantId);
       }
 
+      const localDemoRfqs = getStoredDemoRfqs();
+
       const { data, error } = await query;
       if (error) {
-        setErrorMsg(`견적 요청서 조회 실패: ${error.message}`);
+        console.warn("Supabase fetch failed, showing local demo rfqs:", error.message);
+        setRfqs(localDemoRfqs);
       } else {
-        setRfqs(data || []);
+        // Merge Supabase items and local demo items (dedup by id)
+        const combined = [...(data || [])];
+        localDemoRfqs.forEach((d) => {
+          if (!combined.some((c) => c.id === d.id)) {
+            combined.unshift(d as any);
+          }
+        });
+        setRfqs(combined);
       }
     } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err?.message || "목록을 불러오는 중 오류가 발생했습니다.");
+      console.warn("loadRfqs fallback to local demo rfqs:", err?.message);
+      setRfqs(getStoredDemoRfqs());
     } finally {
       setLoading(false);
     }

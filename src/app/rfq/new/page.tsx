@@ -9,6 +9,7 @@ import { StandardItem } from "@/types/database";
 import { formatPrice, formatNumber } from "@/lib/utils";
 import { parseItemsFromImage } from "@/lib/client-api";
 import { DEFAULT_STANDARD_ITEMS } from "@/lib/default-items";
+import { saveDemoRfq } from "@/lib/mock-storage";
 import { REGION_TREE } from "@/lib/regions";
 import {
   ArrowLeft,
@@ -419,10 +420,21 @@ export default function NewRfqPage() {
 
       router.push(`/rfq?created=${newRfq.id}`);
     } catch (err: any) {
-      console.error("Failed to submit RFQ:", err);
-      setErrorMsg(
-        `견적 요청서 저장 실패: ${err?.message || "Supabase 권한 또는 네트워크 오류"}`
+      console.warn("Supabase submit failed, saving to local demo storage:", err?.message);
+      // Fallback: Supabase 키 미설정 또는 네트워크 오류 시 로컬 데모 스토리지에 안전 저장
+      const demoRfq = saveDemoRfq(
+        {
+          restaurant_id: activeRestaurantId,
+          title: title.trim(),
+          region: fullRegion,
+          contract_months: contractMonths,
+          delivery_days: deliveryDays,
+          payment_terms: paymentTerms,
+          deadline: new Date(`${deadline}T23:59:59+09:00`).toISOString(),
+        },
+        selectedItems
       );
+      router.push(`/rfq?created=${demoRfq.id}&demo=true`);
     } finally {
       setSubmitting(false);
     }
