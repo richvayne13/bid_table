@@ -70,8 +70,8 @@ export default function LoginPage() {
         {/* 타이틀 (숨고 캡처 6 디자인 매칭) */}
         <div className="text-center flex flex-col items-center">
           <BidTableLogoIcon size="md" className="mb-2 shadow-md" />
-          <span className="text-xs font-bold text-[#6366F1] uppercase tracking-wider">
-            BIDPLATE LOGIN
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">
+            BIDTABLE LOGIN
           </span>
           <h1 className="text-2xl font-black text-gray-900 mt-0.5">로그인</h1>
           <p className="text-xs text-gray-400 mt-1">
@@ -172,12 +172,40 @@ export default function LoginPage() {
               🍝 식당 (살롱순라)
             </button>
             <button
-              onClick={() => handleQuickLogin("supplier1@bidplate.com")}
+              onClick={() => handleQuickLogin("supplier1@bidtable.com")}
               className="p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-bold transition-colors"
             >
               🥩 유통사 (한결축산)
             </button>
           </div>
+
+          {/* 내가 신규 가입한 계정 목록 및 원클릭 불러오기 */}
+          {registeredUsers.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-dashed border-gray-200">
+              <p className="text-[10px] font-bold text-gray-500 mb-1.5 flex items-center justify-between">
+                <span>실시간 저장된 가입 회원 DB ({registeredUsers.length}명)</span>
+                <span className="text-[9px] text-emerald-600 font-extrabold">● 정상 저장됨</span>
+              </p>
+              <div className="max-h-28 overflow-y-auto space-y-1 pr-1">
+                {registeredUsers.map((u) => (
+                  <button
+                    key={u.id}
+                    type="button"
+                    onClick={() => {
+                      setEmail(u.email);
+                      setPassword(u.password || "password123");
+                    }}
+                    className="w-full text-left p-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-[10px] text-gray-700 flex items-center justify-between transition-colors border border-gray-100"
+                  >
+                    <span className="font-bold truncate max-w-[150px]">
+                      {u.name} ({u.email})
+                    </span>
+                    <span className="text-blue-600 font-extrabold shrink-0">입력 ↵</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

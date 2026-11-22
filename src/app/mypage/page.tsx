@@ -83,7 +83,7 @@ export default function MyPage() {
           <div
             className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black shadow-sm shrink-0 ${
               currentUser.role === "RESTAURANT"
-                ? "bg-orange-100 text-orange-600"
+                ? "bg-blue-100 text-blue-600"
                 : currentUser.role === "SUPPLIER"
                 ? "bg-indigo-100 text-indigo-600"
                 : "bg-emerald-100 text-emerald-600"
@@ -102,7 +102,7 @@ export default function MyPage() {
               <span
                 className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${
                   currentUser.role === "RESTAURANT"
-                    ? "bg-orange-50 text-orange-700 border border-orange-200"
+                    ? "bg-blue-50 text-blue-700 border border-blue-200"
                     : currentUser.role === "SUPPLIER"
                     ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
                     : "bg-emerald-50 text-emerald-700 border border-emerald-200"
@@ -184,7 +184,7 @@ export default function MyPage() {
                 </h3>
                 <Link
                   href="/rfq/new"
-                  className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-sm transition-all"
+                  className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-all"
                 >
                   <PlusCircle className="w-4 h-4" />
                   <span>새 견적 요청서 작성</span>
@@ -204,7 +204,7 @@ export default function MyPage() {
                 return (
                   <div
                     key={r.id}
-                    className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs hover:border-orange-300 transition-all space-y-4"
+                    className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs hover:border-blue-300 transition-all space-y-4"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
                       <div>
@@ -224,7 +224,7 @@ export default function MyPage() {
                         <span className="text-xs text-gray-400 block">
                           기존 매입가 기준 월 총액
                         </span>
-                        <span className="text-xl font-black text-orange-600">
+                        <span className="text-xl font-black text-blue-600">
                           {totalEstimated > 0 ? formatPrice(totalEstimated) : "견적 요청 중"}
                         </span>
                       </div>
@@ -241,7 +241,7 @@ export default function MyPage() {
                       </div>
                       <div>
                         <span className="text-gray-400 block">희망 요일</span>
-                        <span className="font-bold text-orange-600">
+                        <span className="font-bold text-blue-600">
                           {r.delivery_days?.join(", ") || "협의"} (새벽배송)
                         </span>
                       </div>
@@ -258,7 +258,7 @@ export default function MyPage() {
                       <div className="flex items-center space-x-2 w-full sm:w-auto">
                         <Link
                           href={`/rfq/${r.id}/compare`}
-                          className="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-1 px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition-colors shadow-xs"
+                          className="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-1 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors shadow-xs"
                         >
                           <Scale className="w-3.5 h-3.5" />
                           <span>유통사 비교 매트릭스 보기 ({r.bids?.length || 0}곳)</span>
@@ -314,17 +314,17 @@ export default function MyPage() {
                   <div
                     key={i}
                     className={`bg-white rounded-2xl border p-5 space-y-3 flex flex-col justify-between ${
-                      bid.isBest ? "border-orange-400 shadow-md ring-2 ring-orange-100" : "border-gray-200"
+                      bid.isBest ? "border-blue-400 shadow-md ring-2 ring-blue-100" : "border-gray-200"
                     }`}
                   >
                     <div>
                       {bid.isBest && (
-                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-black bg-orange-500 text-white mb-2">
+                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-black bg-blue-600 text-white mb-2">
                           최저가 추천 입찰
                         </span>
                       )}
                       <h4 className="text-base font-black text-gray-900">{bid.name}</h4>
-                      <p className="text-2xl font-black text-orange-600 mt-1">
+                      <p className="text-2xl font-black text-blue-600 mt-1">
                         {formatPrice(bid.bidAmount)}
                       </p>
                       <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded inline-block mt-1">

@@ -62,7 +62,7 @@ export const DEFAULT_ACCOUNTS: UserAccount[] = [
   },
   {
     id: "c0000000-0000-0000-0000-000000000001",
-    email: "supplier1@bidplate.com",
+    email: "supplier1@bidtable.com",
     password: "password123",
     name: "(주)한결축산 유통",
     role: "SUPPLIER",
@@ -79,7 +79,7 @@ export const DEFAULT_ACCOUNTS: UserAccount[] = [
   },
   {
     id: "c0000000-0000-0000-0000-000000000002",
-    email: "supplier2@bidplate.com",
+    email: "supplier2@bidtable.com",
     password: "password123",
     name: "가락농산 신선물류",
     role: "SUPPLIER",
@@ -132,6 +132,7 @@ export function registerUser(
 
   const users = getRegisteredUsers();
   const inputEmail = data.email.trim().toLowerCase();
+  const inputPassword = (data.password || "").trim();
 
   // 관리자 아이디 충돌 방지
   if (inputEmail === "richman2561" || inputEmail === "admin") {
@@ -141,7 +142,11 @@ export function registerUser(
     };
   }
 
-  const existing = users.find((u) => u.email.toLowerCase() === inputEmail);
+  const existing = users.find(
+    (u) =>
+      u.email.toLowerCase() === inputEmail ||
+      (inputEmail.includes("@") && u.email.toLowerCase().split("@")[0] === inputEmail.split("@")[0])
+  );
   if (existing) {
     return {
       success: false,
@@ -149,15 +154,24 @@ export function registerUser(
     };
   }
 
-  const newAccount: UserAccount = {
+  // 고유 세션 토큰 생성
+  const { sessionToken } = registerActiveSession(inputEmail);
+
+  const newAccount: UserAccount & { sessionToken?: string } = {
     ...data,
     id: "usr-" + Date.now().toString(36) + "-" + Math.random().toString(36).substring(2, 7),
     email: inputEmail,
+    password: inputPassword,
+    sessionToken,
     createdAt: new Date().toISOString().split("T")[0],
   };
 
   const updated = [newAccount, ...users];
-  localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(updated));
+  try {
+    localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(updated));
+  } catch (e) {
+    console.error("Failed to save registered user:", e);
+  }
 
   // 가입 즉시 세션 로그인 처리
   setCurrentSession(newAccount);
@@ -232,10 +246,15 @@ export function loginUser(
   }
 
   const normalized = loginId.trim().toLowerCase();
+  const inputPass = pass.trim();
 
   // 1. 운영관리자 전용 계정 인증 (아이디: richman2561, 비밀번호: 11qqaazz..)
-  if (normalized === "richman2561" || normalized === "richman2561@bidplate.com") {
-    if (pass === "11qqaazz..") {
+  if (
+    normalized === "richman2561" ||
+    normalized === "richman2561@bidtable.com" ||
+    normalized === "richman2561@bidplate.com"
+  ) {
+    if (inputPass === "11qqaazz..") {
       const { sessionToken, hadPreviousSession } = registerActiveSession(ADMIN_ACCOUNT.email);
       setCurrentSession({ ...ADMIN_ACCOUNT, sessionToken });
       return { success: true, user: ADMIN_ACCOUNT, hadPreviousSession };
@@ -252,18 +271,20 @@ export function loginUser(
   const target = users.find(
     (u) =>
       u.email.toLowerCase() === normalized ||
-      u.email.toLowerCase().split("@")[0] === normalized
+      u.email.toLowerCase().split("@")[0] === normalized ||
+      (normalized.includes("@") && u.email.toLowerCase() === normalized)
   );
 
   if (!target) {
     return {
       success: false,
-      error: "등록되지 않은 아이디(이메일)입니다. 아이디를 확인하거나 회원가입을 진행해 주세요.",
+      error: "등록되지 않은 아이디(이메일)입니다. 가입하신 이메일 주소를 다시 확인해 주세요.",
     };
   }
 
-  // 비밀번호 일치 검사
-  if (target.password && target.password !== pass) {
+  // 비밀번호 일치 검사 (앞뒤 공백 무시)
+  const storedPassword = (target.password || "").trim();
+  if (storedPassword && storedPassword !== inputPass) {
     return {
       success: false,
       error: "비밀번호가 일치하지 않습니다. 다시 확인해 주세요.",

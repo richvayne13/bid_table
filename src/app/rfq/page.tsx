@@ -157,7 +157,7 @@ function RfqListContent() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
               내 견적 요청서 (RFQ) 목록
             </h1>
-            <span className="px-2 py-0.5 rounded-md bg-orange-100 text-orange-800 text-xs font-semibold">
+            <span className="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 text-xs font-semibold">
               {currentUser?.role === "RESTAURANT" ? currentUser.name : "전체 공고 보기"}
             </span>
           </div>
@@ -178,7 +178,7 @@ function RfqListContent() {
           </button>
           <Link
             href="/rfq/new"
-            className="px-5 py-2.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm flex items-center space-x-1.5 shadow-md shadow-orange-500/20 transition-all"
+            className="px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm flex items-center space-x-1.5 shadow-md shadow-blue-500/20 transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>새 견적 요청서 작성</span>
@@ -219,7 +219,7 @@ function RfqListContent() {
         </div>
         <div className="bg-white rounded-2xl border border-gray-200 p-4">
           <div className="text-xs font-semibold text-gray-500">누적 유통사 입찰 건수</div>
-          <div className="text-2xl font-black text-orange-600 mt-1">
+          <div className="text-2xl font-black text-blue-600 mt-1">
             {counts.TOTAL_BIDS}건
           </div>
         </div>
@@ -284,7 +284,7 @@ function RfqListContent() {
                 key={rfq.id}
                 className={`bg-white rounded-3xl border p-6 shadow-sm hover:shadow-md transition-all space-y-4 ${
                   isHighlighted
-                    ? "border-orange-400 ring-2 ring-orange-200"
+                    ? "border-blue-400 ring-2 ring-blue-200"
                     : "border-gray-200"
                 }`}
               >
@@ -297,7 +297,7 @@ function RfqListContent() {
                           className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
                             daysLeft < 0
                               ? "bg-rose-100 text-rose-700"
-                              : "bg-orange-100 text-orange-800"
+                              : "bg-blue-100 text-blue-800"
                           }`}
                         >
                           {daysLeft < 0 ? "마감 기한 경과" : `D-${daysLeft}`}
@@ -352,9 +352,9 @@ function RfqListContent() {
                     )}
                     <Link
                       href={`/rfq/${rfq.id}/compare`}
-                      className="px-4 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200 flex items-center space-x-1.5 transition-colors"
+                      className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold border border-blue-200 flex items-center space-x-1.5 transition-colors"
                     >
-                      <Scale className="w-3.5 h-3.5 text-orange-600" />
+                      <Scale className="w-3.5 h-3.5 text-blue-600" />
                       <span>입찰 비교 매트릭스</span>
                     </Link>
                     {Array.isArray(rfq.contracts) && rfq.contracts.length > 0 && (
@@ -381,7 +381,7 @@ function RfqListContent() {
                   </div>
                   <div>
                     <span className="text-gray-400 block text-[11px]">유통사 입찰 건수</span>
-                    <span className="font-bold text-orange-600 text-sm mt-0.5 block">
+                    <span className="font-bold text-blue-600 text-sm mt-0.5 block">
                       {bidCount}건 {bidCount > 0 ? "입찰 접수" : "(대기 중)"}
                     </span>
                   </div>
@@ -447,7 +447,7 @@ function RfqListContent() {
             </p>
             <Link
               href="/rfq/new"
-              className="inline-flex items-center space-x-1 px-4 py-2 bg-orange-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-orange-700 mt-2"
+              className="inline-flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-blue-700 mt-2"
             >
               <Plus className="w-4 h-4" />
               <span>첫 견적 요청서 작성하기</span>

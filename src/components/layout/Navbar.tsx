@@ -62,24 +62,24 @@ export function Navbar() {
             <nav className="hidden md:flex items-center space-x-6 text-[15px] font-semibold text-gray-800">
               <Link
                 href="/rfq/categories"
-                className={`transition-colors hover:text-[#6366F1] ${
-                  isActive("/rfq") ? "text-[#6366F1] font-bold" : "text-gray-700"
+                className={`transition-colors hover:text-blue-600 ${
+                  isActive("/rfq") ? "text-blue-600 font-bold" : "text-gray-700"
                 }`}
               >
                 견적요청
               </Link>
               <Link
                 href="/suppliers"
-                className={`transition-colors hover:text-[#6366F1] ${
-                  isActive("/suppliers") ? "text-[#6366F1] font-bold" : "text-gray-700"
+                className={`transition-colors hover:text-blue-600 ${
+                  isActive("/suppliers") ? "text-blue-600 font-bold" : "text-gray-700"
                 }`}
               >
                 업체찾기
               </Link>
               <Link
                 href="/explore"
-                className={`transition-colors hover:text-[#6366F1] ${
-                  isActive("/explore") ? "text-[#6366F1] font-bold" : "text-gray-700"
+                className={`transition-colors hover:text-blue-600 ${
+                  isActive("/explore") ? "text-blue-600 font-bold" : "text-gray-700"
                 }`}
               >
                 둘러보기
@@ -105,8 +105,8 @@ export function Navbar() {
                   href="/rfq/new"
                   className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
                     isActive("/rfq/new")
-                      ? "bg-orange-500 text-white shadow-sm"
-                      : "bg-orange-50 text-orange-700 hover:bg-orange-100"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-blue-50 text-blue-700 hover:bg-blue-100"
                   }`}
                 >
                   <UtensilsCrossed className="w-3.5 h-3.5" />
@@ -164,7 +164,7 @@ export function Navbar() {
                   className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs font-bold transition-all shadow-xs"
                 >
                   {currentUser.role === "RESTAURANT" && (
-                    <Store className="w-3.5 h-3.5 text-orange-500" />
+                    <Store className="w-3.5 h-3.5 text-blue-500" />
                   )}
                   {currentUser.role === "SUPPLIER" && (
                     <Truck className="w-3.5 h-3.5 text-indigo-500" />
@@ -184,7 +184,7 @@ export function Navbar() {
 
                 <Link
                   href="/mypage"
-                  className="hidden sm:inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#6366F1] text-white hover:bg-[#4F46E5] transition-colors shadow-xs"
+                  className="hidden sm:inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-xs"
                 >
                   <User className="w-3.5 h-3.5" />
                   <span>마이페이지</span>
@@ -205,21 +205,21 @@ export function Navbar() {
               <div className="flex items-center space-x-1.5 sm:space-x-2">
                 <Link
                   href="/login"
-                  className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-[#6366F1] px-2 py-1.5 transition-colors"
+                  className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-blue-600 px-2 py-1.5 transition-colors"
                 >
                   로그인
                 </Link>
 
                 <Link
                   href="/restaurant/register"
-                  className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold border border-orange-200 bg-orange-50/80 hover:bg-orange-100 text-orange-700 transition-all shadow-xs"
+                  className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold border border-blue-200 bg-blue-50/80 hover:bg-blue-100 text-blue-700 transition-all shadow-xs"
                 >
                   구매자 가입
                 </Link>
 
                 <Link
                   href="/supplier/register"
-                  className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-sm transition-all"
+                  className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all"
                 >
                   판매자 가입
                 </Link>
@@ -313,7 +313,7 @@ export function Navbar() {
                     <Link
                       href="/restaurant/register"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs font-bold text-orange-700 bg-orange-50 px-2.5 py-1.5 rounded-md"
+                      className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1.5 rounded-md"
                     >
                       구매자 가입
                     </Link>

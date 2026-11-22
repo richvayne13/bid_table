@@ -504,9 +504,9 @@ export default function NewRfqPage() {
 
       {/* Role Notice if currently in SUPPLIER or ADMIN mode */}
       {currentUser && currentUser.role !== "RESTAURANT" && (
-        <div className="p-4 rounded-2xl bg-orange-50 border border-orange-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center space-x-2 text-orange-900">
-            <UtensilsCrossed className="w-4 h-4 text-orange-600 shrink-0" />
+        <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center space-x-2 text-blue-900">
+            <UtensilsCrossed className="w-4 h-4 text-blue-600 shrink-0" />
             <span>
               현재 <strong>{currentUser.badge}</strong> 모드입니다. 견적 요청서는 식당 업주(
               <strong>{DEFAULT_RESTAURANT_USER.name}</strong>) 계정으로 저장됩니다.
@@ -515,7 +515,7 @@ export default function NewRfqPage() {
           <button
             type="button"
             onClick={() => switchRole("RESTAURANT")}
-            className="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold shrink-0"
+            className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shrink-0"
           >
             식당 모드로 전환
           </button>
@@ -535,7 +535,7 @@ export default function NewRfqPage() {
         <div className="flex items-center justify-between max-w-2xl mx-auto relative">
           <div className="absolute top-5 left-6 right-6 h-0.5 bg-gray-200" />
           <div
-            className="absolute top-5 left-6 h-0.5 bg-orange-500 transition-all duration-300"
+            className="absolute top-5 left-6 h-0.5 bg-blue-600 transition-all duration-300"
             style={{
               width:
                 step === 1
@@ -560,7 +560,7 @@ export default function NewRfqPage() {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
                   step >= s.num
-                    ? "bg-orange-600 text-white shadow-md shadow-orange-500/20"
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
                     : "bg-gray-100 text-gray-500 border border-gray-200"
                 }`}
               >
@@ -568,7 +568,7 @@ export default function NewRfqPage() {
               </div>
               <span
                 className={`text-xs font-bold ${
-                  step === s.num ? "text-orange-700" : "text-gray-600"
+                  step === s.num ? "text-blue-700" : "text-gray-600"
                 }`}
               >
                 {s.label}
@@ -594,14 +594,14 @@ export default function NewRfqPage() {
             {/* 요청서 제목 */}
             <div>
               <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                요청서 제목 <span className="text-orange-600">*</span>
+                요청서 제목 <span className="text-blue-600">*</span>
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="예: 살롱순라 익선점 정기 이탈리안 식자재 견적 요청서"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
               />
             </div>
 
@@ -609,13 +609,13 @@ export default function NewRfqPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-gray-700 flex items-center space-x-1">
-                  <MapPin className="w-3.5 h-3.5 text-orange-600" />
+                  <MapPin className="w-3.5 h-3.5 text-blue-600" />
                   <span>
                     매장 배송 권역 (시 / 구 / 동 선택){" "}
-                    <span className="text-orange-600">*</span>
+                    <span className="text-blue-600">*</span>
                   </span>
                 </label>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-700 border border-orange-200">
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
                   선택 권역: {fullRegion}
                 </span>
               </div>
@@ -625,7 +625,7 @@ export default function NewRfqPage() {
                   <select
                     value={city}
                     onChange={(e) => handleCityChange(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium bg-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium bg-white"
                   >
                     {Object.keys(REGION_TREE).map((c) => (
                       <option key={c} value={c}>
@@ -639,7 +639,7 @@ export default function NewRfqPage() {
                   <select
                     value={district}
                     onChange={(e) => handleDistrictChange(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium bg-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium bg-white"
                   >
                     {districts.map((dist) => (
                       <option key={dist} value={dist}>
@@ -653,7 +653,7 @@ export default function NewRfqPage() {
                   <select
                     value={dong}
                     onChange={(e) => setDong(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium bg-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium bg-white"
                   >
                     {dongs.map((dn) => (
                       <option key={dn} value={dn}>
@@ -669,9 +669,9 @@ export default function NewRfqPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="text-xs font-bold text-gray-700 mb-2 flex items-center space-x-1">
-                  <Calendar className="w-3.5 h-3.5 text-orange-600" />
+                  <Calendar className="w-3.5 h-3.5 text-blue-600" />
                   <span>
-                    희망 계약 기간 <span className="text-orange-600">*</span>
+                    희망 계약 기간 <span className="text-blue-600">*</span>
                   </span>
                 </label>
                 <div className="grid grid-cols-3 gap-2.5">
@@ -682,7 +682,7 @@ export default function NewRfqPage() {
                       onClick={() => setContractMonths(m)}
                       className={`py-2.5 px-3 rounded-xl border text-center font-bold text-sm transition-all ${
                         contractMonths === m
-                          ? "border-orange-500 bg-orange-50 text-orange-900 shadow-sm"
+                          ? "border-blue-500 bg-blue-50 text-blue-900 shadow-sm"
                           : "border-gray-200 hover:bg-gray-50 text-gray-700"
                       }`}
                     >
@@ -694,9 +694,9 @@ export default function NewRfqPage() {
 
               <div>
                 <label className="text-xs font-bold text-gray-700 mb-2 flex items-center space-x-1">
-                  <Clock className="w-3.5 h-3.5 text-orange-600" />
+                  <Clock className="w-3.5 h-3.5 text-blue-600" />
                   <span>
-                    입찰 마감일 <span className="text-orange-600">*</span>
+                    입찰 마감일 <span className="text-blue-600">*</span>
                   </span>
                 </label>
                 <input
@@ -704,7 +704,7 @@ export default function NewRfqPage() {
                   min={minDateStr}
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
                 />
               </div>
             </div>
@@ -712,7 +712,7 @@ export default function NewRfqPage() {
             {/* 희망 배송 요일 (월~일 다중 선택) */}
             <div>
               <label className="block text-xs font-bold text-gray-700 mb-2">
-                희망 배송 요일 (월~일 다중 선택) <span className="text-orange-600">*</span>
+                희망 배송 요일 (월~일 다중 선택) <span className="text-blue-600">*</span>
               </label>
               <div className="flex flex-wrap gap-2">
                 {DAYS_OF_WEEK.map((day) => {
@@ -724,7 +724,7 @@ export default function NewRfqPage() {
                       onClick={() => toggleDeliveryDay(day)}
                       className={`w-11 h-11 rounded-xl font-bold text-sm transition-all flex items-center justify-center ${
                         isSelected
-                          ? "bg-orange-600 text-white shadow-sm"
+                          ? "bg-blue-600 text-white shadow-sm"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                       }`}
                     >
@@ -742,9 +742,9 @@ export default function NewRfqPage() {
             {/* 결제 조건 */}
             <div>
               <label className="text-xs font-bold text-gray-700 mb-2 flex items-center space-x-1">
-                <CreditCard className="w-3.5 h-3.5 text-orange-600" />
+                <CreditCard className="w-3.5 h-3.5 text-blue-600" />
                 <span>
-                  결제 조건 <span className="text-orange-600">*</span>
+                  결제 조건 <span className="text-blue-600">*</span>
                 </span>
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -755,7 +755,7 @@ export default function NewRfqPage() {
                     onClick={() => setPaymentTerms(term)}
                     className={`py-3 px-4 rounded-2xl border text-center font-bold text-sm transition-all ${
                       paymentTerms === term
-                        ? "border-orange-500 bg-orange-50 text-orange-950 shadow-sm"
+                        ? "border-blue-500 bg-blue-50 text-blue-950 shadow-sm"
                         : "border-gray-200 hover:bg-gray-50 text-gray-700"
                     }`}
                   >
@@ -770,7 +770,7 @@ export default function NewRfqPage() {
             <button
               type="button"
               onClick={() => goToStep(2)}
-              className="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm flex items-center space-x-1.5 shadow-md shadow-orange-500/20"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm flex items-center space-x-1.5 shadow-md shadow-blue-500/20"
             >
               <span>다음: 품목 리스트 구성</span>
               <ArrowRight className="w-4 h-4" />
@@ -810,8 +810,8 @@ export default function NewRfqPage() {
                 onClick={() => setItemAddMode("AI")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
                   itemAddMode === "AI"
-                    ? "bg-orange-600 text-white shadow-sm"
-                    : "text-gray-500 hover:text-orange-600"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-gray-500 hover:text-blue-600"
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -850,7 +850,7 @@ export default function NewRfqPage() {
                     placeholder="품목명 또는 규격 검색..."
                     value={itemSearchTerm}
                     onChange={(e) => setItemSearchTerm(e.target.value)}
-                    className="pl-8 pr-3 py-1.5 rounded-lg border border-gray-200 text-xs w-full sm:w-52 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="pl-8 pr-3 py-1.5 rounded-lg border border-gray-200 text-xs w-full sm:w-52 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -874,8 +874,8 @@ export default function NewRfqPage() {
                         key={item.id}
                         className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
                           isSelected
-                            ? "bg-orange-50/60 border-orange-200 text-orange-950"
-                            : "bg-white border-gray-200 hover:border-orange-300 text-gray-800"
+                            ? "bg-blue-50/60 border-blue-200 text-blue-950"
+                            : "bg-white border-gray-200 hover:border-blue-300 text-gray-800"
                         }`}
                       >
                         <div className="min-w-0 pr-2">
@@ -898,7 +898,7 @@ export default function NewRfqPage() {
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all shrink-0 ${
                             isSelected
                               ? "bg-emerald-100 text-emerald-800 cursor-default"
-                              : "bg-orange-600 hover:bg-orange-700 text-white"
+                              : "bg-blue-600 hover:bg-blue-700 text-white"
                           }`}
                         >
                           {isSelected ? "추가됨" : "+ 추가"}
@@ -913,10 +913,10 @@ export default function NewRfqPage() {
 
           {/* 방식 B: AI 자동 추출 */}
           {itemAddMode === "AI" && (
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-orange-50 via-amber-50/40 to-white border border-orange-200 space-y-4">
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 via-indigo-50/40 to-white border border-blue-200 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center space-x-2.5">
-                  <div className="p-2 rounded-xl bg-orange-500 text-white">
+                  <div className="p-2 rounded-xl bg-blue-600 text-white">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
@@ -934,7 +934,7 @@ export default function NewRfqPage() {
                   type="button"
                   disabled={ocrLoading || loadingItems}
                   onClick={() => runParseItems(null, true)}
-                  className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 text-xs font-bold shadow-sm transition-colors shrink-0 disabled:opacity-50"
+                  className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-white border border-blue-300 hover:bg-blue-50 text-blue-800 text-xs font-bold shadow-sm transition-colors shrink-0 disabled:opacity-50"
                 >
                   <Wand2 className="w-3.5 h-3.5" />
                   <span>샘플 명세서로 Mock 체험</span>
@@ -950,8 +950,8 @@ export default function NewRfqPage() {
                 onDrop={handleDrop}
                 className={`border-2 border-dashed rounded-2xl p-6 text-center transition-colors ${
                   isDragging
-                    ? "border-orange-500 bg-orange-100/50"
-                    : "border-orange-300 hover:bg-orange-50/50"
+                    ? "border-blue-500 bg-blue-100/50"
+                    : "border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
                 {previewUrl ? (
@@ -960,7 +960,7 @@ export default function NewRfqPage() {
                     <img
                       src={previewUrl}
                       alt="업로드된 거래명세서 미리보기"
-                      className="max-h-36 rounded-xl border border-orange-200 shadow-sm object-contain"
+                      className="max-h-36 rounded-xl border border-blue-200 shadow-sm object-contain"
                     />
                     <span className="text-[11px] text-gray-500 flex items-center space-x-1">
                       <FileImage className="w-3.5 h-3.5" />
@@ -968,11 +968,11 @@ export default function NewRfqPage() {
                     </span>
                   </div>
                 ) : (
-                  <Upload className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+                  <Upload className="w-8 h-8 text-blue-500 mx-auto mb-2" />
                 )}
 
                 <label className="cursor-pointer">
-                  <span className="px-4 py-2 bg-orange-600 text-white rounded-xl text-xs font-bold hover:bg-orange-700 shadow-sm inline-block">
+                  <span className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow-sm inline-block">
                     {ocrLoading
                       ? "AI 이미지 분석 중..."
                       : "거래명세서 / 메뉴판 이미지 선택 (또는 드래그)"}
@@ -997,7 +997,7 @@ export default function NewRfqPage() {
                   className={`p-3.5 rounded-xl border text-xs flex items-start space-x-2 ${
                     ocrNotice.type === "error"
                       ? "bg-rose-50 border-rose-200 text-rose-800"
-                      : "bg-white border-orange-200 text-orange-950"
+                      : "bg-white border-blue-200 text-blue-950"
                   }`}
                 >
                   {ocrNotice.type === "error" ? (
@@ -1010,7 +1010,7 @@ export default function NewRfqPage() {
                       <span
                         className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-bold mr-1.5 ${
                           ocrNotice.isMock
-                            ? "bg-amber-100 text-amber-800"
+                            ? "bg-blue-100 text-blue-800"
                             : "bg-emerald-100 text-emerald-800"
                         }`}
                       >
@@ -1032,7 +1032,7 @@ export default function NewRfqPage() {
               </h3>
               <div className="text-xs text-gray-600">
                 현재 매입가 기준 월 예상 총액:{" "}
-                <strong className="text-orange-700 font-extrabold text-sm">
+                <strong className="text-blue-700 font-extrabold text-sm">
                   {formatPrice(totalCurrentBudget)}
                 </strong>
               </div>
@@ -1075,7 +1075,7 @@ export default function NewRfqPage() {
                           onChange={(e) =>
                             updateItemQty(item.standard_item_id, Number(e.target.value))
                           }
-                          className="w-24 px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-mono font-bold text-right focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-24 px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-mono font-bold text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </td>
                       <td className="py-3 px-4">
@@ -1091,7 +1091,7 @@ export default function NewRfqPage() {
                               e.target.value === "" ? null : Number(e.target.value)
                             )
                           }
-                          className="w-32 px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-mono text-right focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-32 px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-mono text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </td>
                       <td className="py-3 px-4 text-right font-semibold text-xs text-gray-800">
@@ -1138,7 +1138,7 @@ export default function NewRfqPage() {
             <button
               type="button"
               onClick={() => goToStep(3)}
-              className="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm flex items-center space-x-1.5 shadow-md shadow-orange-500/20"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm flex items-center space-x-1.5 shadow-md shadow-blue-500/20"
             >
               <span>다음: 검토 및 게시</span>
               <ArrowRight className="w-4 h-4" />
@@ -1179,7 +1179,7 @@ export default function NewRfqPage() {
               </div>
               <div className="flex justify-between py-1 border-b border-gray-200/60">
                 <span className="text-gray-500">희망 배송 요일</span>
-                <span className="font-semibold text-orange-600">
+                <span className="font-semibold text-blue-600">
                   {deliveryDays.join(", ")} (주 {deliveryDays.length}회)
                 </span>
               </div>
@@ -1193,18 +1193,18 @@ export default function NewRfqPage() {
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-orange-50/70 border border-orange-200 space-y-3 text-xs flex flex-col justify-between">
+            <div className="p-5 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-3 text-xs flex flex-col justify-between">
               <div className="space-y-2">
-                <div className="font-bold text-orange-950 text-sm">
+                <div className="font-bold text-blue-950 text-sm">
                   💰 현재 매입가 기준 예상 월 총액 요약
                 </div>
-                <div className="flex justify-between py-1 border-b border-orange-200/60">
+                <div className="flex justify-between py-1 border-b border-blue-200/60">
                   <span className="text-gray-600">총 요청 품목 수</span>
-                  <span className="font-bold text-orange-900">
+                  <span className="font-bold text-blue-900">
                     {selectedItems.length}개 품목
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-orange-200/60">
+                <div className="flex justify-between py-1 border-b border-blue-200/60">
                   <span className="text-gray-600">기존 매입단가 입력 품목</span>
                   <span className="font-semibold text-gray-800">
                     {pricedItemCount} / {selectedItems.length}개
@@ -1212,13 +1212,13 @@ export default function NewRfqPage() {
                 </div>
                 <div className="flex justify-between items-baseline pt-2">
                   <span className="text-gray-700 font-bold">현재 매입가 기준 월 총액</span>
-                  <span className="text-2xl font-black text-orange-600">
+                  <span className="text-2xl font-black text-blue-600">
                     {formatPrice(totalCurrentBudget)}
                   </span>
                 </div>
               </div>
 
-              <div className="p-3 bg-white rounded-xl border border-orange-200 text-[11px] text-gray-600">
+              <div className="p-3 bg-white rounded-xl border border-blue-200 text-[11px] text-gray-600">
                 💡 게시 완료 시 Supabase <code className="font-mono font-bold">rfqs</code> 및{" "}
                 <code className="font-mono font-bold">rfq_items</code>에 저장되며, 상태가{" "}
                 <strong className="text-emerald-700">OPEN</strong>으로 등록됩니다.
@@ -1282,7 +1282,7 @@ export default function NewRfqPage() {
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="px-8 py-3 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 disabled:opacity-60 text-white font-extrabold text-sm flex items-center space-x-2 shadow-lg shadow-orange-500/25 transition-all"
+              className="px-8 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-60 text-white font-extrabold text-sm flex items-center space-x-2 shadow-lg shadow-blue-500/25 transition-all"
             >
               {submitting ? (
                 <span>Supabase에 저장 중...</span>

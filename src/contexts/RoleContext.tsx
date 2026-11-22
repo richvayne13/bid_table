@@ -47,28 +47,30 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // 3. 주기적 중복 로그인 세션 무효화 체크 (5초마다 검사)
+    // 3. 다른 탭에서 중복 로그인이 발생했을 때만 감지 (내 토큰과 활성 토큰 대조)
     const checkInterval = setInterval(() => {
       const current = getCurrentSession();
       if (current && current.email && (current as any).sessionToken) {
-        // 전역 활성 토큰과 내 토큰 대조
         const rawMap = localStorage.getItem("bidplate_active_session_tokens_v3");
         if (rawMap) {
           try {
             const map = JSON.parse(rawMap);
             const active = map[current.email.trim().toLowerCase()];
-            if (active && active.sessionToken !== (current as any).sessionToken) {
-              // 다른 기기나 창에서 새로 로그인된 경우 -> 중복 로그인 차단
+            // 활성 토큰이 존재하고, 명확히 다른 새로운 토큰으로 교체된 경우에만 중복 감지 알림
+            if (
+              active &&
+              active.sessionToken &&
+              (current as any).sessionToken &&
+              active.sessionToken !== (current as any).sessionToken
+            ) {
               setCurrentSession(null);
               setCurrentUser(null);
-              alert(
-                `[중복 로그인 감지]\n'${current.email}' 계정으로 다른 기기나 브라우저에서 새로 접속하여 현재 기기의 연결이 안전하게 종료되었습니다.`
-              );
+              console.warn("Concurrent login detected for:", current.email);
             }
           } catch (e) {}
         }
       }
-    }, 4000);
+    }, 6000);
 
     window.addEventListener("storage", handleStorageChange);
     return () => {

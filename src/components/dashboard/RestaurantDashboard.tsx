@@ -149,7 +149,7 @@ export function RestaurantDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 space-y-8">
       {/* Top Welcome Card */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-orange-500/15">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-blue-500/15">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2.5">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs font-semibold">
@@ -159,21 +159,21 @@ export function RestaurantDashboard() {
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
               식자재 역경매 및 단가방어 대시보드
             </h2>
-            <p className="text-orange-100 text-sm max-w-xl">
+            <p className="text-blue-100 text-sm max-w-xl">
               등록하신 월간 식자재 품목에 대해 유통사들이 기준 단위(kg/L/ea)로 경쟁 입찰 중입니다.
               새로운 견적 요청서를 작성하거나 실시간 매트릭스 뷰에서 최저가를 확인하세요.
             </p>
             <div className="flex flex-wrap gap-2.5 pt-2">
               <Link
                 href="/rfq/new"
-                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-white text-orange-700 hover:bg-orange-50 font-extrabold text-xs shadow-sm transition-colors"
+                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-extrabold text-xs shadow-sm transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>새 견적 요청서 작성하기</span>
               </Link>
               <Link
                 href="/rfq"
-                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-orange-700/40 hover:bg-orange-700/60 border border-white/30 text-white font-bold text-xs transition-colors"
+                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-blue-700/40 hover:bg-blue-700/60 border border-white/30 text-white font-bold text-xs transition-colors"
               >
                 <ClipboardList className="w-4 h-4" />
                 <span>내 견적 요청서 목록 ({rfqs.length}건)</span>
@@ -181,7 +181,7 @@ export function RestaurantDashboard() {
             </div>
           </div>
           <div className="flex sm:flex-col items-end justify-between gap-1 bg-white/10 backdrop-blur rounded-2xl px-5 py-4 border border-white/20">
-            <span className="text-xs text-orange-100 font-medium">
+            <span className="text-xs text-blue-100 font-medium">
               선택 공고 예상 절감률
             </span>
             <span className="text-3xl font-extrabold tracking-tight">
@@ -193,7 +193,7 @@ export function RestaurantDashboard() {
               )}
             </span>
             {matrixAnalysis.monthlySavings > 0 && (
-              <span className="text-xs text-orange-100">
+              <span className="text-xs text-blue-100">
                 월 {formatPrice(matrixAnalysis.monthlySavings)} 절감 가능
               </span>
             )}
@@ -205,9 +205,9 @@ export function RestaurantDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           href="/rfq"
-          className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm hover:border-orange-300 transition-colors flex items-center space-x-4"
+          className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm hover:border-blue-300 transition-colors flex items-center space-x-4"
         >
-          <div className="p-3 rounded-xl bg-orange-100 text-orange-600">
+          <div className="p-3 rounded-xl bg-blue-100 text-blue-600">
             <Clock className="w-6 h-6" />
           </div>
           <div>
@@ -218,7 +218,7 @@ export function RestaurantDashboard() {
                 ? `(D-${daysUntilDeadline})`
                 : ""}
             </div>
-            <div className="text-[11px] text-orange-600 font-medium">
+            <div className="text-[11px] text-blue-600 font-medium">
               전체 {rfqs.length}건 중 {bids.length}개사 투찰
             </div>
           </div>
@@ -282,7 +282,7 @@ export function RestaurantDashboard() {
         <div className="p-6 border-b border-gray-100 bg-gradient-to-b from-gray-50/50 to-white flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
+              <span className="p-1.5 rounded-lg bg-blue-100 text-blue-600">
                 <Scale className="w-4 h-4" />
               </span>
               <h3 className="text-lg font-bold text-gray-900">
@@ -316,7 +316,7 @@ export function RestaurantDashboard() {
               {activeRfq && (
                 <Link
                   href={`/rfq/${activeRfq.id}/compare`}
-                  className="px-3.5 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition-colors"
+                  className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors"
                 >
                   상세 시뮬레이터 열기 →
                 </Link>
@@ -338,7 +338,7 @@ export function RestaurantDashboard() {
               </p>
               <Link
                 href="/rfq/new"
-                className="inline-flex items-center space-x-1 px-4 py-2 rounded-xl bg-orange-600 text-white text-xs font-bold hover:bg-orange-700"
+                className="inline-flex items-center space-x-1 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-orange-700"
               >
                 <Plus className="w-4 h-4" />
                 <span>견적 요청서 작성하기</span>
@@ -490,21 +490,21 @@ export function RestaurantDashboard() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-amber-50/50 p-5 rounded-2xl border border-orange-200 space-y-2">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50/50 p-5 rounded-2xl border border-blue-200 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-orange-200 text-orange-900 inline-flex items-center space-x-1">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-200 text-blue-900 inline-flex items-center space-x-1">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>최저가 조합 시 예상 월 발주총액</span>
                 </span>
-                <span className="text-xs font-bold text-orange-800">
+                <span className="text-xs font-bold text-blue-800">
                   참여 {bids.length}개 유통사
                 </span>
               </div>
-              <div className="pt-2 flex justify-between items-baseline border-t border-orange-200/60">
-                <span className="text-xs text-orange-900 font-medium">
+              <div className="pt-2 flex justify-between items-baseline border-t border-blue-200/60">
+                <span className="text-xs text-blue-900 font-medium">
                   품목별 최저가 합산
                 </span>
-                <span className="text-xl font-extrabold text-orange-600">
+                <span className="text-xl font-extrabold text-blue-600">
                   {matrixAnalysis.coveredItems > 0
                     ? `${formatPrice(matrixAnalysis.bestSplitTotal)} (${formatPrice(
                         matrixAnalysis.monthlySavings
