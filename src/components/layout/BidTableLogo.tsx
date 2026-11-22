@@ -8,8 +8,7 @@ interface BidTableLogoProps {
 }
 
 export function BidTableLogoIcon({ size = "md", className = "" }: { size?: "sm" | "md" | "lg"; className?: string }) {
-  // 로고 크기 큼직하게 확대 (sm: 40px, md: 50px, lg: 64px)
-  const dim = size === "sm" ? 40 : size === "lg" ? 64 : 50;
+  const dim = size === "sm" ? 42 : size === "lg" ? 64 : 50;
 
   return (
     <div
@@ -27,102 +26,88 @@ export function BidTableLogoIcon({ size = "md", className = "" }: { size?: "sm" 
         xmlns="http://www.w3.org/2000/svg"
         className="w-[90%] h-[90%]"
       >
-        {/* 1. 고기 위의 훈연 향기 / 불꽃 (첫 번째 유첨 스타일) */}
+        {/* 1. 뒤쪽 뼈다귀 관절 (우측 상단으로 튀어나온 뼈) */}
         <path
-          d="M44 13 C44 8 47 6 48 4 C50 7 49 10 47 12 C48 12 50 11 51 10 C51 13 49 16 45 16 C44 16 44 14 44 13 Z"
+          d="M74 38 L84 28 C87 25 90 28 88 31 C89 33 87 37 84 37 L77 43 Z"
           fill="white"
-          opacity="0.95"
-        />
-        <path
-          d="M55 14 C55 10 58 8 59 6 C61 9 59 12 58 13 C59 13 61 12 62 11 C62 14 60 16 57 16 C55 16 55 15 55 14 Z"
-          fill="white"
-          opacity="0.85"
-        />
-
-        {/* 2. 단순하고 볼드한 스테이크 고기 (첫 번째 유첨 스타일) */}
-        {/* 고기 덩어리 본체 */}
-        <path
-          d="M26 35 C20 31 22 21 32 18 C45 15 63 16 73 22 C81 27 80 36 72 41 C63 45 44 45 34 43 C28 42 24 39 26 35 Z"
-          fill="white"
-          stroke="white"
-          strokeWidth="2"
+          stroke="#1D4ED8"
+          strokeWidth="1.5"
           strokeLinejoin="round"
         />
-        {/* 고기 표면 대각선 사선 그릴 빗금 3개 (선명한 파란색 대비) */}
-        <line
-          x1="37"
-          y1="36"
-          x2="46"
-          y2="23"
-          stroke="#1D4ED8"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="48"
-          y1="38"
-          x2="57"
-          y2="25"
-          stroke="#1D4ED8"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="59"
-          y1="39"
-          x2="67"
-          y2="28"
-          stroke="#1D4ED8"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
 
-        {/* 3. 하단 포크 (두 번째 유첨의 포크 실루엣 & 심살 사이사이 틈을 아주 선명하게 구현) */}
-        {/* 포크 손잡이 (긴 원형 막대 -> 끝부분 둥근 캡) */}
-        <rect x="47" y="69" width="6" height="23" rx="3" fill="white" />
-        
-        {/* 포크 목(Neck): 위로 올라가면서 U자형 어깨로 양옆으로 확 벌어짐 */}
+        {/* 2. 도톰한 만화 통고기 몸통 (Manga Bone Meat Body) */}
         <path
-          d="M47 70 C47 63 43 57 38 52 C35.5 49.5 35 48 35 47 L39 47 C39.5 48.5 41 51 44 54 C46.5 56.5 47 61 47 70 Z"
+          d="M32 55 C32 46 44 38 62 38 C75 38 80 44 80 54 C80 65 72 73 54 75 C38 75 32 68 32 55 Z"
           fill="white"
         />
+        {/* 고기 옆면 두께 및 입체감 음영 */}
         <path
-          d="M53 70 C53 63 57 57 62 52 C64.5 49.5 65 48 65 47 L61 47 C60.5 48.5 59 51 56 54 C53.5 56.5 53 61 53 70 Z"
+          d="M32 55 C32 46 44 38 62 38 L72 44 C54 44 36 50 32 55 Z"
           fill="white"
-        />
-        {/* 어깨 하단 연결 베이스 */}
-        <path
-          d="M38 52 C44 58 56 58 62 52 L61 48 C55 54 45 54 39 48 Z"
-          fill="white"
-        />
-
-        {/* 포크 심살 3개 (Tines) - 사이사이 간격(Gap)을 널찍하고 깊숙하게 파내어 극도로 선명함! */}
-        {/* [좌측 갈래] */}
-        <path
-          d="M36 48 L36 38 C36 36 39 36 39 38 L39 48 C39 50 36 50 36 48 Z"
-          fill="white"
-        />
-        {/* [중앙 갈래] */}
-        <path
-          d="M48.5 48 L48.5 37 C48.5 35 51.5 35 51.5 37 L51.5 48 C51.5 50 48.5 50 48.5 48 Z"
-          fill="white"
-        />
-        {/* [우측 갈래] */}
-        <path
-          d="M61 48 L61 38 C61 36 64 36 64 38 L64 48 C64 50 61 50 61 48 Z"
-          fill="white"
-        />
-
-        {/* 심살 사이사이 깊은 U자형 슬롯(음각) 강조 라인 (배경 파란색과의 확실한 공간 분리) */}
-        {/* 좌-중 갈래 사이 빈 공간 (x: 39 ~ 48.5) */}
-        {/* 중-우 갈래 사이 빈 공간 (x: 51.5 ~ 61) */}
-        {/* 고기와 포크가 만나는 접점의 입체감 그림자 라인 */}
-        <path
-          d="M35 44 C42 46 58 46 65 44"
-          stroke="#1D4ED8"
-          strokeWidth="1.8"
-          strokeLinecap="round"
           opacity="0.8"
+        />
+
+        {/* 고기 앞쪽 원형 단면 (살코기 링) */}
+        <ellipse
+          cx="34"
+          cy="58"
+          rx="14"
+          ry="19"
+          transform="rotate(-15 34 58)"
+          fill="#DBEAFE"
+          stroke="white"
+          strokeWidth="2.5"
+        />
+        {/* 고기 단면 안쪽 붉은 살코기 나이테/마블링 링 */}
+        <ellipse
+          cx="33"
+          cy="58"
+          rx="8.5"
+          ry="12.5"
+          transform="rotate(-15 33 58)"
+          fill="#93C5FD"
+          opacity="0.75"
+        />
+
+        {/* 3. 앞쪽 뼈다귀 (단면 중앙에서 쑥 튀어나온 하얀 뼈 관절) */}
+        <g transform="rotate(-15 28 62)">
+          {/* 뼈 기둥 */}
+          <rect x="22" y="55" width="8" height="18" rx="3" fill="white" stroke="#1D4ED8" strokeWidth="1.2" />
+          {/* 뼈 양갈래 끝부분 (Bone Knobs) */}
+          <circle cx="21" cy="74" r="5" fill="white" stroke="#1D4ED8" strokeWidth="1.2" />
+          <circle cx="29" cy="75" r="5" fill="white" stroke="#1D4ED8" strokeWidth="1.2" />
+        </g>
+
+        {/* 고기 표면 디테일 빗금 (유첨 이미지의 결 무늬) */}
+        <line x1="56" y1="44" x2="58" y2="47" stroke="#1D4ED8" strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="68" y1="48" x2="70" y2="52" stroke="#1D4ED8" strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="60" y1="62" x2="63" y2="65" stroke="#1D4ED8" strokeWidth="2.2" strokeLinecap="round" />
+
+        {/* 4. 고기 등짝에 비스듬히 콕! 꽂혀 있는 3갈래 포크 (심살 사이 틈새를 아주 선명하게 구현) */}
+        <g transform="rotate(22 56 32)">
+          {/* 포크 손잡이 (Handle) */}
+          <rect x="54" y="2" width="5.5" height="24" rx="2.75" fill="white" stroke="#1D4ED8" strokeWidth="1.2" />
+          
+          {/* 포크 목(Neck)에서 어깨로 넓어지는 베이스 */}
+          <path
+            d="M51 28 C51 23 53 22 54 22 L59 22 C60 22 62 23 62 28 Z"
+            fill="white"
+          />
+
+          {/* 포크 3개 갈래 (Tines) - 사이사이 틈새(Gap)가 파란색으로 뻥 뚫려 선명함 */}
+          {/* 좌측 갈래 */}
+          <rect x="47" y="27" width="2.8" height="12" rx="1.2" fill="white" stroke="#1D4ED8" strokeWidth="0.8" />
+          {/* 중앙 갈래 */}
+          <rect x="55" y="27" width="2.8" height="13" rx="1.2" fill="white" stroke="#1D4ED8" strokeWidth="0.8" />
+          {/* 우측 갈래 */}
+          <rect x="63" y="27" width="2.8" height="12" rx="1.2" fill="white" stroke="#1D4ED8" strokeWidth="0.8" />
+        </g>
+
+        {/* 포크가 꽂힌 부위 스파클 임팩트 (신선함) */}
+        <path
+          d="M66 22 L67.5 18 L69 22 L73 23.5 L69 25 L67.5 29 L66 25 L62 23.5 Z"
+          fill="white"
+          opacity="0.95"
         />
       </svg>
     </div>
