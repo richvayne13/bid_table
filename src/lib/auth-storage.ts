@@ -26,11 +26,11 @@ const STORAGE_SESSION_KEY = "bidplate_current_session_v2";
 export const DEFAULT_ACCOUNTS: UserAccount[] = [
   {
     id: "b0000000-0000-0000-0000-000000000001",
-    email: "bistro@bidplate.com",
+    email: "salon@soonra.com",
     password: "password123",
-    name: "청주 파스타공방",
+    name: "살롱순라",
     role: "RESTAURANT",
-    description: "충북 청주시 흥덕구 복대동 / 이탈리안 다이닝",
+    description: "서울 종로구 율곡로 8길 75 (익선동) / 유러피안 다이닝 & 펍",
     badge: "식당 업주",
     phone: "010-8888-9999",
     createdAt: "2026-01-01",

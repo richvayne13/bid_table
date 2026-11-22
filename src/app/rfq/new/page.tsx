@@ -59,10 +59,10 @@ export default function NewRfqPage() {
   const [loadingItems, setLoadingItems] = useState(false);
 
   // Step 1: 기본 계약 조건
-  const [title, setTitle] = useState("청주 파스타공방 정기 양식 식자재 견적 요청");
-  const [city, setCity] = useState("충북 청주시");
-  const [district, setDistrict] = useState("흥덕구");
-  const [dong, setDong] = useState("복대동");
+  const [title, setTitle] = useState("살롱순라 정기 이탈리안 식자재 견적 요청서");
+  const [city, setCity] = useState("서울시");
+  const [district, setDistrict] = useState("종로구");
+  const [dong, setDong] = useState("익선동");
   const [contractMonths, setContractMonths] = useState<1 | 3 | 6>(3);
   const [deliveryDays, setDeliveryDays] = useState<string[]>(["월", "수", "금"]);
   const [paymentTerms, setPaymentTerms] = useState<"선결제" | "월말정산" | "카드결제">(
@@ -573,7 +573,7 @@ export default function NewRfqPage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="예: 청주 파스타공방 정기 양식 식자재 견적 요청서"
+                placeholder="예: 살롱순라 익선점 정기 이탈리안 식자재 견적 요청서"
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium"
               />
             </div>

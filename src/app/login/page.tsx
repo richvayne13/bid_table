@@ -164,10 +164,10 @@ export default function LoginPage() {
           </p>
           <div className="grid grid-cols-2 gap-1.5 text-center">
             <button
-              onClick={() => handleQuickLogin("bistro@bidplate.com")}
+              onClick={() => handleQuickLogin("salon@soonra.com")}
               className="p-2 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-700 text-[11px] font-bold transition-colors"
             >
-              🍝 식당 (파스타공방)
+              🍝 식당 (살롱순라)
             </button>
             <button
               onClick={() => handleQuickLogin("supplier1@bidplate.com")}
@@ -216,7 +216,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => {
                   setSocialModal(null);
-                  handleQuickLogin("bistro@bidplate.com");
+                  handleQuickLogin("salon@soonra.com");
                 }}
                 className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-bold text-xs hover:bg-gray-200"
               >

@@ -176,7 +176,7 @@ export function SupplierDashboard() {
                   <h3 className="text-base font-bold text-gray-900">{r.title}</h3>
                 </div>
                 <div className="text-xs text-gray-500 mt-1 flex items-center space-x-3">
-                  <span>발주처: {r.profiles?.company_name || "청주 파스타공방"}</span>
+                  <span>발주처: {r.profiles?.company_name || "살롱순라 (익선동)"}</span>
                   <span>•</span>
                   <span>계약기간: {r.contract_months}개월</span>
                   <span>•</span>

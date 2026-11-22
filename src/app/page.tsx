@@ -35,13 +35,13 @@ const CATEGORIES = [
   { id: "spice", name: "조미료/기타", icon: "🧂", count: "76종" },
 ];
 
-// 식당 사장님들의 생생한 납품 & 단가방어 후기
+// 식당 사장님들의 생생한 납품 & 단가방어 후기 (살롱순라)
 const RESTAURANT_REVIEWS = [
   {
     id: 1,
     restaurant: "살롱순라",
     location: "서울 종로구 익선동",
-    category: "양식/와인바",
+    category: "유제품/치즈",
     title: "샤퀴테리·치즈류 단가비교로 월 85만원 원가 절감했어요",
     content: "기존 단일 유통사에서 매달 슬금슬금 올리던 버터와 치즈 단가를 견적식탁에서 3곳 비교 후 교체했습니다. 신선도도 훨씬 뛰어나고 배송 시간도 정확합니다.",
     tag: "#양식식자재 #유제품 #단가23%절감",
@@ -50,58 +50,58 @@ const RESTAURANT_REVIEWS = [
   },
   {
     id: 2,
-    restaurant: "통일고기상회",
-    location: "서울 중구 을지로",
-    category: "한식/고깃집",
-    title: "1등급 암퇘지 삼겹살 직배송, 단가 변동 안심 보장!",
-    content: "도매육 유통사 찾기가 제일 힘들었는데, 콜드체인 탑차로 매일 새벽 5시에 깔끔하게 입고됩니다. 고기 육질이 좋아 단골 손님들이 먼저 알아보네요.",
-    tag: "#한돈삼겹 #도매육직거래 #새벽배송",
+    restaurant: "살롱순라",
+    location: "서울 종로구 익선동",
+    category: "축산/육류",
+    title: "채끝등심 & 차돌박이 도매 직배송으로 스테이크 마진율 개선",
+    content: "원육 유통사 찾기가 제일 힘들었는데, 콜드체인 탑차로 매일 새벽 5시에 깔끔하게 입고됩니다. 고기 육질이 좋아 단골 손님들이 먼저 알아보네요.",
+    tag: "#차돌박이 #채끝등심 #새벽배송",
     rating: 5.0,
     image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: 3,
-    restaurant: "청주 파스타공방",
-    location: "충북 청주시 흥덕구",
-    category: "양식/파스타",
-    title: "거래명세표 사진 한 장 올렸더니 최저가 유통사가 바로 연결",
-    content: "차돌박이와 파스타면, 올리브오일 3곳 비교 견적받고 즉시 계약했습니다. 주 3회 정기 새벽배송에 결제 조건도 월말 결제로 맞춰줘서 자금 회전에 큰 도움 됩니다.",
-    tag: "#차돌박이 #파스타식자재 #월말결제",
+    restaurant: "살롱순라",
+    location: "서울 종로구 익선동",
+    category: "오일/공산품",
+    title: "엑스트라 버진 올리브유 & 토마토홀 대용량 최저가 세팅",
+    content: "올리브유와 파스타면 3곳 비교 견적받고 즉시 계약했습니다. 주 3회 정기 새벽배송에 결제 조건도 월말 결제로 맞춰줘서 자금 회전에 큰 도움 됩니다.",
+    tag: "#올리브유 #토마토홀 #월말결제",
     rating: 4.9,
     image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: 4,
-    restaurant: "스시 류(柳)",
-    location: "서울 마포구 연남동",
-    category: "일식/이자카야",
-    title: "노량진 경매 활어 & 연어 필렛 당일 산지 직송 만족도 100%",
-    content: "일식은 원물 신선도가 생명인데 견적식탁 인증 유통사는 원산지 증명서와 위생 점검표를 철저히 보내주네요. 불필요한 중간 마진 없이 공급받습니다.",
-    tag: "#활어도매 #연어필렛 #당일배송",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 5,
-    restaurant: "카페 온화 & 베이커리",
-    location: "서울 성동구 성수동",
-    category: "카페/디저트",
-    title: "프랑스 엘르앤비르 버터·유기농 밀가루 최저가 안정 공급",
-    content: "수입 유제품 수급 불안정 때문에 베이킹 재료 단가가 치솟았는데, 전국 도매상 재고 기반으로 안정 단가를 제시해준 유통사 덕에 가격 인상 없이 버텼습니다.",
-    tag: "#베이킹도매 #버터수급 #안정공급",
+    restaurant: "살롱순라",
+    location: "서울 종로구 익선동",
+    category: "파스타/면류",
+    title: "이탈리아 정통 듀럼밀 파스타면 도매 박스 공급 계약",
+    content: "파스타 전문 매장이라 면 소비량이 많은데, 도매 박스 단가 약정으로 안정 단가에 공급받고 있습니다. 불필요한 중간 마진 없이 직거래합니다.",
+    tag: "#파스타면 #수입식자재 #도매직거래",
     rating: 5.0,
     image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80",
   },
   {
+    id: 5,
+    restaurant: "살롱순라",
+    location: "서울 종로구 익선동",
+    category: "채소/신선농산",
+    title: "루꼴라 & 바질 가락시장 새벽 경매품 매일 아침 직송",
+    content: "신선 허브류와 샐러드 채소 수급 불안정이 심했는데, 매일 아침 경매 직송해주는 전문 채소 유통사 덕에 로스율 없이 신선하게 운영 중입니다.",
+    tag: "#루꼴라 #바질 #새벽직배송",
+    rating: 5.0,
+    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop&q=80",
+  },
+  {
     id: 6,
-    restaurant: "한남 불꽃통닭",
-    location: "서울 용산구 한남동",
-    category: "치킨/호프",
-    title: "국내산 냉장 신선육 호수별 공급 & 전용유 최저가 세팅",
-    content: "닭고기 시세 급등기에도 견적식탁 사전 단가 약정으로 3개월간 동일 단가로 공급받았습니다. 매달 식자재 감사 리포트까지 제공해주니 안심입니다.",
-    tag: "#신선계육 #튀김전용유 #단가고정",
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&auto=format&fit=crop&q=80",
+    restaurant: "살롱순라",
+    location: "서울 종로구 익선동",
+    category: "거래명세표 단가방어",
+    title: "거래명세표 사진 한 장 올렸더니 최저가 유통사가 바로 연결",
+    content: "식자재 시세 급등기에도 견적식탁 사전 단가 약정으로 3개월간 동일 단가로 공급받았습니다. 매달 식자재 감사 리포트까지 제공해주니 안심입니다.",
+    tag: "#명세서OCR #단가방어 #3개월고정",
+    rating: 5.0,
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80",
   },
 ];
 
@@ -340,7 +340,7 @@ export default function HomePage() {
 
         {/* 후기 카테고리 필터 칩 */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
-          {["전체", "양식", "한식", "일식", "카페", "치킨"].map((chip) => (
+          {["전체", "유제품", "육류", "공산품", "면류", "채소"].map((chip) => (
             <button
               key={chip}
               onClick={() => setReviewFilter(chip)}
@@ -350,7 +350,7 @@ export default function HomePage() {
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
-              {chip === "전체" ? "전체 보기" : `${chip} 매장`}
+              {chip === "전체" ? "전체 품목 보기" : `${chip} 납품`}
             </button>
           ))}
         </div>

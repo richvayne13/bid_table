@@ -507,7 +507,7 @@ export default function SupplierBidPage() {
 
               <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 space-y-0.5">
                 <div className="font-bold text-gray-800">
-                  발주 식당: {rfq.profiles?.company_name || "청주 파스타공방"}
+                  발주 식당: {rfq.profiles?.company_name || "살롱순라"}
                 </div>
                 <div className="flex items-center space-x-1 text-blue-700 font-medium">
                   <MapPin className="w-3.5 h-3.5" />
