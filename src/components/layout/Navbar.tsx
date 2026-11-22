@@ -124,17 +124,24 @@ export function Navbar() {
           </form>
 
           {/* Right Action Links & User Dropdown */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-2.5">
             <Link
               href="/login"
-              className="text-sm font-medium text-gray-700 hover:text-[#6366F1] px-2 py-1 transition-colors"
+              className="text-sm font-semibold text-gray-700 hover:text-[#6366F1] px-2 py-1 transition-colors"
             >
-              로그인 / 회원가입
+              로그인
+            </Link>
+
+            <Link
+              href="/restaurant/register"
+              className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold border border-orange-200 bg-orange-50/80 hover:bg-orange-100 text-orange-700 transition-all shadow-xs"
+            >
+              구매자 가입
             </Link>
 
             <Link
               href="/supplier/register"
-              className="px-3.5 py-1.5 rounded-lg text-sm font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-sm transition-all"
+              className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-sm transition-all"
             >
               판매자 가입
             </Link>
@@ -265,21 +272,30 @@ export function Navbar() {
                 둘러보기
               </Link>
             </div>
-            <div className="border-t border-gray-100 pt-2 px-2 flex items-center justify-between">
+            <div className="border-t border-gray-100 pt-2 px-2 flex items-center justify-between gap-2">
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-sm text-gray-700 font-medium"
+                className="text-xs text-gray-700 font-bold"
               >
-                로그인 / 회원가입
+                로그인
               </Link>
-              <Link
-                href="/supplier/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-bold text-indigo-600"
-              >
-                판매자 가입 →
-              </Link>
+              <div className="flex items-center space-x-1.5">
+                <Link
+                  href="/restaurant/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-bold text-orange-700 bg-orange-50 px-2.5 py-1 rounded-md"
+                >
+                  구매자 가입
+                </Link>
+                <Link
+                  href="/supplier/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-bold text-white bg-[#6366F1] px-2.5 py-1 rounded-md"
+                >
+                  판매자 가입
+                </Link>
+              </div>
             </div>
           </div>
         )}

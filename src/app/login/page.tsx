@@ -115,19 +115,25 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* 이메일 찾기 / 비밀번호 찾기 / 회원가입 */}
-        <div className="flex items-center justify-center space-x-3 text-xs text-gray-400">
-          <Link href="/supplier/register" className="text-indigo-600 font-bold hover:underline">
-            판매자 회원가입
-          </Link>
-          <span>|</span>
-          <button
-            type="button"
-            onClick={() => handleQuickLogin("bistro@bidplate.com")}
-            className="hover:text-gray-600 transition-colors"
-          >
-            식당 데모 로그인
-          </button>
+        {/* 구매자 / 판매자 회원가입 선택 링크 */}
+        <div className="pt-1 pb-1">
+          <p className="text-[11px] font-bold text-gray-400 text-center mb-2">
+            아직 견적식탁 회원이 아니신가요?
+          </p>
+          <div className="grid grid-cols-2 gap-2 text-center">
+            <Link
+              href="/restaurant/register"
+              className="py-2.5 px-3 rounded-xl border border-orange-200 bg-orange-50/70 hover:bg-orange-100 text-orange-700 text-xs font-bold transition-colors"
+            >
+              🍝 구매자(식당) 가입
+            </Link>
+            <Link
+              href="/supplier/register"
+              className="py-2.5 px-3 rounded-xl border border-indigo-200 bg-indigo-50/70 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-colors"
+            >
+              🥩 판매자(유통사) 가입
+            </Link>
+          </div>
         </div>
 
         {/* 소셜 로그인 버튼들 (카카오 & 네이버 숨고 스타일) */}
