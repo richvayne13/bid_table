@@ -31,14 +31,14 @@ export default function PrototypesPage() {
       <div className="bg-slate-900 text-white border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 mb-2">
-              <Sparkles className="w-3.5 h-3.5" /> 육류(Meat) 전용 UX 디자인 랩
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold border border-blue-500/30 mb-2">
+              <Sparkles className="w-3.5 h-3.5" /> 셀프바이어 (selfbuyer) UX 디자인 랩
             </div>
             <h1 className="text-2xl font-black">
-              견적식탁 레이아웃 도안 10선 & 박세현 님 파트너 모델 쇼케이스
+              구매자 도안 10선 & 판매자 도안 10선 인터랙티브 쇼케이스
             </h1>
             <p className="text-slate-400 text-xs mt-1">
-              살롱순라 구매자 단독 입점 · 마장동 벨엘미트 실견적서 반영 · 영업사원 리버스 피칭 구조
+              살롱순라 식당 구매자 10대 레이아웃 도안 + 마장동 벨엘미트 판매자 10대 도안 통합 탑재
             </p>
           </div>
 
