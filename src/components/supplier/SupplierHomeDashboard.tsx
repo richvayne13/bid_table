@@ -116,30 +116,152 @@ const STORES: StoreItem[] = [
     monthlyMeatKg: "월 약 850kg",
     targetPriceHighlight: "차돌박이 20,000원 / 양지 대량 공급",
   },
+  {
+    name: "마장 미트라운지",
+    category: "성수-마장 프리미엄 비프 다이닝",
+    tagline: "마장동 축산시장 직송 와인 비스트로",
+    appeal: {
+      representativeImg: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
+      reviewCount: 31,
+      rating: 4.9,
+      reviewText: "마장동 인근 새벽 직배송 희망, 신선 냉장 원육 우선 구매",
+    },
+    wantedMeat: ["살치 (초이스 냉장)", "안심 (AMH S등급)", "채끝등심 (TEYS GF)"],
+    wantedSeafood: ["블랙타이거 새우", "가리비 관자"],
+    location: "서울 성동구 마장로",
+    monthlyMeatKg: "월 약 500kg",
+    targetPriceHighlight: "살치살 32,500원 / 안심 44,000원",
+  },
+  {
+    name: "압구정 비프하우스",
+    category: "정통 아메리칸 스테이크하우스",
+    tagline: "강남 로데오 드라이에이징 스테이크",
+    appeal: {
+      representativeImg: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80",
+      reviewCount: 57,
+      rating: 5.0,
+      reviewText: "CAB 및 프라임급 원육 대량 소비, 월 단위 정기 계약",
+    },
+    wantedMeat: ["알목심 (척아이롤)", "채끝등심 (냉장)", "살치 (프라임 냉장)"],
+    wantedSeafood: ["생연어 슈페리어", "바닷가재"],
+    location: "서울 강남구 압구정로",
+    monthlyMeatKg: "월 약 750kg",
+    targetPriceHighlight: "프라임 알목심 25,900원 / 채끝 28,500원",
+  },
+  {
+    name: "연남 그릴 비스트로",
+    category: "캐주얼 브런치 & 파스타",
+    tagline: "홍대·연남 핫플레이스 다이닝",
+    appeal: {
+      representativeImg: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=600&auto=format&fit=crop&q=80",
+      reviewCount: 22,
+      rating: 4.8,
+      reviewText: "소포장 세절육 및 진공팩 선호, 주 2회 입고",
+    },
+    wantedMeat: ["차돌박이 (미국산)", "알목심 (초이스)", "우삼겹"],
+    wantedSeafood: ["칵테일 새우", "홍합"],
+    location: "서울 마포구 동교로",
+    monthlyMeatKg: "월 약 350kg",
+    targetPriceHighlight: "차돌박이 20,000원 이하",
+  },
 ];
 
 const SEOUL_DISTRICTS = [
   "종로구",
+  "성동구",
+  "강남구",
+  "마포구",
+  "중구",
+  "동대문구",
+  "용산구",
   "도봉구",
   "노원구",
   "강북구",
-  "동대문구",
-  "성동구",
-  "중구",
-  "용산구",
-  "마포구",
-  "서대문구",
-  "강남구",
-  "서초구",
+];
+
+const MEAT_CUT_FILTERS = [
+  "전체 품목",
+  "살치살",
+  "알목심",
+  "안심",
+  "채끝등심",
+  "차돌박이",
+  "우삼겹",
+  "양지 / 사태",
+];
+
+const BUSINESS_TYPE_FILTERS = [
+  "전체 업태",
+  "다이닝 & 와인바",
+  "스테이크하우스",
+  "브런치",
+  "비스트로",
+  "전통 한식 노포",
 ];
 
 export function SupplierHomeDashboard() {
   const [searchTab, setSearchTab] = useState<"region" | "item" | "business">("region");
   const [selectedDistrict, setSelectedDistrict] = useState("종로구");
+  const [selectedMeatCut, setSelectedMeatCut] = useState("전체 품목");
+  const [selectedBusiness, setSelectedBusiness] = useState("전체 업태");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedStore, setSelectedStore] = useState<StoreItem | null>(null);
   const [pitchModalStore, setPitchModalStore] = useState<StoreItem | null>(null);
   const [pitchSubmitted, setPitchSubmitted] = useState(false);
+
+  // 동적 필터링 로직 (권역별 / 품목별 / 업태별 탭 및 검색어 완벽 연동)
+  const filteredStores = React.useMemo(() => {
+    return STORES.filter((store) => {
+      // 1. 검색어 텍스트 필터
+      if (searchKeyword.trim()) {
+        const kw = searchKeyword.trim().toLowerCase();
+        const matchesName = store.name.toLowerCase().includes(kw);
+        const matchesLocation = store.location.toLowerCase().includes(kw);
+        const matchesCategory = store.category.toLowerCase().includes(kw);
+        const matchesMeat = store.wantedMeat.some((m) => m.toLowerCase().includes(kw));
+        if (!matchesName && !matchesLocation && !matchesCategory && !matchesMeat) {
+          return false;
+        }
+      }
+
+      // 2. 탭별 세부 필터링
+      if (searchTab === "region") {
+        return store.location.includes(selectedDistrict);
+      } else if (searchTab === "item") {
+        if (selectedMeatCut === "전체 품목") return true;
+        return store.wantedMeat.some((m) =>
+          m.toLowerCase().includes(selectedMeatCut.replace("살", "").replace("등심", "").trim().toLowerCase())
+        );
+      } else if (searchTab === "business") {
+        if (selectedBusiness === "전체 업태") return true;
+        if (selectedBusiness === "다이닝 & 와인바") {
+          return store.category.includes("다이닝") || store.category.includes("와인바") || store.tagline.includes("와인바");
+        }
+        if (selectedBusiness === "스테이크하우스") {
+          return store.category.includes("스테이크") || store.tagline.includes("스테이크");
+        }
+        if (selectedBusiness === "브런치") {
+          return store.category.includes("브런치");
+        }
+        if (selectedBusiness === "비스트로") {
+          return store.category.includes("비스트로");
+        }
+        if (selectedBusiness === "전통 한식 노포") {
+          return store.category.includes("노포") || store.category.includes("곰탕");
+        }
+        return store.category.includes(selectedBusiness);
+      }
+
+      return true;
+    });
+  }, [searchTab, selectedDistrict, selectedMeatCut, selectedBusiness, searchKeyword]);
+
+  const resetFilters = () => {
+    setSelectedDistrict("종로구");
+    setSelectedMeatCut("전체 품목");
+    setSelectedBusiness("전체 업태");
+    setSearchKeyword("");
+  };
 
   return (
     <div className="min-h-screen bg-[#fafbfc] text-slate-900 pb-20">
@@ -176,12 +298,21 @@ export function SupplierHomeDashboard() {
               </p>
             </div>
           </div>
-          <Link
-            href="/supplier/catalog"
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs whitespace-nowrap transition"
-          >
-            자사 단가표 관리
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/supplier/register-quote"
+              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black rounded-xl shadow-xs whitespace-nowrap transition flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>견적 직접 등록 (1·3·10 믹스)</span>
+            </Link>
+            <Link
+              href="/supplier/catalog"
+              className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-bold rounded-xl shadow-2xs whitespace-nowrap transition"
+            >
+              단가표 관리
+            </Link>
+          </div>
         </div>
 
         {/* 2. 검색 & 권역 필터 영역 (유첨 도안 상단) */}
@@ -220,60 +351,148 @@ export function SupplierHomeDashboard() {
             </button>
           </div>
 
-          {/* 메인 검색바: "🔍 서울 권역별 사장님 찾기" */}
+          {/* 메인 검색바: 탭에 따라 placeholder 변경 */}
           <div className="relative mb-5">
             <div className="flex items-center border-2 border-slate-300 focus-within:border-emerald-600 rounded-xl px-4 py-3 bg-white transition shadow-2xs">
-              <Search className="w-5 h-5 text-slate-400 mr-3" />
+              <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
               <input
                 type="text"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
-                placeholder="서울 권역별 사장님 찾기 (예: 살치살, 종로구, 스테이크)"
+                placeholder={
+                  searchTab === "region"
+                    ? "서울 권역별 사장님 찾기 (예: 종로구, 성동구, 익선동, 마포구)"
+                    : searchTab === "item"
+                    ? "취급 품목별 사장님 찾기 (예: 살치살, 알목심, 안심, 채끝, 차돌박이)"
+                    : "업태/업종별 사장님 찾기 (예: 다이닝, 와인바, 스테이크, 비스트로, 노포)"
+                }
                 className="w-full text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-hidden"
               />
+              {searchKeyword && (
+                <button
+                  onClick={() => setSearchKeyword("")}
+                  className="text-xs text-slate-400 hover:text-slate-600 px-2 font-bold"
+                >
+                  지우기
+                </button>
+              )}
             </div>
           </div>
 
-          {/* 권역별 버튼 리스트 (유첨: 종로구에 위치한 사장님들 & 도봉구, 노원구 등) */}
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-bold text-slate-700 mr-2 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-rose-500" /> 지역 권역:
-            </span>
-            {SEOUL_DISTRICTS.map((district) => (
-              <button
-                key={district}
-                onClick={() => setSelectedDistrict(district)}
-                className={`px-3 py-1.5 rounded-lg font-bold transition ${
-                  selectedDistrict === district
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {district === "종로구" ? "종로구에 위치한 사장님들" : district}
-              </button>
-            ))}
-          </div>
+          {/* 탭별 세부 필터 버튼 리스트 */}
+          {/* 1) 권역별 탭 선택 시 */}
+          {searchTab === "region" && (
+            <div className="flex flex-wrap items-center gap-2 text-xs animate-in fade-in duration-150">
+              <span className="font-bold text-slate-700 mr-2 flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-rose-500" /> 지역 권역:
+              </span>
+              {SEOUL_DISTRICTS.map((district) => (
+                <button
+                  key={district}
+                  onClick={() => setSelectedDistrict(district)}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition ${
+                    selectedDistrict === district
+                      ? "bg-slate-900 text-white shadow-xs"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                >
+                  {district === "종로구" ? "종로구에 위치한 사장님들" : district}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* 2) 품목별 탭 선택 시 (부위별 사장님 찾기) */}
+          {searchTab === "item" && (
+            <div className="flex flex-wrap items-center gap-2 text-xs animate-in fade-in duration-150">
+              <span className="font-bold text-slate-700 mr-2 flex items-center gap-1">
+                🥩 희망 육류 부위:
+              </span>
+              {MEAT_CUT_FILTERS.map((cut) => (
+                <button
+                  key={cut}
+                  onClick={() => setSelectedMeatCut(cut)}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition ${
+                    selectedMeatCut === cut
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200"
+                  }`}
+                >
+                  {cut === "전체 품목" ? cut : `${cut} 찾는 매장`}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* 3) 업태별 탭 선택 시 (매장 컨셉별 사장님 찾기) */}
+          {searchTab === "business" && (
+            <div className="flex flex-wrap items-center gap-2 text-xs animate-in fade-in duration-150">
+              <span className="font-bold text-slate-700 mr-2 flex items-center gap-1">
+                🍽️ 식당 업태/컨셉:
+              </span>
+              {BUSINESS_TYPE_FILTERS.map((bType) => (
+                <button
+                  key={bType}
+                  onClick={() => setSelectedBusiness(bType)}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition ${
+                    selectedBusiness === bType
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200"
+                  }`}
+                >
+                  {bType}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 3. 섹션 1: "육류 업체를 찾고 있어요" (유첨 중앙 핵심 그리드) */}
         <section className="mb-12">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
             <div>
               <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
                 <span>🥩</span> 육류 업체를 찾고 있어요
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                현재 고기 납품 업체를 적극적으로 찾고 있는 {selectedDistrict} 매장들입니다.
+                {searchTab === "region" && `현재 고기 납품 업체를 적극적으로 찾고 있는 ${selectedDistrict} 매장들입니다.`}
+                {searchTab === "item" && `현재 [${selectedMeatCut}] 공급 업체를 우선적으로 찾고 있는 매장들입니다.`}
+                {searchTab === "business" && `[${selectedBusiness}] 업태에 맞춰 전문 육류 소싱을 원하는 매장들입니다.`}
               </p>
             </div>
-            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-              실시간 5개 매장 입점
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                실시간 {filteredStores.length}개 매장 매칭됨
+              </span>
+              {(searchKeyword || selectedMeatCut !== "전체 품목" || selectedBusiness !== "전체 업태" || selectedDistrict !== "종로구") && (
+                <button
+                  onClick={resetFilters}
+                  className="text-xs text-slate-500 hover:text-slate-800 font-bold underline"
+                >
+                  필터 초기화
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* 5개 카드 가로 그리드 (유첨 도안 5열 박스 완벽 구현) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {STORES.map((store, idx) => (
+          {/* 카드 가로 그리드 (동적 필터링 반영) */}
+          {filteredStores.length === 0 ? (
+            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200 space-y-3">
+              <div className="text-3xl">🔎</div>
+              <h4 className="font-bold text-slate-800 text-sm">해당 조건으로 등록된 식당을 찾지 못했습니다</h4>
+              <p className="text-xs text-slate-400">
+                입점 준비 중인 권역이거나 조건에 맞는 매장이 없습니다. 조건을 변경해 보세요.
+              </p>
+              <button
+                onClick={resetFilters}
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition"
+              >
+                전체 매장 보기 (필터 초기화)
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {filteredStores.map((store, idx) => (
               <div
                 key={store.name}
                 className={`bg-white rounded-2xl border transition-all duration-200 flex flex-col justify-between overflow-hidden ${
@@ -365,6 +584,7 @@ export function SupplierHomeDashboard() {
               </div>
             ))}
           </div>
+          )}
         </section>
 
         {/* 4. 섹션 2: "해산물 업체를 찾고 있어요" (유첨 하단 그리드) */}

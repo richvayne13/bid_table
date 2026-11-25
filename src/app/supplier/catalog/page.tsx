@@ -12,6 +12,7 @@ import {
   Store,
   DollarSign,
   Download,
+  Sparkles,
 } from "lucide-react";
 
 interface CatalogItem {
@@ -194,6 +195,13 @@ export default function SupplierCatalogPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/supplier/register-quote"
+              className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black flex items-center gap-1.5 shadow"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>숨고 퀘스트 견적 등록 (1·3·10)</span>
+            </Link>
             <button
               onClick={addRow}
               className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 border border-slate-700"

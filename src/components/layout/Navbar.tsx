@@ -80,6 +80,14 @@ export function Navbar() {
                 <span>도안 20선 갤러리</span>
               </Link>
               <Link
+                href="/supplier/register-quote"
+                className={`transition-colors hover:text-emerald-600 ${
+                  isActive("/supplier/register-quote") ? "text-emerald-600 font-black" : "text-gray-700 font-semibold"
+                }`}
+              >
+                견적 직접 등록
+              </Link>
+              <Link
                 href="/supplier/catalog"
                 className={`transition-colors hover:text-amber-600 ${
                   isActive("/supplier/catalog") ? "text-amber-600 font-bold" : "text-gray-700"

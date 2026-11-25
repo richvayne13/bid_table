@@ -27,21 +27,53 @@ export function BuyerHomeDashboard() {
     { id: "5", name: "초이스 차돌박이 (미국산 세절팩)", qty: 70, currentPrice: 24000, targetPrice: 20000, checked: true },
   ]);
 
+  // 로컬 스토리지에서 이전 입력 수량 동기화
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("selfbuyer_basket");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setBasket(parsed);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const saveBasket = (updated: typeof basket) => {
+    setBasket(updated);
+    try {
+      localStorage.setItem("selfbuyer_basket", JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const [rfqSent, setRfqSent] = useState(false);
   const [showOcrResult, setShowOcrResult] = useState(false);
 
   const toggleCheck = (id: string) => {
-    setBasket((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item))
+    const updated = basket.map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : item
     );
+    saveBasket(updated);
   };
 
   const updateQty = (id: string, delta: number) => {
-    setBasket((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, qty: Math.max(10, item.qty + delta) } : item
-      )
+    const updated = basket.map((item) =>
+      item.id === id ? { ...item, qty: Math.max(10, item.qty + delta) } : item
     );
+    saveBasket(updated);
+  };
+
+  const setQtyDirect = (id: string, newQty: number) => {
+    const val = isNaN(newQty) ? 0 : Math.max(0, newQty);
+    const updated = basket.map((item) =>
+      item.id === id ? { ...item, qty: val } : item
+    );
+    saveBasket(updated);
   };
 
   const checkedItems = basket.filter((b) => b.checked);
@@ -132,18 +164,29 @@ export function BuyerHomeDashboard() {
               </div>
 
               <div className="flex items-center justify-between md:justify-end gap-6 text-xs">
-                {/* 수량 조절 스피너 */}
-                <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl p-1">
+                {/* 수량 직접 입력 및 조절 스피너 */}
+                <div className="flex items-center gap-1.5 bg-white border border-slate-300 rounded-xl p-1 shadow-2xs">
                   <button
                     onClick={() => updateQty(item.id, -10)}
-                    className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700"
+                    className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 transition"
                   >
                     -
                   </button>
-                  <span className="w-14 text-center font-black text-slate-900">{item.qty} kg</span>
+                  <div className="flex items-center px-1">
+                    <input
+                      type="number"
+                      min={0}
+                      step={10}
+                      value={item.qty === 0 ? "" : item.qty}
+                      onChange={(e) => setQtyDirect(item.id, parseInt(e.target.value) || 0)}
+                      placeholder="0"
+                      className="w-14 text-center font-black text-slate-900 bg-transparent border-0 focus:outline-hidden p-0 text-sm focus:ring-0"
+                    />
+                    <span className="text-[11px] font-bold text-slate-400">kg</span>
+                  </div>
                   <button
                     onClick={() => updateQty(item.id, 10)}
-                    className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700"
+                    className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 transition"
                   >
                     +
                   </button>

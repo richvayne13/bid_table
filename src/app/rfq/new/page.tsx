@@ -105,6 +105,47 @@ export default function NewRfqPage() {
     },
   ]);
 
+  // 메인화면(BuyerHomeDashboard)에서 사용자가 입력한 수량(예: 100, 100, 100, 100, 100)을 Step 2 of 3에 즉각 완벽 반영
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("selfbuyer_basket");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setItems((prev) =>
+            prev.map((item) => {
+              const matched = parsed.find((b: any) => {
+                if (!b || !b.name) return false;
+                const bNorm = b.name.replace(/[^가-힣a-zA-Z]/g, "");
+                const itemNorm = item.name.replace(/[^가-힣a-zA-Z]/g, "");
+                return (
+                  (bNorm.includes("살치") && itemNorm.includes("살치")) ||
+                  (bNorm.includes("알목심") && itemNorm.includes("알목심")) ||
+                  (bNorm.includes("안심") && itemNorm.includes("안심")) ||
+                  (bNorm.includes("채끝") && itemNorm.includes("채끝")) ||
+                  (bNorm.includes("차돌") && itemNorm.includes("차돌")) ||
+                  item.name.includes(b.name) ||
+                  b.name.includes(item.name)
+                );
+              });
+
+              if (matched && typeof matched.qty === "number" && matched.qty > 0) {
+                return {
+                  ...item,
+                  monthlyQty: matched.qty,
+                  checked: matched.checked !== undefined ? matched.checked : item.checked,
+                };
+              }
+              return item;
+            })
+          );
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load saved basket:", e);
+    }
+  }, []);
+
   // 기타 직접 입력 품목 추가 인풋 상태
   const [customName, setCustomName] = useState("");
   const [customSpec, setCustomSpec] = useState("");

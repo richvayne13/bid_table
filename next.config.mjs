@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === "production";
-const basePath = isProd ? "/bid_table" : "";
+const basePath = isProd ? "/selfbuyer" : "";
 
 const nextConfig = {
   output: "export",

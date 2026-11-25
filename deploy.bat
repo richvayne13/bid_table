@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 > nul
 echo ========================================================
-echo   견적식탁 (BidPlate) 온라인 배포 스크립트
+echo   셀프바이어 (selfbuyer) 온라인 배포 스크립트
 echo ========================================================
 echo.
 
@@ -30,7 +30,7 @@ git push origin main
 echo.
 echo ========================================================
 echo  [성공] 온라인 배포 푸시가 완료되었습니다!
-echo  접속 주소: https://richvayne13.github.io/bid_table/
+echo  접속 주소: https://richvayne13.github.io/selfbuyer/
 echo ========================================================
 echo.
 pause
