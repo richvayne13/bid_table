@@ -21,144 +21,61 @@ import {
   Info,
 } from "lucide-react";
 
-// 식자재 카테고리 10종
+// 육류/축산 전용 카테고리 (우육/소고기, 돈육, 가공육 등)
 const CATEGORIES = [
-  { id: "meat", name: "육류/축산", icon: "🥩", count: "85종", hot: true },
-  { id: "vege", name: "채소/농산", icon: "🥬", count: "120종", hot: true },
-  { id: "seafood", name: "수산/해물", icon: "🐟", count: "64종" },
-  { id: "fruit", name: "신선 과일", icon: "🍎", count: "42종" },
-  { id: "dairy", name: "유제품/치즈", icon: "🧀", count: "58종" },
-  { id: "sauce", name: "소스/공산품", icon: "🥫", count: "210종", hot: true },
-  { id: "bakery", name: "베이커리", icon: "🍞", count: "35종" },
-  { id: "beverage", name: "음료/주류", icon: "🍺", count: "48종" },
-  { id: "pack", name: "포장/배달용기", icon: "📦", count: "90종" },
-  { id: "spice", name: "조미료/기타", icon: "🧂", count: "76종" },
+  { id: "beef", name: "소고기 (우육)", icon: "🥩", count: "14종", hot: true },
+  { id: "steak", name: "스테이크 부위 (살치/채끝/안심)", icon: "🥩", count: "8종", hot: true },
+  { id: "bulk", name: "구이·로스 (알목심/척아이롤)", icon: "🥓", count: "5종", hot: true },
+  { id: "thin", name: "세절육 (차돌박이/우삼겹)", icon: "🍖", count: "4종" },
+  { id: "pork", name: "돼지고기 (한돈/이베리코)", icon: "🐖", count: "6종" },
+  { id: "chilled", name: "냉장 원육 (Chilled)", icon: "❄️", count: "10종" },
+  { id: "frozen", name: "동결/급랭육 (Frozen)", icon: "🧊", count: "9종" },
 ];
 
-// 식당 사장님들의 생생한 납품 & 단가방어 후기 (살롱순라)
+// 살롱순라 실제 육류 납품 및 견적 후기
 const RESTAURANT_REVIEWS = [
   {
     id: 1,
     restaurant: "살롱순라",
     location: "서울 종로구 익선동",
-    category: "유제품/치즈",
-    title: "샤퀴테리·치즈류 단가비교로 월 85만원 원가 절감했어요",
-    content: "기존 단일 유통사에서 매달 슬금슬금 올리던 버터와 치즈 단가를 견적식탁에서 3곳 비교 후 교체했습니다. 신선도도 훨씬 뛰어나고 배송 시간도 정확합니다.",
-    tag: "#양식식자재 #유제품 #단가23%절감",
+    category: "축산/우육",
+    title: "초이스 냉장 살치살 kg당 2,500원 절감 계약 체결",
+    content: "기존 35,000원에 납품받던 살치살을 마장동 벨엘미트 역제안을 통해 32,500원에 동일 스펙으로 전환했습니다. 월 150kg 기준 매달 37만원 이상 원가가 절감됩니다.",
+    tag: "#초이스살치살 #마장동직송 #원가절감",
     rating: 5.0,
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: 2,
     restaurant: "살롱순라",
     location: "서울 종로구 익선동",
-    category: "축산/육류",
-    title: "채끝등심 & 차돌박이 도매 직배송으로 스테이크 마진율 개선",
-    content: "원육 유통사 찾기가 제일 힘들었는데, 콜드체인 탑차로 매일 새벽 5시에 깔끔하게 입고됩니다. 고기 육질이 좋아 단골 손님들이 먼저 알아보네요.",
-    tag: "#차돌박이 #채끝등심 #새벽배송",
+    category: "축산/우육",
+    title: "프라임 알목심 & TEYS 채끝등심 정기 납품으로 스테이크 품질 향상",
+    content: "마장동 유통사의 직접 제안을 받아 주 3회 신선 냉장으로 공급받고 있습니다. 고기 육질이 균일해서 손님 반응이 매우 좋습니다.",
+    tag: "#알목심 #TEYS채끝 #주3회배송",
     rating: 5.0,
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 3,
-    restaurant: "살롱순라",
-    location: "서울 종로구 익선동",
-    category: "오일/공산품",
-    title: "엑스트라 버진 올리브유 & 토마토홀 대용량 최저가 세팅",
-    content: "올리브유와 파스타면 3곳 비교 견적받고 즉시 계약했습니다. 주 3회 정기 새벽배송에 결제 조건도 월말 결제로 맞춰줘서 자금 회전에 큰 도움 됩니다.",
-    tag: "#올리브유 #토마토홀 #월말결제",
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 4,
-    restaurant: "살롱순라",
-    location: "서울 종로구 익선동",
-    category: "파스타/면류",
-    title: "이탈리아 정통 듀럼밀 파스타면 도매 박스 공급 계약",
-    content: "파스타 전문 매장이라 면 소비량이 많은데, 도매 박스 단가 약정으로 안정 단가에 공급받고 있습니다. 불필요한 중간 마진 없이 직거래합니다.",
-    tag: "#파스타면 #수입식자재 #도매직거래",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 5,
-    restaurant: "살롱순라",
-    location: "서울 종로구 익선동",
-    category: "채소/신선농산",
-    title: "루꼴라 & 바질 가락시장 새벽 경매품 매일 아침 직송",
-    content: "신선 허브류와 샐러드 채소 수급 불안정이 심했는데, 매일 아침 경매 직송해주는 전문 채소 유통사 덕에 로스율 없이 신선하게 운영 중입니다.",
-    tag: "#루꼴라 #바질 #새벽직배송",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 6,
-    restaurant: "살롱순라",
-    location: "서울 종로구 익선동",
-    category: "거래명세표 단가방어",
-    title: "거래명세표 사진 한 장 올렸더니 최저가 유통사가 바로 연결",
-    content: "식자재 시세 급등기에도 견적식탁 사전 단가 약정으로 3개월간 동일 단가로 공급받았습니다. 매달 식자재 감사 리포트까지 제공해주니 안심입니다.",
-    tag: "#명세서OCR #단가방어 #3개월고정",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80",
   },
 ];
 
-// 오늘의 추천 유통업체 (광고 섹션)
+// 오늘의 공식 육류 납품 파트너
 const SPONSORED_SUPPLIERS = [
   {
-    id: "sup-1",
-    name: "(주)한결축산 유통",
-    badge: "광고",
+    id: "sup-belel",
+    name: "벨엘미트 (마장동 축산 도소매)",
+    badge: "공식 납품사",
     rating: 5.0,
-    reviewCount: 48,
-    experience: "업력 15년",
-    clients: "식당 120곳 납품 중",
-    trustScore: "단가준수율 99.8%",
-    moq: "최소주문 10만원",
-    delivery: "수도권 전역 매일 새벽배송 (콜드체인 12대 보유)",
-    items: ["국내산 한돈 삼겹·목살", "미국/호주산 우삼겹·차돌", "양념육 가공"],
+    reviewCount: 52,
+    experience: "업력 16년",
+    clients: "살롱순라 등 외식 매장 정기 납품 중",
+    trustScore: "단가준수율 100%",
+    moq: "최소주문 1박스 (약 10만원)",
+    delivery: "서울 전역 / 종로구 익선동 매일 새벽 콜드체인 직배송",
+    items: ["초이스 냉장 살치살", "프라임 알목심", "호주산 AMH S안심", "TEYS 곡물 채끝"],
     images: [
       "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=500&auto=format&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "sup-2",
-    name: "가락농산 신선물류",
-    badge: "광고",
-    rating: 4.9,
-    reviewCount: 92,
-    experience: "업력 18년",
-    clients: "외식 프랜차이즈 85곳",
-    trustScore: "단가준수율 99.5%",
-    moq: "최소주문 7만원",
-    delivery: "서울/경기 매일 새벽 직배송 (가락시장 경매 직송)",
-    items: ["양파/대파/마늘 깐야채", "샐러드용 고급 양상추", "제철 신선 채소"],
-    images: [
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=500&auto=format&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "sup-3",
-    name: "선창수산 콜드체인",
-    badge: "광고",
-    rating: 5.0,
-    reviewCount: 36,
-    experience: "업력 11년",
-    clients: "일식·횟집 64곳",
-    trustScore: "단가준수율 100%",
-    moq: "최소주문 15만원",
-    delivery: "노량진/인천 산지직송, 냉동/활어탑차 8대",
-    items: ["생연어 슈페리어", "활광어/우럭/참돔", "칵테일 새우·오징어"],
-    images: [
-      "https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=500&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&auto=format&fit=crop&q=80",
     ],
   },
 ];
@@ -205,8 +122,45 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* 🌟 [신규 오픈] 육류 특화 레이아웃 도안 10선 & 박세현 님 파트너 역제안 모델 배너 */}
+      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white py-3.5 px-4 border-b border-emerald-800/40 shadow-md">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 bg-emerald-500 rounded-lg text-slate-950 font-bold text-sm">🥩</span>
+            <div>
+              <span className="font-extrabold text-emerald-400 mr-2">[육류 전용 특화 & 도안 10선 오픈]</span>
+              <span className="text-slate-200">
+                살롱순라 구매자 × 마장동 벨엘미트 실견적서 반영 · 박세현 님 영업사원 리버스 피칭 모델 탑재!
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/prototypes"
+              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-lg shadow transition flex items-center gap-1"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> 도안 10선 & 파트너 모델 체험
+            </Link>
+            <a
+              href="./prototypes.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg border border-slate-700"
+            >
+              독립 HTML 보기
+            </a>
+            <Link
+              href="/supplier/catalog"
+              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold rounded-lg border border-slate-700"
+            >
+              벨엘미트 단가표 등록
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* 1. 상단 히어로 & 검색 섹션 (숨고 메인 상단 벤치마킹) */}
-      <section className="pt-10 pb-6 max-w-4xl mx-auto px-4 text-center">
+      <section className="pt-8 pb-6 max-w-4xl mx-auto px-4 text-center">
         {/* 지역 선택 드롭다운 + 타이틀 */}
         <div className="inline-flex items-center space-x-2 text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
           <div className="relative inline-block text-left">

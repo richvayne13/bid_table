@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>견적식탁 육류 특화 UX 프로토타입 10선 & 파트너 제안 쇼케이스</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .active-tab { background-color: #059669; color: white !important; font-weight: 700; box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
+    .preview-card { transition: all 0.2s ease-in-out; }
+    .preview-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); }
+    .excel-cell:focus { outline: 2px solid #059669; background-color: #f0fdf4; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- 상단 글로벌 헤더 -->
+  <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="p-2 bg-emerald-500 rounded-lg text-slate-950 font-black text-xl">🥩</span>
+        <div>
+          <h1 class="text-lg font-bold flex items-center gap-2">
+            견적식탁 <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">육류(Meat) 전용 UX 랩</span>
+          </h1>
+          <p class="text-xs text-slate-400">살롱순라 구매자 × 마장동 벨엘미트 납품 실데이터 기반</p>
+        </div>
+      </div>
+
+      <!-- 우측 컨트롤 (뷰포트 변경 & 원본 사이트 이동) -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- 뷰포트 토글 -->
+        <div class="bg-slate-800 p-1 rounded-lg flex items-center space-x-1 text-xs">
+          <button id="btn-view-pc" onclick="setViewMode('pc')" class="px-2.5 py-1 rounded font-medium bg-emerald-600 text-white">🖥️ PC 와이드</button>
+          <button id="btn-view-mobile" onclick="setViewMode('mobile')" class="px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white">📱 모바일</button>
+        </div>
+        <a href="index.html" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+          <i data-lucide="home" class="w-3.5 h-3.5"></i> 기존 사이트 홈
+        </a>
+      </div>
+    </div>
+
+    <!-- 10개 도안 탭 네비게이터 -->
+    <div class="bg-slate-950/80 backdrop-blur border-t border-slate-800/80 px-4 overflow-x-auto scrollbar-hide">
+      <div class="max-w-7xl mx-auto flex space-x-1 py-2 text-xs">
+        <button onclick="switchTab('tab-sehyun')" id="btn-tab-sehyun" class="active-tab px-3 py-1.5 rounded-lg text-slate-300 font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          🌟 [핵심] 박세현 님 거래처 역제안 모델
+        </button>
+        <button onclick="switchTab('tab-1')" id="btn-tab-1" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          1. 숨고식 퀘스트 위저드
+        </button>
+        <button onclick="switchTab('tab-2')" id="btn-tab-2" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          2. 마켓보로식 B2B 카탈로그
+        </button>
+        <button onclick="switchTab('tab-3')" id="btn-tab-3" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          3. 마장동 실무 엑셀 그리드
+        </button>
+        <button onclick="switchTab('tab-4')" id="btn-tab-4" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          4. 일괄 체크박스 매트릭스
+        </button>
+        <button onclick="switchTab('tab-5')" id="btn-tab-5" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          5. 등급·규격 옵션 셀렉터
+        </button>
+        <button onclick="switchTab('tab-6')" id="btn-tab-6" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          6. 토스식 30초 원페이저
+        </button>
+        <button onclick="switchTab('tab-7')" id="btn-tab-7" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          7. 카카오톡 AI 메신저 봇
+        </button>
+        <button onclick="switchTab('tab-8')" id="btn-tab-8" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          8. 틴더식 카드 스와이프 매칭
+        </button>
+        <button onclick="switchTab('tab-9')" id="btn-tab-9" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          9. 스카이스캐너형 분할비교
+        </button>
+        <button onclick="switchTab('tab-10')" id="btn-tab-10" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
+          10. 벨엘미트 실견적서 등록기
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 뷰포트 컨테이너 -->
+  <main class="flex-1 py-8 px-4 flex justify-center items-start">
+    <div id="viewport-container" class="w-full max-w-6xl transition-all duration-300">
+
+      <!-- ============================================================== -->
+      <!-- [핵심] 박세현 님 모델: 납품영업사원 리버스 피칭(역제안) 플랫폼 -->
+      <!-- ============================================================== -->
+      <section id="tab-sehyun" class="tab-content space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-emerald-800/40">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3 border border-emerald-500/30">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 파트너 박세현 님 제안 모델 완전 구현
+          </div>
+          <h2 class="text-2xl font-black">"어떤 자재를 납품하세요? (육류)"</h2>
+          <p class="text-slate-300 text-sm mt-1 max-w-3xl leading-relaxed">
+            바쁜 자영업자는 매번 견적을 올리고 비교할 시간이 없습니다. 
+            <strong>마장동 등 영업사원을 둔 육류 거래처(납품업체)</strong>가 플랫폼에 접속해 
+            <strong>살롱순라</strong>의 위치와 현재 구매 중인 고기 스펙을 상시 열람하고, 
+            <strong>"우리가 더 싸고 신선하게 납품하겠다"</strong>고 다이렉트 견적을 들이미는 리버스 피칭(Reverse Pitching) 구조입니다.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pt-4 border-t border-slate-800 text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-emerald-600/40 text-emerald-300 flex items-center justify-center font-bold">1</span>
+              <span><strong>상시 오픈 매장 탐색:</strong> 살롱순라 구매육류 공개</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-emerald-600/40 text-emerald-300 flex items-center justify-center font-bold">2</span>
+              <span><strong>수익 모델 ①:</strong> 매장 상세정보/직통번호 열람 과금</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-emerald-600/40 text-emerald-300 flex items-center justify-center font-bold">3</span>
+              <span><strong>수익 모델 ②:</strong> 다이렉트 견적 제안 건당 티켓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1단계: 거래처 시선 - 품목 카테고리 선택 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4 text-emerald-600"></i> 납품 품목 카테고리 선택
+              </h3>
+              <p class="text-xs text-slate-500">현재 축산물/육류 전문관만 단독 활성화되어 있습니다.</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 bg-emerald-50 text-emerald-700 font-semibold rounded-full border border-emerald-200">
+              납품처 모드 작동 중
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-4 rounded-xl border-2 border-emerald-600 bg-emerald-50/50 flex flex-col items-center text-center cursor-pointer relative shadow-sm">
+              <span class="absolute top-2 right-2 px-1.5 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded">입점 중</span>
+              <span class="text-3xl mb-1">🥩</span>
+              <span class="font-bold text-slate-900 text-sm">육류 / 축산</span>
+              <span class="text-[11px] text-emerald-700 mt-1">소고기, 돼지고기, 수입육</span>
+            </div>
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 opacity-40 flex flex-col items-center text-center cursor-not-allowed">
+              <span class="text-3xl mb-1">🥬</span>
+              <span class="font-bold text-slate-700 text-sm">야채 / 청과</span>
+              <span class="text-[11px] text-slate-400 mt-1">추후 오픈 예정</span>
+            </div>
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 opacity-40 flex flex-col items-center text-center cursor-not-allowed">
+              <span class="text-3xl mb-1">🐟</span>
+              <span class="font-bold text-slate-700 text-sm">해산물 / 수산</span>
+              <span class="text-[11px] text-slate-400 mt-1">추후 오픈 예정</span>
+            </div>
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 opacity-40 flex flex-col items-center text-center cursor-not-allowed">
+              <span class="text-3xl mb-1">📦</span>
+              <span class="font-bold text-slate-700 text-sm">포장용기 / 소모품</span>
+              <span class="text-[11px] text-slate-400 mt-1">추후 오픈 예정</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2단계: 살롱순라 매장 카드 (단독 입점) -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="store" class="w-4 h-4 text-emerald-600"></i> 육류 납품처를 찾고 있는 외식 사업장
+              </h3>
+              <p class="text-xs text-slate-500">현재 입점 매장: <strong>살롱순라</strong> (종로구 익선동 한옥 다이닝)</p>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">조회 가능 매장 1건</span>
+          </div>
+
+          <!-- 살롱순라 인터랙티브 카드 -->
+          <div class="border-2 border-emerald-500/80 rounded-2xl p-6 bg-gradient-to-br from-white via-slate-50/50 to-emerald-50/30 hover:shadow-lg transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+              <div class="flex items-start gap-4">
+                <div class="w-16 h-16 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-2xl shadow-inner flex-shrink-0">
+                  🍷
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="text-lg font-black text-slate-900">살롱순라 (Salon Soonra)</h4>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs">상시 견적 수신 중</span>
+                    <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs">유러피안 한옥 다이닝</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i> 서울 종로구 율곡로 8길 75 (익선동 한옥마을 인근)
+                  </p>
+                  <p class="text-xs text-slate-600 mt-1">
+                    🥩 <strong>월간 육류 소싱 규모:</strong> 약 600kg / 월 (살치살, 알목심, 채끝, 안심, 차돌 등)
+                  </p>
+                </div>
+              </div>
+
+              <!-- 우측 액션: 정보 열람 & 견적 제안 버튼 -->
+              <div class="flex sm:flex-col gap-2">
+                <button onclick="openStoreDetailModal()" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow transition">
+                  <i data-lucide="eye" class="w-3.5 h-3.5 text-amber-400"></i> 매장 정보 열람 (1크레딧)
+                </button>
+                <button onclick="openDirectPitchModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow transition">
+                  <i data-lucide="send" class="w-3.5 h-3.5"></i> 다이렉트 역견적 제안
+                </button>
+              </div>
+            </div>
+
+            <!-- 살롱순라가 현재 사용/구매 희망하는 육류 리스트 요약 -->
+            <div class="mt-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> 살롱순라 구매 희망 육류 스펙 (공개)
+                </span>
+                <span class="text-[11px] text-slate-400">단위: kg당 납품가 기준 비교</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                  <div class="text-[11px] font-semibold text-slate-500">EXCEL 초이스</div>
+                  <div class="font-bold text-slate-900 text-sm">냉장 살치살</div>
+                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">35,000원</span></div>
+                  <div class="text-xs font-bold text-emerald-600">목표가: 32,500원 이하</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                  <div class="text-[11px] font-semibold text-slate-500">EXCEL 프라임</div>
+                  <div class="font-bold text-slate-900 text-sm">냉장 알목심(척아이롤)</div>
+                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">28,000원</span></div>
+                  <div class="text-xs font-bold text-emerald-600">목표가: 25,900원 이하</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                  <div class="text-[11px] font-semibold text-slate-500">호주산 TEYS GF</div>
+                  <div class="font-bold text-slate-900 text-sm">동결 곡물 채끝</div>
+                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">33,000원</span></div>
+                  <div class="text-xs font-bold text-emerald-600">목표가: 28,500원 이하</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                  <div class="text-[11px] font-semibold text-slate-500">호주산 AMH S등급</div>
+                  <div class="font-bold text-slate-900 text-sm">냉장 S안심</div>
+                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">48,000원</span></div>
+                  <div class="text-xs font-bold text-emerald-600">목표가: 44,000원 이하</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3단계: 살롱순라 사장님 관점 수신 대시보드 미리보기 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="inbox" class="w-4 h-4 text-emerald-600"></i> [자영업자 뷰] 살롱순라 역제안 수신함
+              </h3>
+              <p class="text-xs text-slate-500">영업사원들이 플랫폼을 통해 던진 역견적이 도착했을 때 사장님이 보는 화면</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 bg-amber-50 text-amber-800 font-bold rounded-lg border border-amber-200">
+              신규 제안 1건 도착
+            </span>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <div class="bg-slate-50 px-4 py-3 flex items-center justify-between border-b border-slate-200">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-sm">
+                  벨엘
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-slate-900">벨엘미트 (마장동 축산 도소매)</div>
+                  <div class="text-xs text-slate-500">서울 성동구 마장로27길 6 · 사업자 258-40-00129 · 대표 김지선</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-bold text-emerald-600">월 약 2,470,000원 절감 제안</span>
+                <div class="text-[11px] text-slate-400">방금 전 제안됨</div>
+              </div>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-emerald-50/20">
+              <div class="p-3 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-500">살치살 (초이스 냉장)</span>
+                <div class="flex justify-between items-baseline mt-1">
+                  <span class="line-through text-slate-400">35,000원</span>
+                  <span class="font-extrabold text-emerald-600 text-sm">32,500원/kg</span>
+                </div>
+                <span class="text-[10px] text-emerald-600 font-semibold">▼ kg당 2,500원 절감</span>
+              </div>
+              <div class="p-3 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-500">알목심 (프라임 냉장)</span>
+                <div class="flex justify-between items-baseline mt-1">
+                  <span class="line-through text-slate-400">28,000원</span>
+                  <span class="font-extrabold text-emerald-600 text-sm">25,900원/kg</span>
+                </div>
+                <span class="text-[10px] text-emerald-600 font-semibold">▼ kg당 2,100원 절감</span>
+              </div>
+              <div class="p-3 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-500">S안심 (호주산 AMH 냉장)</span>
+                <div class="flex justify-between items-baseline mt-1">
+                  <span class="line-through text-slate-400">48,000원</span>
+                  <span class="font-extrabold text-emerald-600 text-sm">44,000원/kg</span>
+                </div>
+                <span class="text-[10px] text-emerald-600 font-semibold">▼ kg당 4,000원 절감</span>
+              </div>
+            </div>
+
+            <div class="bg-white px-4 py-3 border-t border-slate-200 flex justify-between items-center">
+              <span class="text-xs text-slate-500">결제조건: 월말정산 / 배송: 주 3회 직배송 / MOQ: 1박스</span>
+              <div class="flex gap-2">
+                <button onclick="alert('제안 검토 완료: 거래처에 샘플 요청 메시지가 전송되었습니다.')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">샘플 요청</button>
+                <button onclick="alert('거래 성사! 살롱순라와 마장동 벨엘미트 간의 계약이 체결되었습니다.')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold">이 조건으로 계약 진행</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 1] 숨고식 스텝 바이 스텝 퀘스트 위저드 -->
+      <!-- ============================================================== -->
+      <section id="tab-1" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b pb-4 mb-6">
+            <div>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md">도안 1 · 숨고 / 크몽 스타일</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">대화형 카드 퀘스트 견적 위저드</h2>
+              <p class="text-xs text-slate-500">한 화면에 하나의 질문만 집중 제시하여 진입 장벽을 극단적으로 낮춘 방식</p>
+            </div>
+            <div class="text-right">
+              <span id="step-badge" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">1 / 4 단계</span>
+            </div>
+          </div>
+
+          <!-- 스텝 진행 프로그레스 바 -->
+          <div class="w-full bg-slate-100 h-2 rounded-full mb-8 overflow-hidden">
+            <div id="step-progress" class="bg-emerald-600 h-full transition-all duration-300 w-1/4"></div>
+          </div>
+
+          <!-- STEP 1: 고기 부위 선택 -->
+          <div id="wizard-step-1" class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900">1. 견적을 요청하거나 납품할 <span class="text-emerald-600">육류 부위</span>를 선택하세요</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <button onclick="selectWizardMeat('살치살')" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-left hover:border-emerald-600 transition">
+                <span class="text-2xl">🥩</span>
+                <div class="font-bold text-slate-900 mt-2">살치살</div>
+                <div class="text-xs text-slate-500">마블링 우수 / 스테이크용</div>
+              </button>
+              <button onclick="selectWizardMeat('알목심(척아이롤)')" class="p-4 rounded-xl border border-slate-200 text-left hover:border-emerald-500 hover:bg-slate-50 transition">
+                <span class="text-2xl">🥩</span>
+                <div class="font-bold text-slate-900 mt-2">알목심</div>
+                <div class="text-xs text-slate-500">로스구이 / 스테이크</div>
+              </button>
+              <button onclick="selectWizardMeat('안심(텐더로인)')" class="p-4 rounded-xl border border-slate-200 text-left hover:border-emerald-500 hover:bg-slate-50 transition">
+                <span class="text-2xl">🥩</span>
+                <div class="font-bold text-slate-900 mt-2">안심</div>
+                <div class="text-xs text-slate-500">최고 부드러움 / 고급 안심</div>
+              </button>
+              <button onclick="selectWizardMeat('채끝등심')" class="p-4 rounded-xl border border-slate-200 text-left hover:border-emerald-500 hover:bg-slate-50 transition">
+                <span class="text-2xl">🥩</span>
+                <div class="font-bold text-slate-900 mt-2">채끝등심</div>
+                <div class="text-xs text-slate-500">진한 육향 / 스트립로인</div>
+              </button>
+            </div>
+            <div class="flex justify-end pt-4">
+              <button onclick="goWizardStep(2)" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm flex items-center gap-2">
+                다음 단계로 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: 원산지 및 브랜드/등급 -->
+          <div id="wizard-step-2" class="space-y-4 hidden">
+            <h3 class="text-lg font-bold text-slate-900">2. <span class="text-emerald-600">브랜드 및 등급</span>을 선택하세요</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 flex items-center justify-between cursor-pointer">
+                <div>
+                  <div class="font-bold text-slate-900">EXCEL (미국산)</div>
+                  <div class="text-xs text-slate-500">초이스(CH) 등급 / 냉장</div>
+                </div>
+                <input type="radio" name="w_brand" checked class="w-4 h-4 text-emerald-600">
+              </label>
+              <label class="p-4 rounded-xl border border-slate-200 flex items-center justify-between cursor-pointer hover:border-emerald-400">
+                <div>
+                  <div class="font-bold text-slate-900">TEYS (호주산)</div>
+                  <div class="text-xs text-slate-500">곡물비육(GF) / 동결</div>
+                </div>
+                <input type="radio" name="w_brand" class="w-4 h-4 text-emerald-600">
+              </label>
+              <label class="p-4 rounded-xl border border-slate-200 flex items-center justify-between cursor-pointer hover:border-emerald-400">
+                <div>
+                  <div class="font-bold text-slate-900">AMH (호주산)</div>
+                  <div class="text-xs text-slate-500">S등급 프리미엄 / 냉장</div>
+                </div>
+                <input type="radio" name="w_brand" class="w-4 h-4 text-emerald-600">
+              </label>
+            </div>
+            <div class="flex justify-between pt-4">
+              <button onclick="goWizardStep(1)" class="px-5 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl text-sm">이전</button>
+              <button onclick="goWizardStep(3)" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm flex items-center gap-2">
+                다음 단계로 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3: 월간 필요량 / 단가 입력 -->
+          <div id="wizard-step-3" class="space-y-4 hidden">
+            <h3 class="text-lg font-bold text-slate-900">3. <span class="text-emerald-600">월 예상 납품/발주량</span>과 단가를 정해주세요</h3>
+            <div class="bg-slate-50 p-4 rounded-xl space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">월 소요량 (kg 단위)</label>
+                <div class="flex items-center gap-2">
+                  <input type="number" id="wizard-qty" value="150" class="w-32 px-3 py-2 border rounded-lg text-right font-bold text-slate-900">
+                  <span class="text-sm font-bold text-slate-600">kg / 월</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">희망/제안 단가 (1kg당)</label>
+                <div class="flex items-center gap-2">
+                  <input type="number" id="wizard-price" value="32500" class="w-40 px-3 py-2 border rounded-lg text-right font-bold text-emerald-700">
+                  <span class="text-sm font-bold text-slate-600">원 / kg</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between pt-4">
+              <button onclick="goWizardStep(2)" class="px-5 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl text-sm">이전</button>
+              <button onclick="goWizardStep(4)" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm flex items-center gap-2">
+                견적 요약 확인 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 4: 완료 및 제출 -->
+          <div id="wizard-step-4" class="space-y-4 hidden">
+            <div class="text-center py-6">
+              <span class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full inline-flex items-center justify-center text-3xl mb-3">🎉</span>
+              <h3 class="text-xl font-black text-slate-900">살롱순라 전용 육류 견적서가 완성되었습니다!</h3>
+              <p class="text-xs text-slate-500 mt-1">선택하신 조건으로 마장동 벨엘미트 등 공식 납품처에 실시간 전송됩니다.</p>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+              <div class="flex justify-between">
+                <span class="text-slate-500">수신 매장:</span>
+                <span class="font-bold text-slate-900">살롱순라 (종로구 율곡로)</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">품목 / 스펙:</span>
+                <span class="font-bold text-slate-900">EXCEL 초이스 냉장 살치살</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">월간 물량 / 단가:</span>
+                <span class="font-bold text-emerald-700">150kg @ 32,500원/kg (월 4,875,000원)</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between pt-4">
+              <button onclick="goWizardStep(3)" class="px-5 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl text-sm">수정하기</button>
+              <button onclick="alert('도안 1 견적이 성공적으로 접수되었습니다!')" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm shadow-lg">
+                최종 견적서 발행 및 전송
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 2] 마켓보로 / 식봄 스타일 B2B 카탈로그 & 수량 카운터 -->
+      <!-- ============================================================== -->
+      <section id="tab-2" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <div>
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-md">도안 2 · 마켓보로 / 식봄 스타일</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">2단 B2B 육류 카탈로그 & 장바구니 발주/견적기</h2>
+              <p class="text-xs text-slate-500">좌측 부위 필터 + 우측 카드 리스트에서 수량(+/-) 터치로 초고속 견적서 작성</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-500">장바구니 합계:</span>
+              <div id="cart-total" class="text-lg font-black text-emerald-600">8,525,000원</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- 좌측 축종/부위 카테고리 사이드바 -->
+            <div class="space-y-2">
+              <div class="text-xs font-bold text-slate-500 uppercase px-2">육류 부위 필터</div>
+              <button class="w-full text-left px-3 py-2 rounded-lg bg-emerald-600 text-white font-bold text-xs flex justify-between">
+                <span>우육 전체 (소고기)</span> <span>12</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium text-xs flex justify-between">
+                <span>살치살 / 꽃등심</span> <span>3</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium text-xs flex justify-between">
+                <span>알목심 / 척아이롤</span> <span>3</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium text-xs flex justify-between">
+                <span>안심 / 채끝</span> <span>4</span>
+              </button>
+              <button class="w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium text-xs flex justify-between">
+                <span>차돌박이 / 우삼겹</span> <span>2</span>
+              </button>
+            </div>
+
+            <!-- 우측 상품 카드 목록 (살롱순라 실데이터) -->
+            <div class="md:col-span-3 space-y-3">
+              <!-- 품목 1 -->
+              <div class="p-4 rounded-xl border border-slate-200 hover:border-emerald-400 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded">EXCEL · 미국산</span>
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded">초이스(CH) · 냉장</span>
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm mt-1">초이스 냉장 살치살</h4>
+                  <p class="text-xs text-slate-500">스테이크용 원육 진공포장 / 1kg 단위</p>
+                  <div class="text-emerald-700 font-extrabold text-sm mt-1">32,500원 <span class="text-xs font-normal text-slate-400">/ kg</span></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700">-</button>
+                  <span class="w-12 text-center font-bold text-sm">150 kg</span>
+                  <button class="w-8 h-8 rounded-lg bg-emerald-600 hover:bg-emerald-700 flex items-center justify-center font-bold text-white">+</button>
+                </div>
+              </div>
+
+              <!-- 품목 2 -->
+              <div class="p-4 rounded-xl border border-slate-200 hover:border-emerald-400 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded">EXCEL · 미국산</span>
+                    <span class="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold rounded">프라임(PR) · 냉장</span>
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm mt-1">프라임 냉장 알목심 (척아이롤)</h4>
+                  <p class="text-xs text-slate-500">로스구이 / 스테이크 슬라이스 / 1kg 단위</p>
+                  <div class="text-emerald-700 font-extrabold text-sm mt-1">25,900원 <span class="text-xs font-normal text-slate-400">/ kg</span></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700">-</button>
+                  <span class="w-12 text-center font-bold text-sm">100 kg</span>
+                  <button class="w-8 h-8 rounded-lg bg-emerald-600 hover:bg-emerald-700 flex items-center justify-center font-bold text-white">+</button>
+                </div>
+              </div>
+
+              <!-- 품목 3 -->
+              <div class="p-4 rounded-xl border border-slate-200 hover:border-emerald-400 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded">AMH · 호주산</span>
+                    <span class="px-2 py-0.5 bg-rose-50 text-rose-700 text-[10px] font-bold rounded">S등급 · 냉장</span>
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm mt-1">AMH 냉장 S안심</h4>
+                  <p class="text-xs text-slate-500">텐더로인 프리미엄 / 1kg 단위</p>
+                  <div class="text-emerald-700 font-extrabold text-sm mt-1">44,000원 <span class="text-xs font-normal text-slate-400">/ kg</span></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700">-</button>
+                  <span class="w-12 text-center font-bold text-sm">50 kg</span>
+                  <button class="w-8 h-8 rounded-lg bg-emerald-600 hover:bg-emerald-700 flex items-center justify-center font-bold text-white">+</button>
+                </div>
+              </div>
+
+              <!-- 일괄 발주/견적 버튼 -->
+              <div class="pt-4 flex justify-end">
+                <button onclick="alert('담은 3개 육류 품목에 대한 견적서가 생성되었습니다.')" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm shadow">
+                  선택한 육류 3건 즉시 견적 제출 (총 8,525,000원)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 3] 마장동 실무형 엑셀 스프레드시트 인라인 그리드 -->
+      <!-- ============================================================== -->
+      <section id="tab-3" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <div>
+              <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-md">도안 3 · 마장동 도매 실무형</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">스프레드시트 퀵 입력 인라인 그리드</h2>
+              <p class="text-xs text-slate-500">엑셀처럼 Tab 키와 화살표로 셀을 넘나들며 수백 종의 육류 단가를 초고속 일괄 입력하는 방식</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="addExcelRow()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> 행 추가
+              </button>
+              <button onclick="alert('엑셀 단가표가 저장되었습니다.')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg flex items-center gap-1">
+                <i data-lucide="save" class="w-3.5 h-3.5"></i> 단가 저장
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-xs text-left" id="excel-table">
+              <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-2.5 border-r">브랜드</th>
+                  <th class="p-2.5 border-r">등급</th>
+                  <th class="p-2.5 border-r">보관</th>
+                  <th class="p-2.5 border-r">품목 (부위)</th>
+                  <th class="p-2.5 border-r">원산지</th>
+                  <th class="p-2.5 border-r text-right">kg당 납품단가 (원)</th>
+                  <th class="p-2.5 border-r">비고</th>
+                  <th class="p-2.5">사용매장</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200" id="excel-tbody">
+                <tr>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="EXCEL"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="CH (초이스)"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-blue-600 font-bold" value="냉동"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold" value="살치살"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="미국산"></td>
+                  <td class="p-1 border-r text-right"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-right font-extrabold text-emerald-700" value="27,500"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="-"></td>
+                  <td class="p-1"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-slate-600" value="퍼블릭 도원, 더멜란지"></td>
+                </tr>
+                <tr>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="EXCEL"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="CH (초이스)"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-blue-600 font-bold" value="냉동"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold" value="알목심 (척아이롤)"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="미국산"></td>
+                  <td class="p-1 border-r text-right"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-right font-extrabold text-emerald-700" value="16,000"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="-"></td>
+                  <td class="p-1"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold text-emerald-700" value="살롱순라"></td>
+                </tr>
+                <tr>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="EXCEL"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="PR (프라임)"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-indigo-600 font-bold" value="동결"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold" value="알목심 (척아이롤)"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="미국산"></td>
+                  <td class="p-1 border-r text-right"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-right font-extrabold text-emerald-700" value="19,000"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="-"></td>
+                  <td class="p-1"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold text-emerald-700" value="살롱순라"></td>
+                </tr>
+                <tr>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="TEYS"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="GF (곡물비육)"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-indigo-600 font-bold" value="동결"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold" value="채끝등심"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="호주산"></td>
+                  <td class="p-1 border-r text-right"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-right font-extrabold text-emerald-700" value="28,500"></td>
+                  <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="-"></td>
+                  <td class="p-1"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold text-emerald-700" value="살롱순라"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 4] 기존 견적식탁 고도화: 멀티 체크박스 & 일괄 수량/희망가 테이블 -->
+      <!-- ============================================================== -->
+      <section id="tab-4" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <div>
+              <span class="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-md">도안 4 · 견적식탁 클래식 고도화</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">체크박스 다중선택 & 일괄 편집 매트릭스</h2>
+              <p class="text-xs text-slate-500">필요한 육류를 체크박스로 한 번에 고르고 상단 컨트롤러로 수량/마진율을 일괄 적용</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-500">선택한 품목: <span class="text-emerald-600">3개</span></span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl mb-4 flex flex-wrap items-center gap-3 text-xs">
+            <span class="font-bold text-slate-700">일괄 적용 도구:</span>
+            <input type="number" placeholder="월 수량(kg)" class="w-28 px-2.5 py-1.5 border rounded-lg bg-white">
+            <button class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">수량 일괄반영</button>
+            <input type="number" placeholder="희망단가(원)" class="w-28 px-2.5 py-1.5 border rounded-lg bg-white">
+            <button class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">단가 일괄반영</button>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-600 border-b">
+                <tr>
+                  <th class="p-3 w-10 text-center"><input type="checkbox" checked class="w-4 h-4 text-emerald-600 rounded"></th>
+                  <th class="p-3">품목명 (부위)</th>
+                  <th class="p-3">스펙 / 브랜드</th>
+                  <th class="p-3">보관</th>
+                  <th class="p-3 text-right">월 소요량 (kg)</th>
+                  <th class="p-3 text-right">기존 매입단가</th>
+                  <th class="p-3 text-right">희망 견적단가</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr class="bg-emerald-50/30">
+                  <td class="p-3 text-center"><input type="checkbox" checked class="w-4 h-4 text-emerald-600 rounded"></td>
+                  <td class="p-3 font-bold text-slate-900">초이스 냉장 살치살</td>
+                  <td class="p-3 text-slate-500">미국산 EXCEL 초이스</td>
+                  <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[11px]">냉장</span></td>
+                  <td class="p-3 text-right font-bold"><input value="150" class="w-16 text-right px-2 py-1 border rounded"></td>
+                  <td class="p-3 text-right text-slate-400 line-through">35,000원</td>
+                  <td class="p-3 text-right font-bold text-emerald-600"><input value="32,500" class="w-24 text-right px-2 py-1 border rounded text-emerald-700 font-bold"></td>
+                </tr>
+                <tr class="bg-emerald-50/30">
+                  <td class="p-3 text-center"><input type="checkbox" checked class="w-4 h-4 text-emerald-600 rounded"></td>
+                  <td class="p-3 font-bold text-slate-900">프라임 냉장 알목심</td>
+                  <td class="p-3 text-slate-500">미국산 EXCEL 프라임</td>
+                  <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[11px]">냉장</span></td>
+                  <td class="p-3 text-right font-bold"><input value="200" class="w-16 text-right px-2 py-1 border rounded"></td>
+                  <td class="p-3 text-right text-slate-400 line-through">28,000원</td>
+                  <td class="p-3 text-right font-bold text-emerald-600"><input value="25,900" class="w-24 text-right px-2 py-1 border rounded text-emerald-700 font-bold"></td>
+                </tr>
+                <tr class="bg-emerald-50/30">
+                  <td class="p-3 text-center"><input type="checkbox" checked class="w-4 h-4 text-emerald-600 rounded"></td>
+                  <td class="p-3 font-bold text-slate-900">AMH 냉장 S안심</td>
+                  <td class="p-3 text-slate-500">호주산 AMH S등급</td>
+                  <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[11px]">냉장</span></td>
+                  <td class="p-3 text-right font-bold"><input value="80" class="w-16 text-right px-2 py-1 border rounded"></td>
+                  <td class="p-3 text-right text-slate-400 line-through">48,000원</td>
+                  <td class="p-3 text-right font-bold text-emerald-600"><input value="44,000" class="w-24 text-right px-2 py-1 border rounded text-emerald-700 font-bold"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 5] 배민상회 / 쿠팡형 등급·규격 옵션 셀렉터 -->
+      <!-- ============================================================== -->
+      <section id="tab-5" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="border-b pb-4 mb-6">
+            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-md">도안 5 · 배민상회 / 쿠팡 로켓그로스 스타일</span>
+            <h2 class="text-xl font-black text-slate-900 mt-1">계층형 옵션 드롭다운 캐스케이드 (Cascader)</h2>
+            <p class="text-xs text-slate-500">부위(대분류) 선택 시 [브랜드 → 등급 → 보관상태]가 드롭다운으로 순차 연쇄되어 규격 오입력 완전 차단</p>
+          </div>
+
+          <div class="max-w-2xl mx-auto space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">1차 선택: 축종 및 부위</label>
+              <select class="w-full p-2.5 bg-white border rounded-xl text-sm font-bold">
+                <option>소고기 (우육) > 살치살</option>
+                <option>소고기 (우육) > 알목심 (척아이롤)</option>
+                <option>소고기 (우육) > 안심 (텐더로인)</option>
+                <option>소고기 (우육) > 채끝등심</option>
+                <option>소고기 (우육) > 차돌박이</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">2차: 브랜드</label>
+                <select class="w-full p-2.5 bg-white border rounded-xl text-xs font-semibold">
+                  <option>EXCEL (미국 카길)</option>
+                  <option>TEYS (호주)</option>
+                  <option>AMH (호주 JBS)</option>
+                  <option>IBP (미국 타이슨)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">3차: 등급</label>
+                <select class="w-full p-2.5 bg-white border rounded-xl text-xs font-semibold">
+                  <option>초이스 (Choice, CH)</option>
+                  <option>프라임 (Prime, PR)</option>
+                  <option>곡물비육 (GF)</option>
+                  <option>S등급 (프리미엄)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">4차: 보관상태</label>
+                <select class="w-full p-2.5 bg-white border rounded-xl text-xs font-semibold">
+                  <option>냉장 (Chilled)</option>
+                  <option>냉동 (Frozen)</option>
+                  <option>동결 (Deep Frozen)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 mt-4">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-emerald-900">선택 규격 견적 기준가:</span>
+                <span class="text-base font-extrabold text-emerald-700">32,500원 / kg</span>
+              </div>
+              <p class="text-[11px] text-emerald-600 mt-1">살롱순라 기준 최소 발주 단위: 1박스 (약 20~25kg)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 6] 토스식 30초 원페이저 폼 -->
+      <!-- ============================================================== -->
+      <section id="tab-6" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-xl mx-auto">
+          <div class="text-center mb-6">
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-md">도안 6 · 토스 / 카카오페이 스타일</span>
+            <h2 class="text-2xl font-black text-slate-900 mt-2">바쁜 사장님을 위한 30초 원클릭 견적</h2>
+            <p class="text-xs text-slate-500 mt-1">단 하나의 화면에서 슬라이더 터치만으로 견적 요청 끝</p>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-2">필요한 육류 부위 터치</label>
+              <div class="flex flex-wrap gap-2">
+                <button class="px-3 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow-sm">초이스 살치살</button>
+                <button class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">프라임 알목심</button>
+                <button class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">호주산 채끝</button>
+                <button class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">AMH 안심</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-baseline mb-2">
+                <label class="text-xs font-bold text-slate-700">월간 필요 수량 조절</label>
+                <span id="slider-val" class="text-lg font-black text-emerald-600">150 kg</span>
+              </div>
+              <input type="range" min="30" max="500" step="10" value="150" oninput="document.getElementById('slider-val').innerText = this.value + ' kg'" class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>30kg</span>
+                <span>250kg</span>
+                <span>500kg</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+              <div class="text-xs text-slate-500">살롱순라 예상 월 절감액</div>
+              <div class="text-2xl font-black text-emerald-600 mt-1">월 375,000원 아낌</div>
+              <div class="text-[11px] text-slate-400 mt-1">기존 매입가 35,000원 → 최적 견적 32,500원 기준</div>
+            </div>
+
+            <button onclick="alert('토스식 30초 견적 요청이 완료되었습니다!')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl text-base shadow-lg transition">
+              견적 제안 요청하기
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 7] 카카오톡 / AI 대화형 메신저 봇 -->
+      <!-- ============================================================== -->
+      <section id="tab-7" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-lg mx-auto">
+          <div class="border-b pb-3 mb-4 flex items-center justify-between">
+            <div>
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-md">도안 7 · 카카오톡 / AI 메신저</span>
+              <h2 class="text-lg font-black text-slate-900 mt-1">챗봇 대화형 육류 견적서 자동 생성</h2>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          </div>
+
+          <!-- 메신저 대화창 UI -->
+          <div class="bg-[#abc1d1] p-4 rounded-2xl h-80 overflow-y-auto space-y-3 text-xs">
+            <!-- 봇 메시지 -->
+            <div class="flex items-start gap-2">
+              <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">🥩</div>
+              <div class="bg-white p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-sm">
+                안녕하세요! 살롱순라 사장님.<br>
+                오늘 견적 요청하실 고기 부위나 물량을 편하게 말씀해주세요. (예: <strong>"살치살 냉장 100kg랑 안심 50kg 견적 줘"</strong>)
+              </div>
+            </div>
+
+            <!-- 유저 메시지 -->
+            <div class="flex justify-end">
+              <div class="bg-amber-300 p-3 rounded-2xl rounded-tr-none max-w-[80%] text-slate-900 font-medium shadow-sm">
+                살롱순라인데, 초이스 냉장 살치살 150kg이랑 호주산 안심 80kg 이번 달 견적 좀 내주세요!
+              </div>
+            </div>
+
+            <!-- 봇 파싱 및 견적 카드 제안 -->
+            <div class="flex items-start gap-2">
+              <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">🥩</div>
+              <div class="bg-white p-3 rounded-2xl rounded-tl-none max-w-[85%] shadow-sm space-y-2">
+                <span class="font-bold text-slate-900">✨ AI가 견적서를 자동 구조화했습니다:</span>
+                <div class="bg-slate-50 p-2 rounded-lg border text-[11px] space-y-1">
+                  <div>1. <strong>초이스 냉장 살치</strong>: 150kg (추천가 32,500원)</div>
+                  <div>2. <strong>AMH 냉장 S안심</strong>: 80kg (추천가 44,000원)</div>
+                  <div class="text-emerald-700 font-bold pt-1 border-t">총 견적 합계: 8,395,000원</div>
+                </div>
+                <button onclick="alert('카카오 알림톡으로 정식 견적서 링크가 발송되었습니다.')" class="w-full py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-[11px]">
+                  마장동 벨엘미트에 견적서 전송하기
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-3">
+            <input placeholder="원하시는 고기 부위와 수량을 적어보세요..." class="flex-1 px-3 py-2 border rounded-xl text-xs">
+            <button class="px-4 py-2 bg-amber-400 hover:bg-amber-500 font-bold text-slate-900 text-xs rounded-xl">전송</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 8] 틴더식 카드 스와이프 다이렉트 매칭 -->
+      <!-- ============================================================== -->
+      <section id="tab-8" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-md mx-auto text-center">
+          <div class="mb-4">
+            <span class="px-2.5 py-1 bg-pink-50 text-pink-700 text-xs font-bold rounded-md">도안 8 · 틴더 / 데이팅앱 스타일</span>
+            <h2 class="text-xl font-black text-slate-900 mt-1">카드 스와이프 다이렉트 매칭 덱</h2>
+            <p class="text-xs text-slate-500">매장이나 공급사의 조건을 넘기며 마음에 들면 [수락 / 견적], 아니면 [패스]</p>
+          </div>
+
+          <!-- 스와이프 카드 본체 -->
+          <div class="border-2 border-slate-200 rounded-3xl p-6 bg-gradient-to-b from-white to-slate-50 shadow-lg text-left space-y-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">매칭 대상 매장</span>
+                <h3 class="text-xl font-black text-slate-900 mt-1">살롱순라</h3>
+                <p class="text-xs text-slate-500">서울 종로구 율곡로 (익선동)</p>
+              </div>
+              <span class="text-3xl">🍷</span>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-100 space-y-1.5 text-xs">
+              <div class="text-slate-500">구매 희망: <strong class="text-slate-900">EXCEL 초이스 살치살 (냉장)</strong></div>
+              <div class="text-slate-500">필요 물량: <strong class="text-slate-900">월 150kg</strong></div>
+              <div class="text-slate-500">희망 상한가: <strong class="text-emerald-600">33,000원 / kg 이하</strong></div>
+            </div>
+
+            <div class="flex justify-center gap-4 pt-2">
+              <button onclick="alert('패스되었습니다. 다음 카드로 넘어갑니다.')" class="w-14 h-14 rounded-full border-2 border-slate-200 text-slate-400 hover:text-slate-600 hover:border-slate-300 flex items-center justify-center text-xl font-bold shadow-sm">
+                ✕
+              </button>
+              <button onclick="alert('매칭 성공! 살롱순라에 즉시 견적이 제안되었습니다.')" class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-emerald-500/30">
+                ♥
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 9] 스카이스캐너형 실시간 분할비교 대시보드 -->
+      <!-- ============================================================== -->
+      <section id="tab-9" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <div>
+              <span class="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-md">도안 9 · 항공권 스카이스캐너 스타일</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">공급사별 실시간 최저가 분할 비교 히트맵</h2>
+              <p class="text-xs text-slate-500">품목별 최저가를 색상(그린)으로 1초 만에 찾아내어 단일 vs 2사 분할 최적 매트릭스 산출</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 bg-emerald-50 text-emerald-700 font-bold rounded-lg">AI 최적 2사 조합 추천</span>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-100 text-slate-700">
+                <tr>
+                  <th class="p-3 border-r">살롱순라 필요 품목</th>
+                  <th class="p-3 border-r text-center">월 수량</th>
+                  <th class="p-3 border-r bg-emerald-100/60 font-black text-emerald-900 text-center">
+                    🏆 벨엘미트 (마장동)
+                  </th>
+                  <th class="p-3 border-r text-center text-slate-500">경쟁 A 유통</th>
+                  <th class="p-3 text-center text-slate-500">경쟁 B 축산</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr>
+                  <td class="p-3 border-r font-bold">초이스 냉장 살치살</td>
+                  <td class="p-3 border-r text-center">150kg</td>
+                  <td class="p-3 border-r text-center bg-emerald-50 font-black text-emerald-700">
+                    32,500원 <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">최저가</span>
+                  </td>
+                  <td class="p-3 border-r text-center text-slate-400">34,000원</td>
+                  <td class="p-3 text-center text-slate-400">33,500원</td>
+                </tr>
+                <tr>
+                  <td class="p-3 border-r font-bold">프라임 냉장 알목심</td>
+                  <td class="p-3 border-r text-center">200kg</td>
+                  <td class="p-3 border-r text-center bg-emerald-50 font-black text-emerald-700">
+                    25,900원 <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">최저가</span>
+                  </td>
+                  <td class="p-3 border-r text-center text-slate-400">27,000원</td>
+                  <td class="p-3 text-center text-slate-400">26,500원</td>
+                </tr>
+                <tr>
+                  <td class="p-3 border-r font-bold">AMH 냉장 S안심</td>
+                  <td class="p-3 border-r text-center">80kg</td>
+                  <td class="p-3 border-r text-center bg-emerald-50 font-black text-emerald-700">
+                    44,000원 <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">최저가</span>
+                  </td>
+                  <td class="p-3 border-r text-center text-slate-400">46,000원</td>
+                  <td class="p-3 text-center text-slate-400">45,500원</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [도안 10] 벨엘미트 실제 견적서 양식 기반 판매자 단가 등록기 -->
+      <!-- ============================================================== -->
+      <section id="tab-10" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <div>
+              <span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-md">도안 10 · 실무 견적서 100% 반영</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">벨엘미트 마장동 실견적서 단가표 등록 시스템</h2>
+              <p class="text-xs text-slate-500">업로드해주신 실제 견적서(26.10.30)의 모든 항목(브랜드, 등급, 보관, 품목, 원산지, 단가, 비고) 완벽 지원</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-400">공급자:</span>
+              <div class="text-sm font-bold text-slate-900">벨엘미트 (김지선 대표)</div>
+            </div>
+          </div>
+
+          <!-- 실제 견적서 양식 카드 -->
+          <div class="border-2 border-slate-300 rounded-xl overflow-hidden">
+            <div class="bg-blue-100/60 p-4 text-center border-b border-slate-300">
+              <h3 class="text-xl font-black tracking-widest text-slate-900">견 적 서</h3>
+              <p class="text-xs text-slate-600 mt-1">공급받는자: (주)제이앤파트너스코리아 (살롱순라, 더베르지, 퍼블릭도원)</p>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-slate-50/50 border-b">
+              <div>
+                <span class="text-slate-500 font-bold">공급받는 자:</span>
+                <div class="font-bold text-slate-900">살롱순라 (종로구 율곡로)</div>
+              </div>
+              <div>
+                <span class="text-slate-500 font-bold">공급자 정보:</span>
+                <div class="font-bold text-slate-900">벨엘미트 · 등록번호 258-40-00129 · 대표 김지선</div>
+                <div class="text-slate-500">소재지: 서울특별시 성동구 마장로27길 6 (마장동 1층)</div>
+              </div>
+            </div>
+
+            <!-- 견적 품목 입력 테이블 -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left" id="invoice-table">
+                <thead class="bg-amber-100/60 text-slate-800 font-bold border-b border-slate-200">
+                  <tr>
+                    <th class="p-2 border-r text-center w-12">구분</th>
+                    <th class="p-2 border-r">품목 (부위 / 브랜드 / 등급 / 보관)</th>
+                    <th class="p-2 border-r text-center w-14">단위(kg)</th>
+                    <th class="p-2 border-r text-center w-20">원산지</th>
+                    <th class="p-2 border-r text-right w-28">판매단가(원)</th>
+                    <th class="p-2">비고</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="초이스 냉장 살치" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">미국산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="32,500" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input placeholder="비고 입력" class="w-full px-1 border-0 text-slate-400"></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="초이스 냉동 살치" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">미국산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="27,000" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input placeholder="비고 입력" class="w-full px-1 border-0 text-slate-400"></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="프라임 냉장 알목심" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">미국산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="25,900" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input placeholder="비고 입력" class="w-full px-1 border-0 text-slate-400"></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="프라임 냉동 알목심" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">미국산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="22,000" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input placeholder="비고 입력" class="w-full px-1 border-0 text-slate-400"></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="AMH 냉장 S안심" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">호주산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="44,000" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input placeholder="비고 입력" class="w-full px-1 border-0 text-slate-400"></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="동결 곡물 채끝" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">호주산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="31,000" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input placeholder="비고 입력" class="w-full px-1 border-0 text-slate-400"></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border-r text-center font-bold bg-slate-50">우육</td>
+                    <td class="p-2 border-r font-bold"><input value="초이스 차돌백이작업" class="w-full px-1 border-0"></td>
+                    <td class="p-2 border-r text-center">1</td>
+                    <td class="p-2 border-r text-center">미국산</td>
+                    <td class="p-2 border-r text-right font-extrabold text-emerald-700"><input value="20,000" class="w-full text-right px-1 border-0 text-emerald-700 font-bold"></td>
+                    <td class="p-2"><input value="12월부터 22,000~24,000원" class="w-full px-1 border-0 text-amber-600 font-medium"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="bg-slate-100 p-3 flex justify-between items-center text-xs">
+              <span class="text-slate-500">등록일: 2026.10.30 · 연락처: 010-7475-7410</span>
+              <button onclick="alert('실견적서 양식이 데이터베이스에 등록되었습니다.')" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow">
+                이 견적서 그대로 납품단가 등록
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 모달 1: 매장 상세 정보 열람 (과금 모델 시뮬레이션) -->
+  <div id="modal-store-detail" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex justify-between items-start border-b pb-3">
+        <div>
+          <span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded">1크레딧 사용됨</span>
+          <h3 class="text-lg font-black text-slate-900 mt-1">살롱순라 매장 상세 프로필</h3>
+        </div>
+        <button onclick="closeStoreDetailModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 bg-slate-50 rounded-xl space-y-1">
+          <div class="flex justify-between"><span class="text-slate-500">상호명:</span> <span class="font-bold">살롱순라 (Salon Soonra)</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">사업자번호:</span> <span class="font-mono font-bold">222-32-16745</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">대표자 연락처:</span> <span class="font-bold text-emerald-600">010-8888-9999 (열람 완료)</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">매장 주소:</span> <span>서울 종로구 율곡로 8길 75 (익선동)</span></div>
+        </div>
+
+        <div class="p-3 bg-emerald-50 rounded-xl space-y-1">
+          <div class="font-bold text-emerald-950 mb-1">🥩 주방 육류 납품 요구사항:</div>
+          <p class="text-slate-600 leading-relaxed">
+            - 주 3회(화, 목, 토) 오전 10시 이전 배송 희망<br>
+            - 살치살은 마블링 고른 초이스급 스테이크컷 필수<br>
+            - 알목심은 로스구이 및 찹스테이크용 세절 규격 필요<br>
+            - 결제 조건: 익월 10일 전액 현금 계좌이체 (미수금 없음)
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeStoreDetailModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-xs">닫기</button>
+        <button onclick="closeStoreDetailModal(); openDirectPitchModal();" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl text-xs">바로 견적 넣기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 2: 다이렉트 역견적 제안 (거래처 견적서 투척) -->
+  <div id="modal-direct-pitch" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex justify-between items-start border-b pb-3">
+        <div>
+          <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">다이렉트 역제안</span>
+          <h3 class="text-lg font-black text-slate-900 mt-1">살롱순라에 고기 납품 견적 제안</h3>
+        </div>
+        <button onclick="closeDirectPitchModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="text-slate-500">살롱순라가 구매 희망하는 육류에 대해 공급 가능한 kg당 납품가를 입력하세요.</p>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+            <div>
+              <div class="font-bold text-slate-900">초이스 냉장 살치살</div>
+              <div class="text-[11px] text-slate-400">월 150kg 소요 (목표 32,500원 이하)</div>
+            </div>
+            <div class="flex items-center gap-1">
+              <input type="number" value="32500" class="w-24 px-2 py-1 border rounded text-right font-bold text-emerald-700">
+              <span>원/kg</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+            <div>
+              <div class="font-bold text-slate-900">프라임 냉장 알목심</div>
+              <div class="text-[11px] text-slate-400">월 200kg 소요 (목표 25,900원 이하)</div>
+            </div>
+            <div class="flex items-center gap-1">
+              <input type="number" value="25900" class="w-24 px-2 py-1 border rounded text-right font-bold text-emerald-700">
+              <span>원/kg</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+            <div>
+              <div class="font-bold text-slate-900">호주산 곡물 채끝 (동결)</div>
+              <div class="text-[11px] text-slate-400">월 100kg 소요 (목표 28,500원 이하)</div>
+            </div>
+            <div class="flex items-center gap-1">
+              <input type="number" value="28500" class="w-24 px-2 py-1 border rounded text-right font-bold text-emerald-700">
+              <span>원/kg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-50 rounded-xl text-amber-800 text-[11px]">
+          💡 <strong>제안 수수료 정책:</strong> 살롱순라가 견적을 채택하여 첫 발주가 발생할 때만 소정의 거래 성공 수수료가 부과됩니다.
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeDirectPitchModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-xs">취소</button>
+        <button onclick="submitDirectPitch()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md">
+          살롱순라에 견적서 찌르기 (전송)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="font-bold text-slate-300">견적식탁 (BidPlate) · 육류 전용 역제안 시스템 & 도안 10선 쇼케이스</p>
+      <p class="mt-1 text-slate-500">살롱순라 단독 구매자 입점 · 마장동 벨엘미트 실제 견적서 반영 · 박세현 파트너 리버스 피칭 모델 탑재</p>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // 탭 전환 로직
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById(tabId);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      document.querySelectorAll('header button[id^="btn-tab-"]').forEach(btn => {
+        btn.classList.remove('active-tab');
+        btn.classList.add('text-slate-300');
+      });
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('active-tab');
+        activeBtn.classList.remove('text-slate-300');
+      }
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 뷰포트 토글 (PC vs 모바일)
+    function setViewMode(mode) {
+      const container = document.getElementById('viewport-container');
+      const btnPc = document.getElementById('btn-view-pc');
+      const btnMobile = document.getElementById('btn-view-mobile');
+
+      if (mode === 'mobile') {
+        container.classList.remove('max-w-6xl');
+        container.classList.add('max-w-md', 'shadow-2xl', 'border', 'border-slate-300', 'p-4', 'rounded-3xl', 'bg-white');
+        btnMobile.className = 'px-2.5 py-1 rounded font-medium bg-emerald-600 text-white';
+        btnPc.className = 'px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white';
+      } else {
+        container.classList.add('max-w-6xl');
+        container.classList.remove('max-w-md', 'shadow-2xl', 'border', 'border-slate-300', 'p-4', 'rounded-3xl', 'bg-white');
+        btnPc.className = 'px-2.5 py-1 rounded font-medium bg-emerald-600 text-white';
+        btnMobile.className = 'px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white';
+      }
+    }
+
+    // 스텝 위저드 (도안 1)
+    let currentWizardStep = 1;
+    function goWizardStep(step) {
+      currentWizardStep = step;
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('wizard-step-' + i);
+        if (el) el.classList.add('hidden');
+      }
+      const activeEl = document.getElementById('wizard-step-' + step);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      document.getElementById('step-badge').innerText = step + ' / 4 단계';
+      document.getElementById('step-progress').style.width = (step * 25) + '%';
+      lucide.createIcons();
+    }
+
+    function selectWizardMeat(name) {
+      // 선택 시 바로 다음 단계로 자연스럽게 이동
+      setTimeout(() => goWizardStep(2), 200);
+    }
+
+    // 엑셀 행 추가 (도안 3)
+    function addExcelRow() {
+      const tbody = document.getElementById('excel-tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="EXCEL"></td>
+        <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="초이스"></td>
+        <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-emerald-600 font-bold" value="냉장"></td>
+        <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0 font-bold" value="새 육류 품목"></td>
+        <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="미국산"></td>
+        <td class="p-1 border-r text-right"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-right font-extrabold text-emerald-700" value="30,000"></td>
+        <td class="p-1 border-r"><input class="excel-cell w-full px-2 py-1 rounded border-0" value="신규 추가"></td>
+        <td class="p-1"><input class="excel-cell w-full px-2 py-1 rounded border-0 text-emerald-700 font-bold" value="살롱순라"></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // 모달 관리
+    function openStoreDetailModal() {
+      document.getElementById('modal-store-detail').classList.remove('hidden');
+    }
+    function closeStoreDetailModal() {
+      document.getElementById('modal-store-detail').classList.add('hidden');
+    }
+
+    function openDirectPitchModal() {
+      document.getElementById('modal-direct-pitch').classList.remove('hidden');
+    }
+    function closeDirectPitchModal() {
+      document.getElementById('modal-direct-pitch').classList.add('hidden');
+    }
+
+    function submitDirectPitch() {
+      closeDirectPitchModal();
+      alert('🎉 살롱순라에 다이렉트 역견적이 성공적으로 전송되었습니다!\n살롱순라 사장님 대시보드의 [역제안 수신함]에서 즉시 확인 가능합니다.');
+    }
+  </script>
+</body>
+</html>
