@@ -19,7 +19,7 @@ copy /y nul out\.nojekyll > nul
 
 echo.
 echo [3/4] gh-pages 브랜치에 온라인 배포본 푸시 중...
-powershell -Command "$outDir = '%~dp0out'; git --work-tree=$outDir add --all; $tree = git --work-tree=$outDir write-tree; $commit = git commit-tree $tree -m 'Deploy update to gh-pages: %date% %time%'; git update-ref refs/heads/gh-pages $commit; git push origin gh-pages --force"
+powershell -Command "$outDir = '%~dp0out'; $env:GIT_INDEX_FILE = '%~dp0.git\gh-pages-index'; if (Test-Path $env:GIT_INDEX_FILE) { Remove-Item $env:GIT_INDEX_FILE }; git --work-tree=$outDir add -A; $tree = git --work-tree=$outDir write-tree; $commit = git commit-tree $tree -m 'Deploy update to gh-pages: %date% %time%'; git update-ref refs/heads/gh-pages $commit; git push origin gh-pages --force; if (Test-Path $env:GIT_INDEX_FILE) { Remove-Item $env:GIT_INDEX_FILE }"
 
 echo.
 echo [4/4] main 소스코드 저장소 푸시 중...
