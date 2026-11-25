@@ -219,11 +219,120 @@ export function HaengbokMeatCompare({
     },
   ]);
 
-  // 수량 변경 함수
+  // initialItems 및 localStorage(selfbuyer_basket)의 사용자 설정 수량(100 100 100 100 100 등) 완벽 동기화
+  React.useEffect(() => {
+    try {
+      // 1. initialItems 전달된 경우 우선 적용
+      if (initialItems && initialItems.length > 0) {
+        setItems((prev) =>
+          prev.map((item) => {
+            const found = initialItems.find((init: any) => {
+              if (!init || !init.name) return false;
+              const a = init.name.replace(/[^가-힣a-zA-Z]/g, "");
+              const b = item.name.replace(/[^가-힣a-zA-Z]/g, "");
+              return (
+                (a.includes("살치") && b.includes("살치")) ||
+                (a.includes("알목심") && b.includes("알목심")) ||
+                (a.includes("안심") && b.includes("안심")) ||
+                (a.includes("채끝") && b.includes("채끝")) ||
+                (a.includes("차돌") && b.includes("차돌")) ||
+                item.name.includes(init.name) ||
+                init.name.includes(item.name)
+              );
+            });
+            if (found) {
+              const q = found.monthlyQty || found.qty;
+              if (typeof q === "number" && q > 0) {
+                return { ...item, qty: q };
+              }
+            }
+            return item;
+          })
+        );
+      }
+
+      // 2. localStorage에 저장된 사용자 입력 수량(100 100 100 100 100) 즉시 반영
+      const savedBasket = localStorage.getItem("selfbuyer_basket");
+      if (savedBasket) {
+        const parsed = JSON.parse(savedBasket);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setItems((prev) =>
+            prev.map((item) => {
+              const matched = parsed.find((p: any) => {
+                if (!p || !p.name) return false;
+                const a = p.name.replace(/[^가-힣a-zA-Z]/g, "");
+                const b = item.name.replace(/[^가-힣a-zA-Z]/g, "");
+                return (
+                  (a.includes("살치") && b.includes("살치")) ||
+                  (a.includes("알목심") && b.includes("알목심")) ||
+                  (a.includes("안심") && b.includes("안심")) ||
+                  (a.includes("채끝") && b.includes("채끝")) ||
+                  (a.includes("차돌") && b.includes("차돌")) ||
+                  item.name.includes(p.name) ||
+                  p.name.includes(item.name)
+                );
+              });
+              if (matched && typeof matched.qty === "number" && matched.qty > 0) {
+                return { ...item, qty: matched.qty };
+              }
+              return item;
+            })
+          );
+        }
+      }
+    } catch (e) {
+      console.error("HaengbokMeatCompare sync error:", e);
+    }
+  }, [initialItems]);
+
+  // 수량 변경 함수 (로컬스토리지에도 함께 저장)
+  const syncStorage = (updatedItems: MeatItem[]) => {
+    try {
+      const savedBasket = localStorage.getItem("selfbuyer_basket");
+      if (savedBasket) {
+        const parsed = JSON.parse(savedBasket);
+        if (Array.isArray(parsed)) {
+          const synced = parsed.map((p: any) => {
+            const matched = updatedItems.find((it) => {
+              const a = p.name.replace(/[^가-힣a-zA-Z]/g, "");
+              const b = it.name.replace(/[^가-힣a-zA-Z]/g, "");
+              return (
+                (a.includes("살치") && b.includes("살치")) ||
+                (a.includes("알목심") && b.includes("알목심")) ||
+                (a.includes("안심") && b.includes("안심")) ||
+                (a.includes("채끝") && b.includes("채끝")) ||
+                (a.includes("차돌") && b.includes("차돌"))
+              );
+            });
+            return matched ? { ...p, qty: matched.qty } : p;
+          });
+          localStorage.setItem("selfbuyer_basket", JSON.stringify(synced));
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const updateQty = (id: string, delta: number) => {
-    setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, qty: Math.max(10, it.qty + delta) } : it))
-    );
+    setItems((prev) => {
+      const updated = prev.map((it) =>
+        it.id === id ? { ...it, qty: Math.max(10, it.qty + delta) } : it
+      );
+      syncStorage(updated);
+      return updated;
+    });
+  };
+
+  const updateQtyDirect = (id: string, newQty: number) => {
+    const val = isNaN(newQty) ? 0 : Math.max(0, newQty);
+    setItems((prev) => {
+      const updated = prev.map((it) =>
+        it.id === id ? { ...it, qty: val } : it
+      );
+      syncStorage(updated);
+      return updated;
+    });
   };
 
   // 품목 삭제 함수
@@ -244,57 +353,18 @@ export function HaengbokMeatCompare({
 
   return (
     <div className="bg-[#F8F9FA] min-h-screen text-[#333333] font-sans pb-16">
-      {/* 1. 상단 행복쇼핑 스타일 검색 및 유틸 헤더 */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1400px] mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* 좌측 로고 & 슬로건 */}
-          <div className="flex items-center space-x-3">
-            <Link href="/" className="flex items-center space-x-1.5">
-              <span className="text-2xl font-black text-[#E11D48] tracking-tighter">행복</span>
-              <span className="text-2xl font-black text-[#2563EB] tracking-tighter">식탁</span>
-              <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-bold ml-1">
-                셀프바이어 B2B
-              </span>
-            </Link>
-          </div>
-
-          {/* 중앙 검색창 (행복쇼핑 싱크로율 100%) */}
-          <div className="flex-1 max-w-xl w-full">
-            <div className="relative flex items-center">
-              <input
-                type="text"
-                readOnly
-                value="원가는 낮추고, 신선도는 높이다. 살롱순라 익선동 매장 맞춤 육류 견적비교"
-                className="w-full pl-4 pr-24 py-2 border-2 border-[#2563EB] rounded-sm text-xs sm:text-sm font-semibold bg-white focus:outline-none"
-              />
-              <button className="absolute right-0 top-0 bottom-0 px-4 bg-[#2563EB] text-white flex items-center justify-center font-bold text-sm">
-                <Search className="w-4 h-4 mr-1" /> 검색
-              </button>
-            </div>
-          </div>
-
-          {/* 우측 바로가기 */}
-          <div className="flex items-center space-x-4 text-xs font-semibold text-gray-600">
-            {onBackToQuest && (
-              <button
-                onClick={onBackToQuest}
-                className="px-3 py-1.5 rounded bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold border border-blue-200 transition"
-              >
-                ← 견적 요청서(3스텝)로 돌아가기
-              </button>
-            )}
-            <div className="flex items-center space-x-1">
-              <ShoppingCart className="w-4 h-4 text-gray-500" />
-              <span>장바구니 <strong>{items.length}</strong></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. 대제목 & 배너 바 */}
+      {/* 2. 대제목 & 배너 바 (두 번째 유첨 상단 행복식탁 로고/검색창 제거 요청 반영) */}
       <div className="max-w-[1400px] mx-auto px-4 pt-5 pb-3">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
+            {onBackToQuest && (
+              <button
+                onClick={onBackToQuest}
+                className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold border border-blue-200 text-xs flex items-center gap-1 transition"
+              >
+                ← 3스텝 퀘스트로 돌아가기
+              </button>
+            )}
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">
               미니샵별 견적비교
             </h1>
@@ -419,14 +489,16 @@ export function HaengbokMeatCompare({
                       <div className="text-[11px] text-gray-500 mt-0.5">{item.spec}</div>
                     </td>
 
-                    {/* 수량 조절 버튼 (행복쇼핑 [ 150 ] ▲▼ 그대로 재현) */}
+                    {/* 수량 조절 버튼 (행복쇼핑 [ 100 ] ▲▼ 직접 입력 지원) */}
                     <td className="py-2.5 px-2 border-r border-gray-200 text-center">
                       <div className="inline-flex items-center border border-gray-300 rounded bg-white">
                         <input
-                          type="text"
-                          readOnly
+                          type="number"
+                          min={10}
+                          step={10}
                           value={item.qty}
-                          className="w-10 text-center text-xs font-bold text-gray-800 focus:outline-none"
+                          onChange={(e) => updateQtyDirect(item.id, parseInt(e.target.value) || 0)}
+                          className="w-12 text-center text-xs font-bold text-gray-800 focus:outline-none p-0.5"
                         />
                         <div className="flex flex-col border-l border-gray-200">
                           <button
@@ -694,96 +766,6 @@ export function HaengbokMeatCompare({
 
           <div className="text-xs text-gray-500 font-semibold">
             {currentPage === 1 ? "1페이지: 전체 종합비교표" : `${currentPage}페이지: 상세 견적서 원본`}
-          </div>
-        </div>
-
-        {/* 4. 하단 부가 서비스 영역 (행복쇼핑 기본 조립 / 프리미엄 조립 / 정품 설치 박스 100% 벤치마킹) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          {/* 1) 기본 조립 서비스 -> 기본 가공/세절 서비스 */}
-          <div className="bg-white p-4 rounded border border-gray-200 shadow-2xs">
-            <h4 className="font-black text-sm text-gray-900 border-b pb-2 mb-3">
-              기본 가공 / 세절 서비스
-            </h4>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">기본 스테이크 컷팅 (1kg분)</span>
-                <span className="font-bold text-blue-600">+ 1,000원</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">구이용 슬라이스 세절 (1kg분)</span>
-                <span className="font-bold text-blue-600">+ 1,500원</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">1kg 개별 진공 스킨 포장</span>
-                <span className="font-bold text-blue-600">+ 2,000원</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 2) 프리미엄 조립 서비스 -> 프리미엄 숙성 서비스 */}
-          <div className="bg-white p-4 rounded border border-gray-200 shadow-2xs">
-            <h4 className="font-black text-sm text-gray-900 border-b pb-2 mb-3">
-              프리미엄 숙성 서비스 (웻에이징/드라이)
-            </h4>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">14일 웻에이징 정밀 숙성</span>
-                <span className="font-bold text-blue-600">+ 40,000원</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">맞춤 드라이에이징 (1박스분)</span>
-                <span className="font-bold text-blue-600">+ 60,000원</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">콜드체인 냉장 임시 보관 (1주일)</span>
-                <span className="font-bold text-blue-600">+ 20,000원</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 3) 정품 설치 서비스 -> 정품/단가보증 서비스 */}
-          <div className="bg-white p-4 rounded border border-gray-200 shadow-2xs">
-            <h4 className="font-black text-sm text-gray-900 border-b pb-2 mb-3">
-              정품 / 단가보증 안심 서비스
-            </h4>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">축산물 이력번호 추적 확인서</span>
-                <span className="font-bold text-emerald-600">무료 제공</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">3개월 단가 동결 보증제</span>
-                <span className="font-bold text-emerald-600">기본 적용</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700">불시 단가 인상 시 차액 100% 보상</span>
-                <span className="font-bold text-blue-600">+ 10,000원</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 5. 하단 배너 & 꼭 확인하세요 (행복쇼핑 캡처 하단 영역) */}
-        <div className="mt-8 bg-white border border-gray-200 rounded p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2">
-            <span className="text-xs text-blue-600 font-bold">업소용 식자재를 싸게 사는 방법</span>
-            <h3 className="text-2xl font-black text-gray-900 tracking-tight">
-              셀프바이어 B2B 육류 도매 견적 서비스
-            </h3>
-            <p className="text-xs text-gray-500 max-w-lg leading-relaxed">
-              살롱순라처럼 사용하는 품목과 예상 소요량만 올려두시면, 마장동 공인 납품사들이 직접
-              최저가로 역제안하여 매달 최대 24%의 원가를 절감해 드립니다.
-            </p>
-          </div>
-
-          <div className="bg-gray-50 border border-gray-200 rounded p-4 max-w-sm w-full text-xs space-y-1.5">
-            <div className="font-black text-gray-800 text-sm mb-1">꼭 확인하세요!</div>
-            <p className="text-gray-600 leading-tight">
-              ① 모든 육류는 도축 및 수입 통관 정품이며 이력번호 조회가 가능합니다.
-            </p>
-            <p className="text-gray-600 leading-tight">
-              ② 세금계산서 의무 발행 및 종로구/익선동 새벽 콜드체인 직배송을 보장합니다.
-            </p>
           </div>
         </div>
       </div>
