@@ -59,30 +59,49 @@ export function Navbar() {
             <BidTableLogo size="md" />
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6 text-[15px] font-semibold text-gray-800">
+            <nav className="hidden md:flex items-center space-x-5 text-[14px] font-semibold text-gray-800">
               <Link
-                href="/rfq/categories"
+                href="/"
+                className={`transition-colors hover:text-blue-600 ${
+                  isActive("/") && !isActive("/prototypes") ? "text-blue-600 font-bold" : "text-gray-700"
+                }`}
+              >
+                원클릭 발주
+              </Link>
+              <Link
+                href="/prototypes"
+                className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
+                  isActive("/prototypes")
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200"
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                <span>도안 20선 갤러리</span>
+              </Link>
+              <Link
+                href="/supplier/catalog"
+                className={`transition-colors hover:text-amber-600 ${
+                  isActive("/supplier/catalog") ? "text-amber-600 font-bold" : "text-gray-700"
+                }`}
+              >
+                단가표 관리
+              </Link>
+              <Link
+                href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
                 className={`transition-colors hover:text-blue-600 ${
                   isActive("/rfq") ? "text-blue-600 font-bold" : "text-gray-700"
                 }`}
               >
-                견적요청
+                견적 비교
               </Link>
               <Link
-                href="/suppliers"
+                href="/contracts/e0000000-0000-0000-0000-000000000001/audit"
                 className={`transition-colors hover:text-blue-600 ${
-                  isActive("/suppliers") ? "text-blue-600 font-bold" : "text-gray-700"
+                  isActive("/contracts") ? "text-blue-600 font-bold" : "text-gray-700"
                 }`}
               >
-                업체찾기
-              </Link>
-              <Link
-                href="/explore"
-                className={`transition-colors hover:text-blue-600 ${
-                  isActive("/explore") ? "text-blue-600 font-bold" : "text-gray-700"
-                }`}
-              >
-                둘러보기
+                명세서 AI 감시
               </Link>
 
               {/* 로그인 상태별 전용 링크 */}
@@ -252,27 +271,43 @@ export function Navbar() {
               </div>
             </form>
 
-            <div className="grid grid-cols-3 gap-1 px-2 text-center text-sm font-semibold">
+            <div className="grid grid-cols-3 gap-1 px-2 text-center text-xs font-semibold">
               <Link
-                href="/rfq/categories"
+                href="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600"
+                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600 font-bold"
               >
-                견적요청
+                원클릭 발주
               </Link>
               <Link
-                href="/suppliers"
+                href="/prototypes"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600"
+                className="py-2 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold border border-emerald-200"
               >
-                업체찾기
+                도안 20선 갤러리
               </Link>
               <Link
-                href="/explore"
+                href="/supplier/catalog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 rounded-lg bg-amber-50 text-amber-800 hover:bg-amber-100 font-bold"
+              >
+                단가표 관리
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-1 px-2 text-center text-xs font-semibold">
+              <Link
+                href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600"
               >
-                둘러보기
+                견적 비교
+              </Link>
+              <Link
+                href="/contracts/e0000000-0000-0000-0000-000000000001/audit"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600"
+              >
+                명세서 AI 감시
               </Link>
             </div>
 
