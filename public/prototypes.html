@@ -163,85 +163,182 @@
           </div>
         </div>
 
-        <!-- 2단계: 살롱순라 매장 카드 (단독 입점) -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                <i data-lucide="store" class="w-4 h-4 text-emerald-600"></i> 육류 납품처를 찾고 있는 외식 사업장
-              </h3>
-              <p class="text-xs text-slate-500">현재 입점 매장: <strong>살롱순라</strong> (종로구 익선동 한옥 다이닝)</p>
+        <!-- 2단계: 유첨 도안 100% 반영 - 육류/해산물 매장 5열 카드 그리드 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-8">
+          
+          <!-- 검색 및 권역 필터 (유첨 도안 상단) -->
+          <div class="border-b border-slate-200 pb-4">
+            <div class="flex items-center gap-6 text-xs font-bold border-b border-slate-100 pb-2 mb-3">
+              <span class="text-slate-900 border-b-2 border-slate-900 pb-1 cursor-pointer">품목별 사장님 찾기</span>
+              <span class="text-slate-400 hover:text-slate-700 cursor-pointer">업태별 사장님 찾기</span>
             </div>
-            <span class="text-xs font-semibold text-slate-500">조회 가능 매장 1건</span>
+            <div class="relative mb-3">
+              <input type="text" value="서울 권역별 사장님 찾기" class="w-full px-4 py-2.5 text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl" readonly>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-xs">
+              <span class="px-3 py-1 bg-slate-900 text-white rounded-lg font-bold">종로구에 위치한 사장님들</span>
+              <span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg">도봉구</span>
+              <span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg">노원구</span>
+              <span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg">강북구</span>
+              <span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg">동대문구</span>
+            </div>
           </div>
 
-          <!-- 살롱순라 인터랙티브 카드 -->
-          <div class="border-2 border-emerald-500/80 rounded-2xl p-6 bg-gradient-to-br from-white via-slate-50/50 to-emerald-50/30 hover:shadow-lg transition">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
-              <div class="flex items-start gap-4">
-                <div class="w-16 h-16 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-2xl shadow-inner flex-shrink-0">
-                  🍷
-                </div>
+          <!-- 섹션 1: 육류 업체를 찾고 있어요 (5개 카드) -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+                <span>🥩</span> 육류 업체를 찾고 있어요
+              </h3>
+              <span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">5개 매장 입점</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+              <!-- 살롱순라 -->
+              <div class="border-2 border-emerald-500 rounded-xl p-3.5 bg-emerald-50/20 flex flex-col justify-between shadow-sm">
                 <div>
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <h4 class="text-lg font-black text-slate-900">살롱순라 (Salon Soonra)</h4>
-                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs">상시 견적 수신 중</span>
-                    <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs">유러피안 한옥 다이닝</span>
+                  <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-black text-slate-900 text-sm">살롱순라</h4>
+                    <span class="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold rounded">추천</span>
                   </div>
-                  <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
-                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i> 서울 종로구 율곡로 8길 75 (익선동 한옥마을 인근)
-                  </p>
-                  <p class="text-xs text-slate-600 mt-1">
-                    🥩 <strong>월간 육류 소싱 규모:</strong> 약 600kg / 월 (살치살, 알목심, 채끝, 안심, 차돌 등)
-                  </p>
+                  <div class="bg-white p-2 rounded-lg border border-slate-200 mb-2">
+                    <span class="text-[10px] text-slate-400 font-bold block">매장 어필 정보</span>
+                    <p class="text-[11px] text-slate-600 mt-0.5">· 대표 사진<br>· 타 품목 거래처 후기: ★5.0 칼입금</p>
+                  </div>
+                  <div class="bg-white p-2 rounded-lg border border-slate-200">
+                    <span class="text-[10px] text-slate-400 font-bold block">원하는 품목</span>
+                    <ul class="text-[11px] text-slate-800 font-medium space-y-0.5 mt-0.5">
+                      <li>• 살치 (초이스 냉장)</li>
+                      <li>• 차돌백이</li>
+                      <li>• 채끝등심</li>
+                      <li>• 안심</li>
+                    </ul>
+                  </div>
                 </div>
+                <button onclick="openDirectPitchModal()" class="w-full mt-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">
+                  견적 찌르기
+                </button>
               </div>
 
-              <!-- 우측 액션: 정보 열람 & 견적 제안 버튼 -->
-              <div class="flex sm:flex-col gap-2">
-                <button onclick="openStoreDetailModal()" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow transition">
-                  <i data-lucide="eye" class="w-3.5 h-3.5 text-amber-400"></i> 매장 정보 열람 (1크레딧)
+              <!-- 퍼블릭 도원 -->
+              <div class="border border-slate-200 rounded-xl p-3.5 bg-white flex flex-col justify-between">
+                <div>
+                  <h4 class="font-black text-slate-900 text-sm mb-2">퍼블릭 도원</h4>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 mb-2">
+                    <span class="text-[10px] text-slate-400 font-bold block">매장 어필 정보</span>
+                    <p class="text-[11px] text-slate-600 mt-0.5">대량 발주, 냉동 규격육 선호</p>
+                  </div>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <span class="text-[10px] text-slate-400 font-bold block">원하는 품목</span>
+                    <ul class="text-[11px] text-slate-800 font-medium space-y-0.5 mt-0.5">
+                      <li>• 살치 (냉동)</li>
+                      <li>• 알목심</li>
+                      <li>• 우삼겹</li>
+                    </ul>
+                  </div>
+                </div>
+                <button onclick="alert('퍼블릭 도원에 견적을 제안합니다.')" class="w-full mt-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">
+                  견적 제안
                 </button>
-                <button onclick="openDirectPitchModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow transition">
-                  <i data-lucide="send" class="w-3.5 h-3.5"></i> 다이렉트 역견적 제안
+              </div>
+
+              <!-- 더 멜란지 -->
+              <div class="border border-slate-200 rounded-xl p-3.5 bg-white flex flex-col justify-between">
+                <div>
+                  <h4 class="font-black text-slate-900 text-sm mb-2">더 멜란지</h4>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 mb-2">
+                    <span class="text-[10px] text-slate-400 font-bold block">매장 어필 정보</span>
+                    <p class="text-[11px] text-slate-600 mt-0.5">스테이크 전문, 주 3회 배송</p>
+                  </div>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <span class="text-[10px] text-slate-400 font-bold block">원하는 품목</span>
+                    <ul class="text-[11px] text-slate-800 font-medium space-y-0.5 mt-0.5">
+                      <li>• 채끝 (동결)</li>
+                      <li>• 살치살</li>
+                      <li>• 부채살</li>
+                    </ul>
+                  </div>
+                </div>
+                <button onclick="alert('더 멜란지에 견적을 제안합니다.')" class="w-full mt-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">
+                  견적 제안
+                </button>
+              </div>
+
+              <!-- 이층 양옥 -->
+              <div class="border border-slate-200 rounded-xl p-3.5 bg-white flex flex-col justify-between">
+                <div>
+                  <h4 class="font-black text-slate-900 text-sm mb-2">이층 양옥</h4>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 mb-2">
+                    <span class="text-[10px] text-slate-400 font-bold block">매장 어필 정보</span>
+                    <p class="text-[11px] text-slate-600 mt-0.5">익선동 파스타·스테이크</p>
+                  </div>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <span class="text-[10px] text-slate-400 font-bold block">원하는 품목</span>
+                    <ul class="text-[11px] text-slate-800 font-medium space-y-0.5 mt-0.5">
+                      <li>• 안심 (S등급)</li>
+                      <li>• 채끝등심</li>
+                      <li>• 살치살</li>
+                    </ul>
+                  </div>
+                </div>
+                <button onclick="alert('이층 양옥에 견적을 제안합니다.')" class="w-full mt-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">
+                  견적 제안
+                </button>
+              </div>
+
+              <!-- 영춘옥 -->
+              <div class="border border-slate-200 rounded-xl p-3.5 bg-white flex flex-col justify-between">
+                <div>
+                  <h4 class="font-black text-slate-900 text-sm mb-2">영춘옥</h4>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 mb-2">
+                    <span class="text-[10px] text-slate-400 font-bold block">매장 어필 정보</span>
+                    <p class="text-[11px] text-slate-600 mt-0.5">80년 전통 종로 곰탕 노포</p>
+                  </div>
+                  <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <span class="text-[10px] text-slate-400 font-bold block">원하는 품목</span>
+                    <ul class="text-[11px] text-slate-800 font-medium space-y-0.5 mt-0.5">
+                      <li>• 차돌박이</li>
+                      <li>• 양지 / 사태</li>
+                      <li>• 우골 / 사골</li>
+                    </ul>
+                  </div>
+                </div>
+                <button onclick="alert('영춘옥에 견적을 제안합니다.')" class="w-full mt-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">
+                  견적 제안
                 </button>
               </div>
             </div>
+          </div>
 
-            <!-- 살롱순라가 현재 사용/구매 희망하는 육류 리스트 요약 -->
-            <div class="mt-4">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> 살롱순라 구매 희망 육류 스펙 (공개)
-                </span>
-                <span class="text-[11px] text-slate-400">단위: kg당 납품가 기준 비교</span>
+          <!-- 섹션 2: 해산물 업체를 찾고 있어요 (5개 카드) -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+                <span>🐟</span> 해산물 업체를 찾고 있어요
+              </h3>
+              <span class="text-xs text-blue-700 font-bold bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">5개 매장 입점</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+              <div class="border border-slate-200 rounded-xl p-3 bg-white">
+                <h4 class="font-black text-slate-900 mb-1">살롱순라</h4>
+                <p class="text-[11px] text-slate-500">생연어, 새우, 관자, 홍합</p>
               </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-                <div class="bg-white p-3 rounded-xl border border-slate-200">
-                  <div class="text-[11px] font-semibold text-slate-500">EXCEL 초이스</div>
-                  <div class="font-bold text-slate-900 text-sm">냉장 살치살</div>
-                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">35,000원</span></div>
-                  <div class="text-xs font-bold text-emerald-600">목표가: 32,500원 이하</div>
-                </div>
-                <div class="bg-white p-3 rounded-xl border border-slate-200">
-                  <div class="text-[11px] font-semibold text-slate-500">EXCEL 프라임</div>
-                  <div class="font-bold text-slate-900 text-sm">냉장 알목심(척아이롤)</div>
-                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">28,000원</span></div>
-                  <div class="text-xs font-bold text-emerald-600">목표가: 25,900원 이하</div>
-                </div>
-                <div class="bg-white p-3 rounded-xl border border-slate-200">
-                  <div class="text-[11px] font-semibold text-slate-500">호주산 TEYS GF</div>
-                  <div class="font-bold text-slate-900 text-sm">동결 곡물 채끝</div>
-                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">33,000원</span></div>
-                  <div class="text-xs font-bold text-emerald-600">목표가: 28,500원 이하</div>
-                </div>
-                <div class="bg-white p-3 rounded-xl border border-slate-200">
-                  <div class="text-[11px] font-semibold text-slate-500">호주산 AMH S등급</div>
-                  <div class="font-bold text-slate-900 text-sm">냉장 S안심</div>
-                  <div class="mt-1 text-xs text-slate-500">현재 납품가: <span class="line-through">48,000원</span></div>
-                  <div class="text-xs font-bold text-emerald-600">목표가: 44,000원 이하</div>
-                </div>
+              <div class="border border-slate-200 rounded-xl p-3 bg-white">
+                <h4 class="font-black text-slate-900 mb-1">퍼블릭 도원</h4>
+                <p class="text-[11px] text-slate-500">오징어채, 바지락살, 새우</p>
+              </div>
+              <div class="border border-slate-200 rounded-xl p-3 bg-white">
+                <h4 class="font-black text-slate-900 mb-1">더 멜란지</h4>
+                <p class="text-[11px] text-slate-500">흰다리새우, 연어필렛, 문어</p>
+              </div>
+              <div class="border border-slate-200 rounded-xl p-3 bg-white">
+                <h4 class="font-black text-slate-900 mb-1">이층 양옥</h4>
+                <p class="text-[11px] text-slate-500">가리비 관자, 조개, 오징어</p>
+              </div>
+              <div class="border border-slate-200 rounded-xl p-3 bg-white">
+                <h4 class="font-black text-slate-900 mb-1">영춘옥</h4>
+                <p class="text-[11px] text-slate-500">국물용 다시 멸치, 건새우</p>
               </div>
             </div>
           </div>
