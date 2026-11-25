@@ -7,9 +7,9 @@ import { Navbar } from "@/components/layout/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "견적식탁 (BidTable) - B2B 식자재 역경매 & 단가방어 플랫폼",
+  title: "셀프바이어 (selfbuyer) - 거래처 발굴부터, 견적 비교까지",
   description:
-    "식자재 견적 요청, 최적 1사/2사 조합 매트릭스 뷰, 계약 단가 스냅샷 및 OCR 거래명세서 단가 방어 감시 플랫폼",
+    "거래처 발굴부터 견적 비교까지! B2B 외식업 식자재 역제안 & 단가방어 플랫폼",
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <footer className="border-t border-gray-200 bg-white py-6 mt-12 text-center text-xs text-gray-500">
               <div className="max-w-7xl mx-auto px-4">
-                © 2026 견적식탁 (BidTable). B2B 식자재 역경매 및 단가방어 매칭 플랫폼. All rights reserved.
+                © 2026 셀프바이어 (selfbuyer). 거래처 발굴부터, 견적 비교까지. All rights reserved.
               </div>
             </footer>
           </div>

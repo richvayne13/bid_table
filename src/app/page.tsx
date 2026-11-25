@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRole } from "@/contexts/RoleContext";
+import { SupplierHomeDashboard } from "@/components/supplier/SupplierHomeDashboard";
 import {
   Search,
   Sparkles,
@@ -19,6 +21,8 @@ import {
   MapPin,
   ChevronRight,
   Info,
+  Store,
+  Briefcase,
 } from "lucide-react";
 
 // 육류/축산 전용 카테고리 (우육/소고기, 돈육, 가공육 등)
@@ -82,12 +86,48 @@ const SPONSORED_SUPPLIERS = [
 
 export default function HomePage() {
   const router = useRouter();
+  const { currentUser } = useRole();
   const [selectedRegion, setSelectedRegion] = useState("서울 종로구");
   const [searchWord, setSearchWord] = useState("");
   const [activeTab, setActiveTab] = useState<"compare" | "regular">("compare");
   const [reviewFilter, setReviewFilter] = useState("전체");
   const [savedReviewIds, setSavedReviewIds] = useState<number[]>([]);
   const [supplierTab, setSupplierTab] = useState("전체");
+  
+  // 판매자 뷰 / 구매자 뷰 토글 상태 (기본값: 'auto' -> 로그인 롤에 따름)
+  const [viewModeOverride, setViewModeOverride] = useState<"auto" | "buyer" | "supplier">("auto");
+
+  const isSupplier = currentUser?.role === "SUPPLIER";
+  const showSupplierHome =
+    viewModeOverride === "supplier" || (viewModeOverride === "auto" && isSupplier);
+
+  // 1. 판매자로 로그인했거나, 판매자 화면 미리보기를 켰을 때는 유첨 이미지의 [판매자 초기화면]을 렌더링!
+  if (showSupplierHome) {
+    return (
+      <div className="relative">
+        {/* 상단 뷰 모드 알림 및 스위처 바 */}
+        <div className="bg-slate-900 text-white px-4 py-2 border-b border-slate-800 text-xs">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="font-bold text-emerald-400">
+                [판매자 초기화면 작동 중] {isSupplier ? "(판매자 계정 로그인 상태)" : "(판매자 화면 미리보기)"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewModeOverride("buyer")}
+                className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-bold border border-slate-700 transition"
+              >
+                🔄 구매자(기존) 화면으로 전환
+              </button>
+            </div>
+          </div>
+        </div>
+        <SupplierHomeDashboard />
+      </div>
+    );
+  }
 
   const regions = [
     "서울 종로구",
@@ -128,27 +168,26 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-emerald-500 rounded-lg text-slate-950 font-bold text-sm">🥩</span>
             <div>
-              <span className="font-extrabold text-emerald-400 mr-2">[육류 전용 특화 & 도안 10선 오픈]</span>
+              <span className="font-extrabold text-emerald-400 mr-2">[셀프바이어 selfbuyer 육류 전용 오픈]</span>
               <span className="text-slate-200">
-                살롱순라 구매자 × 마장동 벨엘미트 실견적서 반영 · 박세현 님 영업사원 리버스 피칭 모델 탑재!
+                거래처 발굴부터, 견적 비교까지 · 살롱순라 구매자 × 마장동 벨엘미트 실견적서 연동
               </span>
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* 판매자 화면 즉시 전환 버튼 */}
+            <button
+              onClick={() => setViewModeOverride("supplier")}
+              className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-lg shadow transition flex items-center gap-1"
+            >
+              <Briefcase className="w-3.5 h-3.5" /> 판매자 초기화면 보기
+            </button>
             <Link
               href="/prototypes"
               className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-lg shadow transition flex items-center gap-1"
             >
-              <Sparkles className="w-3.5 h-3.5" /> 도안 10선 & 파트너 모델 체험
+              <Sparkles className="w-3.5 h-3.5" /> 도안 10선 체험
             </Link>
-            <a
-              href="./prototypes.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg border border-slate-700"
-            >
-              독립 HTML 보기
-            </a>
             <Link
               href="/supplier/catalog"
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold rounded-lg border border-slate-700"

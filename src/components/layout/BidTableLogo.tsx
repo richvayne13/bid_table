@@ -129,14 +129,14 @@ export default function BidTableLogo({
         <div className="flex flex-col">
           <div className="flex items-center space-x-2">
             <span className="font-black tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors text-xl sm:text-2xl">
-              견적식탁
+              셀프바이어
             </span>
-            <span className="text-[11px] font-black uppercase px-2 py-0.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 tracking-wider shadow-2xs">
-              BidTable
+            <span className="text-[11px] font-black lowercase px-2 py-0.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 tracking-wider shadow-2xs">
+              selfbuyer
             </span>
           </div>
           <span className="text-xs text-gray-400 font-bold -mt-0.5 hidden sm:block">
-            외식업 식자재 역경매 & 단가방어
+            거래처 발굴부터, 견적 비교까지
           </span>
         </div>
       )}

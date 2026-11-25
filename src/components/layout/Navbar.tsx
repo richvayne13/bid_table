@@ -139,7 +139,7 @@ export function Navbar() {
               <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="식당 식자재 찾을 땐 견적식탁"
+                placeholder="거래처 발굴부터 견적 비교까지, 셀프바이어"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-24 py-2 bg-gray-100 hover:bg-gray-50 focus:bg-white text-sm rounded-full border border-transparent focus:border-indigo-400 focus:outline-none transition-all placeholder:text-gray-400 text-gray-800"
@@ -244,7 +244,7 @@ export function Navbar() {
                 <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="식당 식자재 찾을 땐 견적식탁"
+                  placeholder="거래처 발굴부터 견적 비교까지, 셀프바이어"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 bg-gray-100 text-sm rounded-lg border-0 focus:ring-2 focus:ring-indigo-400"
