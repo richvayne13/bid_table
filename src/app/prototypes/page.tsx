@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { HaengbokMeatCompare } from "@/components/compare/HaengbokMeatCompare";
 import {
   Sparkles,
   Layers,
@@ -107,21 +108,21 @@ export default function PrototypesPage() {
               onClick={() => setActiveTab("tab-4")}
               className={`px-3 py-1.5 rounded-lg font-bold whitespace-nowrap transition ${
                 activeTab === "tab-4"
-                  ? "bg-emerald-600 text-white shadow"
+                  ? "bg-blue-600 text-white shadow"
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              4. 일괄 체크박스 매트릭스
+              4. B-4. 3스텝 맞춤 퀘스트
             </button>
             <button
               onClick={() => setActiveTab("tab-5")}
               className={`px-3 py-1.5 rounded-lg font-bold whitespace-nowrap transition ${
                 activeTab === "tab-5"
-                  ? "bg-emerald-600 text-white shadow"
+                  ? "bg-red-600 text-white shadow"
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              5. 등급·규격 옵션 셀렉터
+              5. B-5. 행복쇼핑 견적비교 (실사판)
             </button>
             <button
               onClick={() => setActiveTab("tab-6")}
@@ -372,8 +373,21 @@ export default function PrototypesPage() {
           </div>
         )}
 
+        {/* B-5. 행복쇼핑 견적비교 화면 직접 렌더링 */}
+        {activeTab === "tab-5" && (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-3 bg-slate-900 text-white flex items-center justify-between text-xs">
+              <span className="font-bold text-red-400">
+                ★ [실사판 캡처 100% 재현] 행복쇼핑 미니샵별 육류 견적비교 인터랙티브 뷰
+              </span>
+              <span className="text-slate-400">수량 변경 시 최저 견적금액 실시간 재계산</span>
+            </div>
+            <HaengbokMeatCompare />
+          </div>
+        )}
+
         {/* 10개 세부 도안은 prototypes.html 임베드로 즉각 인터랙션 가능 */}
-        {activeTab !== "sehyun" && (
+        {activeTab !== "sehyun" && activeTab !== "tab-5" && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
               <span className="text-xs font-bold text-emerald-400">인터랙티브 라이브 도안 프리뷰</span>

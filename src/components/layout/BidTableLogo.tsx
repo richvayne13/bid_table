@@ -122,20 +122,15 @@ export default function BidTableLogo({
   return (
     <Link
       href="/"
-      className={`inline-flex items-center space-x-3 group select-none transition-transform active:scale-95 ${className}`}
+      className={`inline-flex items-center space-x-2.5 group select-none transition-transform active:scale-95 ${className}`}
     >
       <BidTableLogoIcon size={size} />
       {showText && (
-        <div className="flex flex-col">
-          <div className="flex items-center space-x-2">
-            <span className="font-black tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors text-xl sm:text-2xl">
-              셀프바이어
-            </span>
-            <span className="text-[11px] font-black lowercase px-2 py-0.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 tracking-wider shadow-2xs">
-              selfbuyer
-            </span>
-          </div>
-          <span className="text-xs text-gray-400 font-bold -mt-0.5 hidden sm:block">
+        <div className="flex flex-col leading-tight">
+          <span className="font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors text-xl sm:text-2xl font-sans">
+            selfbuyer
+          </span>
+          <span className="text-[11px] sm:text-xs text-slate-500 font-bold tracking-tight">
             거래처 발굴부터, 견적 비교까지
           </span>
         </div>

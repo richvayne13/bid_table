@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 import { formatPrice, formatNumber } from "@/lib/utils";
 import { getStoredDemoRfqs } from "@/lib/mock-storage";
 import { getUnifiedRfqById } from "@/lib/unified-rfq-store";
+import { HaengbokMeatCompare } from "@/components/compare/HaengbokMeatCompare";
 import {
   CompareBid,
   CompareRfqItem,
@@ -69,6 +70,7 @@ export default function RfqComparePage() {
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [viewFormat, setViewFormat] = useState<"HAENGBOK" | "ADVANCED">("HAENGBOK");
 
   useEffect(() => {
     async function loadCompareData() {
@@ -576,17 +578,55 @@ export default function RfqComparePage() {
     }
   };
 
+  if (viewFormat === "HAENGBOK") {
+    return (
+      <div>
+        {/* 상단 뷰 모드 알림 및 스위처 바 */}
+        <div className="bg-slate-900 text-white px-4 py-2 text-xs border-b border-slate-800">
+          <div className="max-w-[1400px] mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="font-bold text-emerald-400">
+                [행복쇼핑 미니샵별 육류 견적비교표 가동 중]
+              </span>
+              <span className="text-slate-400 hidden sm:inline">
+                | 살롱순라 구매자 × 마장동 공식 유통사 실시간 비교
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewFormat("ADVANCED")}
+                className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-bold border border-slate-700 transition"
+              >
+                ⚙️ 2개 공급사 분할(Split) 최적화 시뮬레이터로 전환
+              </button>
+            </div>
+          </div>
+        </div>
+        <HaengbokMeatCompare />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-32 space-y-6">
-      {/* Top Bar */}
+      {/* Top Bar with switch back to Haengbok */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <Link
-          href="/rfq"
-          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-500 hover:text-orange-600 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>내 견적 요청 목록 (/rfq)으로 돌아가기</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/rfq"
+            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-500 hover:text-orange-600 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>내 견적 요청 목록 (/rfq)으로 돌아가기</span>
+          </Link>
+          <button
+            onClick={() => setViewFormat("HAENGBOK")}
+            className="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-xs font-bold shadow-xs hover:bg-blue-500 transition"
+          >
+            ← 행복쇼핑 견적비교표로 돌아가기
+          </button>
+        </div>
 
         {existingContracts.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">

@@ -134,7 +134,7 @@ const SEOUL_DISTRICTS = [
 ];
 
 export function SupplierHomeDashboard() {
-  const [searchTab, setSearchTab] = useState<"item" | "business">("item");
+  const [searchTab, setSearchTab] = useState<"region" | "item" | "business">("region");
   const [selectedDistrict, setSelectedDistrict] = useState("종로구");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedStore, setSelectedStore] = useState<StoreItem | null>(null);
@@ -143,17 +143,15 @@ export function SupplierHomeDashboard() {
 
   return (
     <div className="min-h-screen bg-[#fafbfc] text-slate-900 pb-20">
-      {/* 1. 상단 브랜딩 & 슬로건 바 (유첨 디자인 100% 반영) */}
+      {/* 1. 상단 브랜딩 & 슬로건 바 (중앙 정렬) */}
       <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col items-end">
-          <div className="text-right">
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-sans">
-              selfbuyer
-            </h1>
-            <p className="text-sm sm:text-base font-bold text-slate-600 mt-1">
-              거래처 발굴부터, 견적 비교까지
-            </p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col items-center justify-center text-center">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-sans">
+            selfbuyer
+          </h1>
+          <p className="text-sm sm:text-base font-bold text-slate-600 mt-1.5">
+            거래처 발굴부터, 견적 비교까지
+          </p>
         </div>
       </div>
 
@@ -188,14 +186,24 @@ export function SupplierHomeDashboard() {
 
         {/* 2. 검색 & 권역 필터 영역 (유첨 도안 상단) */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs mb-10">
-          {/* 상단 탭: 품목별 사장님 찾기 vs 업태별 사장님 찾기 */}
-          <div className="flex items-center space-x-6 border-b border-slate-100 pb-3 mb-5 text-sm font-bold">
+          {/* 상단 탭: 권역별 사장님 찾기 (볼드) vs 품목별 사장님 찾기 (연하게) vs 업태별 사장님 찾기 (연하게) */}
+          <div className="flex items-center space-x-6 border-b border-slate-100 pb-3 mb-5 text-sm">
+            <button
+              onClick={() => setSearchTab("region")}
+              className={`pb-2 relative transition ${
+                searchTab === "region"
+                  ? "text-slate-900 border-b-2 border-slate-900 font-black text-base"
+                  : "text-slate-400 font-medium hover:text-slate-700"
+              }`}
+            >
+              권역별 사장님 찾기
+            </button>
             <button
               onClick={() => setSearchTab("item")}
               className={`pb-2 relative transition ${
                 searchTab === "item"
-                  ? "text-slate-900 border-b-2 border-slate-900 font-black"
-                  : "text-slate-400 hover:text-slate-700"
+                  ? "text-slate-900 border-b-2 border-slate-900 font-black text-base"
+                  : "text-slate-400 font-medium hover:text-slate-700"
               }`}
             >
               품목별 사장님 찾기
@@ -204,8 +212,8 @@ export function SupplierHomeDashboard() {
               onClick={() => setSearchTab("business")}
               className={`pb-2 relative transition ${
                 searchTab === "business"
-                  ? "text-slate-900 border-b-2 border-slate-900 font-black"
-                  : "text-slate-400 hover:text-slate-700"
+                  ? "text-slate-900 border-b-2 border-slate-900 font-black text-base"
+                  : "text-slate-400 font-medium hover:text-slate-700"
               }`}
             >
               업태별 사장님 찾기

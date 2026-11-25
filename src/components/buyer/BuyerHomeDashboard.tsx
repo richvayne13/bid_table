@@ -173,20 +173,16 @@ export function BuyerHomeDashboard() {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Link
               href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
-              className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl text-xs font-bold transition flex items-center gap-1"
+              className="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-700 rounded-2xl text-xs font-black transition flex items-center gap-1 border border-red-200"
             >
-              1사 vs 2사 매트릭스 비교 <ChevronRight className="w-4 h-4" />
+              행복쇼핑 미니샵별 견적비교표 <ChevronRight className="w-4 h-4 text-red-600" />
             </Link>
-            <button
-              onClick={() => {
-                setRfqSent(true);
-                alert("🎉 마장동 공식 축산 도매상(벨엘미트 등)에 실시간 역경매 견적 요청이 전송되었습니다!");
-              }}
-              className="flex-1 sm:flex-none px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl text-sm shadow-md transition flex items-center justify-center gap-2"
+            <Link
+              href="/rfq/new"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs font-black shadow-lg transition flex items-center justify-center gap-1.5"
             >
-              <Zap className="w-4 h-4 text-amber-300" />
-              {rfqSent ? "견적 요청 완료됨 (견적 수신 중)" : "마장동 최저가 견적 요청 (원클릭)"}
-            </button>
+              <Zap className="w-4 h-4 text-amber-300" /> 3스텝 맞춤 퀘스트 견적요청
+            </Link>
           </div>
         </div>
       </section>

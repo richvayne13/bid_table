@@ -82,7 +82,8 @@
           B-4. 3스텝 맞춤 퀘스트
         </button>
         <button onclick="switchTab('tab-b-5')" id="btn-tab-b-5" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
-          B-5. 1사 vs 2사 최적 매트릭스
+          <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
+          B-5. 행복쇼핑 견적비교 (캡처 실사판)
         </button>
         <button onclick="switchTab('tab-b-6')" id="btn-tab-b-6" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 whitespace-nowrap flex items-center gap-1.5 transition">
           B-6. 카카오톡 대화형 챗봇
@@ -367,108 +368,414 @@
       </section>
 
       <!-- ============================================================== -->
-      <!-- [구매자 도안 4] 3스텝 숨고식 식당 맞춤 견적 위저드 -->
+      <!-- [구매자 도안 4] 3스텝 맞춤 퀘스트 (회의록 결정사항 100% 반영) -->
       <!-- ============================================================== -->
       <section id="tab-b-4" class="tab-content hidden space-y-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-xl mx-auto space-y-5">
-          <div class="border-b pb-3">
-            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-md">도안 B-4 · 3단계 맞춤 퀘스트</span>
-            <h2 class="text-xl font-black text-slate-900 mt-1">식당 맞춤형 3단계 육류 견적 위저드</h2>
-            <p class="text-xs text-slate-500">메뉴와 사용량만 톡톡 고르면 마장동 유통사들에게 동시에 맞춤 견적서가 날아갑니다.</p>
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-5">
+          <div class="border-b pb-3 flex items-center justify-between">
+            <div>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md">도안 B-4 · 3단계 맞춤 퀘스트</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">살롱순라 맞춤 3스텝 육류 견적 위저드</h2>
+              <p class="text-xs text-slate-500 mt-0.5">회의록 반영: 불필요한 조리방식 제외 · 품목 다중선택 · 기타 직접입력 · 개별 슬라이더</p>
+            </div>
+            <button onclick="switchTab('tab-b-5')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-black shadow-xs">
+              행복쇼핑 견적비교표 즉시보기 →
+            </button>
           </div>
 
-          <div class="space-y-4">
+          <div class="space-y-5">
+            <!-- 1단계: 필요 부위 다중 선택 + 기타 직접 입력 -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">1단계: 우리 매장 메인 조리 방식은?</label>
-              <div class="grid grid-cols-3 gap-2 text-xs">
-                <button class="p-3 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-slate-900">스테이크 / 양식</button>
-                <button class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700">구이 / 로스</button>
-                <button class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700">탕 / 수육 / 전골</button>
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-xs font-bold text-slate-700">1단계: 필요하신 육류 부위를 모두 체크하세요 (다중 선택)</label>
+                <button type="button" onclick="document.getElementById('custom-meat-input-box').classList.toggle('hidden')" class="text-xs text-blue-600 hover:text-blue-700 font-bold flex items-center gap-1">
+                  + 기타 품목 직접 추가
+                </button>
+              </div>
+
+              <!-- 기타 품목 직접 기재 박스 -->
+              <div id="custom-meat-input-box" class="hidden mb-3 p-3 bg-blue-50 rounded-xl border border-blue-200 text-xs space-y-2">
+                <span class="font-bold text-blue-900 block">새로운 맞춤 부위 추가</span>
+                <div class="flex gap-2">
+                  <input type="text" id="custom-meat-name" placeholder="품목명 (예: 토마호크, 우설)" class="flex-1 p-2 rounded border border-slate-300 bg-white font-semibold">
+                  <button type="button" onclick="alert('기타 품목이 추가되었습니다!'); document.getElementById('custom-meat-input-box').classList.add('hidden');" class="px-3 py-2 bg-blue-600 text-white rounded font-bold">추가</button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <label class="p-3 rounded-xl border-2 border-blue-600 bg-blue-50/70 font-bold text-slate-900 flex items-center justify-between cursor-pointer">
+                  <span>살치살 (초이스 냉장)</span>
+                  <input type="checkbox" checked class="accent-blue-600">
+                </label>
+                <label class="p-3 rounded-xl border-2 border-blue-600 bg-blue-50/70 font-bold text-slate-900 flex items-center justify-between cursor-pointer">
+                  <span>알목심 (프라임 냉장)</span>
+                  <input type="checkbox" checked class="accent-blue-600">
+                </label>
+                <label class="p-3 rounded-xl border-2 border-blue-600 bg-blue-50/70 font-bold text-slate-900 flex items-center justify-between cursor-pointer">
+                  <span>S안심 (호주 AMH)</span>
+                  <input type="checkbox" checked class="accent-blue-600">
+                </label>
+                <label class="p-3 rounded-xl border-2 border-blue-600 bg-blue-50/70 font-bold text-slate-900 flex items-center justify-between cursor-pointer">
+                  <span>곡물채끝 (호주 TEYS)</span>
+                  <input type="checkbox" checked class="accent-blue-600">
+                </label>
+                <label class="p-3 rounded-xl border-2 border-blue-600 bg-blue-50/70 font-bold text-slate-900 flex items-center justify-between cursor-pointer">
+                  <span>차돌박이 (세절 급랭)</span>
+                  <input type="checkbox" checked class="accent-blue-600">
+                </label>
+                <label class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700 flex items-center justify-between cursor-pointer">
+                  <span>한우 1++ 등심</span>
+                  <input type="checkbox" class="accent-blue-600">
+                </label>
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">2단계: 필요하신 핵심 부위를 터치하세요</label>
-              <div class="flex flex-wrap gap-2 text-xs">
-                <span class="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-bold cursor-pointer">살치살 ✓</span>
-                <span class="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-bold cursor-pointer">알목심(척아이롤) ✓</span>
-                <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-medium cursor-pointer">안심</span>
-                <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-medium cursor-pointer">채끝등심</span>
-                <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-medium cursor-pointer">차돌박이</span>
+            <!-- 2단계: 품목별 월 사용량 슬라이더 (회의록: 품목마다 슬라이더) -->
+            <div class="space-y-3 pt-2 border-t border-slate-200">
+              <label class="block text-xs font-bold text-slate-700">2단계: 각 품목별 월 소요량 슬라이더 설정</label>
+              
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+                <div class="flex justify-between items-center font-bold">
+                  <span>초이스 냉장 살치살</span>
+                  <span class="text-blue-600 font-black">월 150 kg</span>
+                </div>
+                <input type="range" min="20" max="400" value="150" class="w-full accent-blue-600">
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+                <div class="flex justify-between items-center font-bold">
+                  <span>프라임 냉장 알목심 (척아이롤)</span>
+                  <span class="text-blue-600 font-black">월 200 kg</span>
+                </div>
+                <input type="range" min="20" max="400" value="200" class="w-full accent-blue-600">
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+                <div class="flex justify-between items-center font-bold">
+                  <span>호주산 AMH S안심</span>
+                  <span class="text-blue-600 font-black">월 80 kg</span>
+                </div>
+                <input type="range" min="10" max="200" value="80" class="w-full accent-blue-600">
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">3단계: 월 예상 사용량 슬라이더</label>
-              <div class="flex justify-between items-baseline mb-1">
-                <span class="text-xs text-slate-400">월간 매입 규모</span>
-                <span class="text-base font-black text-blue-600">월 350 kg</span>
+            <!-- 3단계: 납품 조건 & 맞춤 견적 요청서 발행 -->
+            <div class="pt-2 border-t border-slate-200 space-y-3">
+              <div class="flex justify-between text-xs text-slate-600">
+                <span>배송 조건: <strong>주 3회 (월/수/금 익선동 새벽 05:00)</strong></span>
+                <span>정산: <strong>월말 정산 세금계산서</strong></span>
               </div>
-              <input type="range" min="50" max="1000" step="50" value="350" class="w-full accent-blue-600">
-            </div>
 
-            <button onclick="alert('맞춤 견적 요청서가 마장동 유통망에 발행되었습니다!')" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-sm shadow-md transition">
-              맞춤 견적 요청서 발행 (마장동 5곳 전송)
-            </button>
+              <button onclick="alert('맞춤 견적 요청서가 마장동 6개 유통사에 실시간 전송되었습니다! 행복쇼핑 견적비교표로 이동합니다.'); switchTab('tab-b-5');" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black rounded-2xl text-sm shadow-lg transition flex items-center justify-center gap-2">
+                <span>🚀 맞춤 견적 요청서 발행 & 행복쇼핑 견적비교표 확인</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ============================================================== -->
-      <!-- [구매자 도안 5] 1사 몰아주기 vs 2사 최적 분할 매트릭스 비교 시뮬레이터 -->
+      <!-- [구매자 도안 5] 행복쇼핑 미니샵별 견적비교 화면 (캡처 100% 실사판) -->
       <!-- ============================================================== -->
       <section id="tab-b-5" class="tab-content hidden space-y-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-          <div class="flex items-center justify-between border-b pb-4">
-            <div>
-              <span class="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-md">도안 B-5 · 최적 분할 알고리즘 매트릭스</span>
-              <h2 class="text-xl font-black text-slate-900 mt-1">1개 업체 몰아주기 vs 2개 업체 최적 분할 납품 비교</h2>
-              <p class="text-xs text-slate-500">한 유통사에 다 맡기는 것보다, 부위별 최저가 2사를 쪼개어 계약할 때 생기는 추가 마진을 비교합니다.</p>
+        <div class="bg-white border border-gray-300 shadow-sm rounded-sm overflow-hidden text-xs text-[#333333]">
+          
+          <!-- 상단 행복쇼핑 로고 & 검색 바 헤더 -->
+          <div class="p-3 bg-white border-b border-gray-200 flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl font-black text-[#E11D48]">행복</span>
+              <span class="text-xl font-black text-[#2563EB]">식탁</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded bg-blue-100 text-blue-700 font-bold">셀프바이어 B2B</span>
             </div>
-            <span class="text-xs px-3 py-1.5 bg-emerald-50 text-emerald-700 font-extrabold rounded-xl border border-emerald-200">
-              2사 분할 시 +160만원 추가 절감!
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <!-- 옵션 A: 1사 단일 계약 -->
-            <div class="border-2 border-slate-200 rounded-2xl p-4 bg-slate-50/50 space-y-3">
-              <div class="flex justify-between items-center border-b pb-2">
-                <div>
-                  <span class="font-bold text-slate-500 text-[11px]">옵션 A</span>
-                  <h3 class="font-black text-slate-900 text-sm">벨엘미트 1사 단일 계약</h3>
-                </div>
-                <span class="px-2 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-bold rounded">발주 편의성 최고</span>
+            <div class="flex-1 max-w-lg w-full">
+              <div class="relative flex items-center">
+                <input type="text" readonly value="원가는 낮추고 식자재 품질은 높이다. 살롱순라 익선동 매장 미니샵별 육류 견적비교" class="w-full pl-3 pr-20 py-1.5 border-2 border-[#2563EB] rounded-sm text-xs font-semibold focus:outline-none">
+                <button class="absolute right-0 top-0 bottom-0 px-3 bg-[#2563EB] text-white font-bold text-xs">검색</button>
               </div>
-              <p class="text-slate-600">모든 품목(살치, 알목심, 안심, 채끝)을 마장동 벨엘미트 1곳에서 원스톱으로 입고받음.</p>
-              <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-1">
-                <div class="flex justify-between"><span class="text-slate-500">월 예상 납품 총액:</span> <span class="font-black text-slate-900 text-sm">18,300,000원</span></div>
-                <div class="flex justify-between"><span class="text-slate-500">기존 대비 절감액:</span> <span class="font-bold text-emerald-600">월 1,850,000원 절감</span></div>
-              </div>
-              <button onclick="alert('옵션 A (벨엘미트 단일 계약)로 확정되었습니다.')" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs">
-                옵션 A 단일 계약 확정
-              </button>
             </div>
-
-            <!-- 옵션 B: 2사 최적 분할 조합 -->
-            <div class="border-2 border-emerald-500 rounded-2xl p-4 bg-emerald-50/20 space-y-3 shadow-sm">
-              <div class="flex justify-between items-center border-b border-emerald-100 pb-2">
-                <div>
-                  <span class="font-bold text-emerald-700 text-[11px]">옵션 B (AI 추천)</span>
-                  <h3 class="font-black text-slate-900 text-sm">최적 2사 분할 조합</h3>
-                </div>
-                <span class="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded">마진 극대화</span>
-              </div>
-              <p class="text-slate-600">살치·차돌은 <strong>벨엘미트</strong>(최저가) + 알목심·채끝은 <strong>한결축산</strong>(최저가) 분할 발주.</p>
-              <div class="p-3 bg-white rounded-xl border border-emerald-200 space-y-1">
-                <div class="flex justify-between"><span class="text-slate-500">월 예상 납품 총액:</span> <span class="font-black text-emerald-700 text-sm">16,700,000원</span></div>
-                <div class="flex justify-between"><span class="text-slate-500">기존 대비 총 절감액:</span> <span class="font-extrabold text-emerald-600">월 3,450,000원 절감!</span></div>
-              </div>
-              <button onclick="alert('옵션 B (최적 2사 분할 조합)로 확정되었습니다!')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow">
-                옵션 B 2사 분할 계약 확정 (월 160만 원 추가 아낌)
-              </button>
+            <div class="flex items-center space-x-3 text-xs text-gray-500 font-semibold">
+              <button onclick="switchTab('tab-b-4')" class="text-blue-600 hover:underline">← 3스텝 퀘스트로 돌아가기</button>
             </div>
           </div>
+
+          <!-- 대제목 & 프로모션 배너 -->
+          <div class="p-4 bg-[#F8F9FA] border-b border-gray-200">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-xl font-black text-gray-900 tracking-tight">미니샵별 견적비교</h2>
+              <span class="text-[11px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded">마장동 공식 유통사 실시간 역경매</span>
+            </div>
+
+            <!-- 노란색 무이자/단가보증 배너 -->
+            <div class="w-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 p-3 rounded-sm text-slate-900 flex items-center justify-between shadow-2xs">
+              <div class="flex items-center space-x-3">
+                <span class="px-2 py-0.5 bg-slate-950 text-yellow-300 font-black text-xs rounded">무이자/단가보장</span>
+                <div>
+                  <span class="font-black text-sm block">최대 24개월 무이자 할부 / 3개월 단가 동결 프로모션</span>
+                  <span class="text-[11px] font-semibold text-slate-800">다양한 규격의 업소용 고기를 부담 없이 구매하세요</span>
+                </div>
+              </div>
+              <span class="hidden sm:inline text-xs font-bold text-slate-800">콜드체인 직배송 보장</span>
+            </div>
+
+            <!-- 탭 (일반전문몰 견적 vs 카드전문몰 견적) -->
+            <div class="flex border-b-2 border-[#2563EB] mt-3">
+              <button class="px-6 py-2 bg-[#2563EB] text-white font-black text-xs border-t-2 border-x-2 border-[#2563EB] rounded-t-sm flex items-center gap-1.5">
+                <span>₩ 일반전문몰 견적</span>
+                <span class="text-[9px] px-1 rounded bg-white/20 text-white">최저가</span>
+              </button>
+              <button class="px-6 py-2 bg-white text-gray-700 hover:bg-gray-50 font-bold text-xs border-t-2 border-x-2 border-gray-200 rounded-t-sm ml-1">
+                <span>💳 카드전문몰 견적</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 메인 비교 테이블 (캡처 이미지 컬럼 및 레이아웃 100% 동일) -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead>
+                <tr class="bg-[#F1F3F5] border-b border-gray-300 text-gray-700">
+                  <th class="py-2 px-2 border-r border-gray-300 font-bold w-12 text-center">분류</th>
+                  <th class="py-2 px-3 border-r border-gray-300 font-bold text-center min-w-[220px]">상품명</th>
+                  <th class="py-2 px-2 border-r border-gray-300 font-bold w-16 text-center">수량(kg)</th>
+                  <th class="py-2 px-3 border-r-2 border-blue-500 font-bold w-24 text-center bg-blue-50/50">최저 견적금액</th>
+                  
+                  <!-- 유통사 헤더 컬럼들 -->
+                  <th class="p-2 border-r border-gray-300 min-w-[125px] text-center bg-blue-600 text-white">
+                    <div class="text-[10px] font-normal">파워셀러 ⓘ</div>
+                    <div class="font-black text-xs mt-0.5">벨엘미트 (마장)</div>
+                    <div class="mt-0.5 text-[9px] text-white/90">카드 | 후기 99점</div>
+                  </th>
+                  <th class="p-2 border-r border-gray-300 min-w-[125px] text-center bg-blue-500 text-white">
+                    <div class="text-[10px] font-normal">톡톡 커뮤니티 인증 ⓘ</div>
+                    <div class="font-black text-xs mt-0.5">피씨미트 (마장)</div>
+                    <div class="mt-0.5 text-[9px] text-white/90">일반 | 후기 96점</div>
+                  </th>
+                  <th class="p-2 border-r border-gray-300 min-w-[125px] text-center bg-blue-500 text-white">
+                    <div class="text-[10px] font-normal">파워셀러 ⓘ</div>
+                    <div class="font-black text-xs mt-0.5">케이메모리 (성동)</div>
+                    <div class="mt-0.5 text-[9px] text-white/90">일반 | 후기 97점</div>
+                  </th>
+                  <th class="p-2 border-r border-gray-300 min-w-[125px] text-center bg-blue-500 text-white">
+                    <div class="text-[10px] font-normal">인증 셀러</div>
+                    <div class="font-black text-xs mt-0.5">마트컴 (한결축산)</div>
+                    <div class="mt-0.5 text-[9px] text-white/90">일반 | 후기 96점</div>
+                  </th>
+                  <th class="p-2 border-r border-gray-300 min-w-[125px] text-center bg-blue-500 text-white">
+                    <div class="text-[10px] font-normal">공식 납품사</div>
+                    <div class="font-black text-xs mt-0.5">앤케이미트</div>
+                    <div class="mt-0.5 text-[9px] text-white/90">일반 | 후기 98점</div>
+                  </th>
+                  <th class="p-2 border-r border-gray-300 min-w-[125px] text-center bg-blue-500 text-white">
+                    <div class="text-[10px] font-normal">특가몰</div>
+                    <div class="font-black text-xs mt-0.5">마장도매 (동양)</div>
+                    <div class="mt-0.5 text-[9px] text-white/90">카드 | 후기 95점</div>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- 품목 1: 살치살 -->
+                <tr class="border-b border-gray-200 hover:bg-yellow-50/40">
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-blue-600">우육</td>
+                  <td class="py-2.5 px-3 border-r text-left">
+                    <div class="flex items-center space-x-1">
+                      <span class="px-1 text-[9px] rounded bg-blue-50 text-blue-700 border border-blue-200 font-bold">재고인증</span>
+                      <span class="font-bold text-gray-900">초이스 냉장 살치살 (미국산 EXCEL 1kg)</span>
+                    </div>
+                  </td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold">150 kg</td>
+                  <td class="py-2.5 px-2 border-r-2 border-blue-500 text-right bg-blue-50/20 font-black text-red-600">32,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-black text-red-600 bg-red-50/30">32,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">33,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">33,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">33,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">33,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">34,500원</td>
+                </tr>
+
+                <!-- 품목 2: 알목심 -->
+                <tr class="border-b border-gray-200 hover:bg-yellow-50/40 bg-[#FAFAFA]">
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-blue-600">우육</td>
+                  <td class="py-2.5 px-3 border-r text-left">
+                    <div class="flex items-center space-x-1">
+                      <span class="px-1 text-[9px] rounded bg-blue-50 text-blue-700 border border-blue-200 font-bold">재고인증</span>
+                      <span class="font-bold text-gray-900">프라임 냉장 알목심 (미국산 EXCEL 척아이롤)</span>
+                    </div>
+                  </td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold">200 kg</td>
+                  <td class="py-2.5 px-2 border-r-2 border-blue-500 text-right bg-blue-50/20 font-black text-red-600">25,900원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-black text-red-600 bg-red-50/30">25,900원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">27,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">26,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">26,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">26,800원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">27,500원</td>
+                </tr>
+
+                <!-- 품목 3: S안심 -->
+                <tr class="border-b border-gray-200 hover:bg-yellow-50/40">
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-blue-600">우육</td>
+                  <td class="py-2.5 px-3 border-r text-left">
+                    <div class="flex items-center space-x-1">
+                      <span class="px-1 text-[9px] rounded bg-blue-50 text-blue-700 border border-blue-200 font-bold">재고인증</span>
+                      <span class="font-bold text-gray-900">AMH 냉장 S안심 (호주산 텐더로인 1kg)</span>
+                    </div>
+                  </td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold">80 kg</td>
+                  <td class="py-2.5 px-2 border-r-2 border-blue-500 text-right bg-blue-50/20 font-black text-red-600">44,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-black text-red-600 bg-red-50/30">44,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">45,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">44,500원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">44,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">44,000원</td>
+                  <td class="py-2.5 px-2 border-r text-center font-bold text-gray-700">46,000원</td>
+                </tr>
+
+                <!-- 배송 / 정책 행 -->
+                <tr class="bg-[#F8F9FA] border-t-2 border-gray-300 text-[11px] text-gray-600">
+                  <td colSpan="4" class="p-3 border-r-2 border-blue-500 text-right font-semibold">
+                    <div>미니샵 포인트 정책</div>
+                    <div>발송 예정일</div>
+                    <div>미니샵 배송정책 (배송비)</div>
+                  </td>
+                  <td class="p-2 border-r text-center leading-tight">
+                    <div class="text-blue-600 font-bold">결제금액 0.2%</div>
+                    <div class="text-red-600 font-bold">11/26 (목) 직송</div>
+                    <div class="text-gray-500 text-[10px]">새벽 05:00 익선동</div>
+                    <div class="text-gray-700">무료 배송</div>
+                  </td>
+                  <td class="p-2 border-r text-center leading-tight">
+                    <div class="text-blue-600 font-bold">결제금액 0.2%</div>
+                    <div class="text-red-600 font-bold">11/26 (목) 직송</div>
+                    <div class="text-gray-500 text-[10px]">아침 06:30 종로</div>
+                    <div class="text-gray-700">3,500원</div>
+                  </td>
+                  <td class="p-2 border-r text-center leading-tight">
+                    <div class="text-blue-600 font-bold">결제금액 0.2%</div>
+                    <div class="text-red-600 font-bold">11/26 (목) 직송</div>
+                    <div class="text-gray-500 text-[10px]">오전 07:00 종로</div>
+                    <div class="text-gray-700">무료 배송</div>
+                  </td>
+                  <td class="p-2 border-r text-center leading-tight">
+                    <div class="text-blue-600 font-bold">결제금액 0.2%</div>
+                    <div class="text-red-600 font-bold">11/26 (목) 직송</div>
+                    <div class="text-gray-500 text-[10px]">오전 직송</div>
+                    <div class="text-gray-700">무료 배송</div>
+                  </td>
+                  <td class="p-2 border-r text-center leading-tight">
+                    <div class="text-blue-600 font-bold">결제금액 0.2%</div>
+                    <div class="text-red-600 font-bold">11/27 (금) 직송</div>
+                    <div class="text-gray-500 text-[10px]">새벽 배송</div>
+                    <div class="text-gray-700">무료 배송</div>
+                  </td>
+                  <td class="p-2 border-r text-center leading-tight">
+                    <div class="text-blue-600 font-bold">결제금액 0.1%</div>
+                    <div class="text-red-600 font-bold">11/26 (목) 직송</div>
+                    <div class="text-gray-500 text-[10px]">오전 직송</div>
+                    <div class="text-gray-700">5,000원</div>
+                  </td>
+                </tr>
+
+                <!-- 총 견적금액 행 -->
+                <tr class="bg-white border-t-2 border-gray-300">
+                  <td colSpan="4" class="py-3 px-4 border-r-2 border-blue-500 text-right align-middle">
+                    <span class="text-sm font-black text-gray-800 mr-2">총 견적금액 (최저가 기준)</span>
+                    <span class="text-2xl font-black text-red-600">13,575,000원</span>
+                  </td>
+                  <td class="p-2 border-r text-center align-middle bg-blue-50/20">
+                    <div class="font-black text-base text-red-600">13,575,000</div>
+                    <span class="text-[9px] font-bold text-red-600">★ 최저가 1위</span>
+                  </td>
+                  <td class="p-2 border-r text-center align-middle">
+                    <div class="font-black text-sm text-blue-900">14,025,000</div>
+                  </td>
+                  <td class="p-2 border-r text-center align-middle">
+                    <div class="font-black text-sm text-blue-900">13,810,000</div>
+                  </td>
+                  <td class="p-2 border-r text-center align-middle">
+                    <div class="font-black text-sm text-blue-900">13,770,000</div>
+                  </td>
+                  <td class="p-2 border-r text-center align-middle">
+                    <div class="font-black text-sm text-blue-900">13,905,000</div>
+                  </td>
+                  <td class="p-2 border-r text-center align-middle">
+                    <div class="font-black text-sm text-blue-900">14,355,000</div>
+                  </td>
+                </tr>
+
+                <!-- 버튼 행 -->
+                <tr class="bg-white border-t border-gray-200">
+                  <td colSpan="4" class="p-2 border-r-2 border-blue-500 bg-gray-50 text-center text-gray-500 font-semibold">
+                    발주 체결 및 견적 상담
+                  </td>
+                  <td class="p-2 border-r text-center space-y-1">
+                    <button onclick="alert('벨엘미트와 발주 계약이 체결되었습니다! 익선동 콜드체인 직배송이 준비됩니다.')" class="w-full py-2 bg-[#2563EB] hover:bg-blue-700 text-white font-black text-xs rounded-xs">
+                      구매(발주)하기
+                    </button>
+                    <button onclick="alert('벨엘미트 김지선 대표 (010-7475-7410) 1:1 견적 상담이 연결되었습니다.')" class="w-full py-1 bg-[#0284C7] hover:bg-sky-700 text-white font-bold text-[10px] rounded-xs">
+                      견적상담하기
+                    </button>
+                  </td>
+                  <td class="p-2 border-r text-center space-y-1">
+                    <button onclick="alert('피씨미트 발주가 접수되었습니다.')" class="w-full py-2 bg-[#2563EB] hover:bg-blue-700 text-white font-black text-xs rounded-xs">구매하기</button>
+                    <button class="w-full py-1 bg-[#0284C7] text-white font-bold text-[10px] rounded-xs">견적상담하기</button>
+                  </td>
+                  <td class="p-2 border-r text-center space-y-1">
+                    <button class="w-full py-2 bg-[#2563EB] text-white font-black text-xs rounded-xs">구매하기</button>
+                    <button class="w-full py-1 bg-[#0284C7] text-white font-bold text-[10px] rounded-xs">견적상담하기</button>
+                  </td>
+                  <td class="p-2 border-r text-center space-y-1">
+                    <button class="w-full py-2 bg-[#2563EB] text-white font-black text-xs rounded-xs">구매하기</button>
+                    <button class="w-full py-1 bg-[#0284C7] text-white font-bold text-[10px] rounded-xs">견적상담하기</button>
+                  </td>
+                  <td class="p-2 border-r text-center space-y-1">
+                    <button class="w-full py-2 bg-[#2563EB] text-white font-black text-xs rounded-xs">구매하기</button>
+                    <button class="w-full py-1 bg-[#0284C7] text-white font-bold text-[10px] rounded-xs">견적상담하기</button>
+                  </td>
+                  <td class="p-2 border-r text-center space-y-1">
+                    <button class="w-full py-2 bg-[#2563EB] text-white font-black text-xs rounded-xs">구매하기</button>
+                    <button class="w-full py-1 bg-[#0284C7] text-white font-bold text-[10px] rounded-xs">견적상담하기</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 페이징: [ < ] 1/4 [ > ] -->
+          <div class="p-3 bg-white border-t border-gray-200 flex items-center justify-between">
+            <span class="text-xs text-gray-500 font-semibold">1페이지: 전체 미니샵 비교표 · 2~4페이지: 유통사별 정식 견적서 원본</span>
+            <div class="flex items-center space-x-2">
+              <button class="p-1 rounded border border-gray-300 bg-white font-bold text-gray-400" disabled>&lt;</button>
+              <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">1 / 4</span>
+              <button onclick="alert('2페이지: 벨엘미트 엑셀 정식 견적서 원본이 열립니다.')" class="p-1 rounded border border-gray-300 bg-white hover:bg-gray-100 font-bold text-blue-600">&gt;</button>
+            </div>
+          </div>
+
+          <!-- 하단 부가 서비스 박스 3개 (행복쇼핑 캡처 하단 그대로) -->
+          <div class="p-4 bg-[#F8F9FA] border-t border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-white p-3 rounded border border-gray-200">
+              <h4 class="font-black text-xs text-gray-800 border-b pb-1.5 mb-2">기본 가공 / 세절 서비스</h4>
+              <div class="space-y-1 text-[11px] text-gray-600">
+                <div class="flex justify-between"><span>스테이크 1인분 소분컷팅</span><span class="font-bold text-blue-600">+ 1,000원</span></div>
+                <div class="flex justify-between"><span>구이용 로스 슬라이스</span><span class="font-bold text-blue-600">+ 1,500원</span></div>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded border border-gray-200">
+              <h4 class="font-black text-xs text-gray-800 border-b pb-1.5 mb-2">프리미엄 숙성 서비스</h4>
+              <div class="space-y-1 text-[11px] text-gray-600">
+                <div class="flex justify-between"><span>14일 웻에이징 정밀 숙성</span><span class="font-bold text-blue-600">+ 40,000원</span></div>
+                <div class="flex justify-between"><span>맞춤 드라이에이징 (1박스)</span><span class="font-bold text-blue-600">+ 60,000원</span></div>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded border border-gray-200">
+              <h4 class="font-black text-xs text-gray-800 border-b pb-1.5 mb-2">정품 / 단가보증 안심제</h4>
+              <div class="space-y-1 text-[11px] text-gray-600">
+                <div class="flex justify-between"><span>축산물 이력번호 추적 확인서</span><span class="font-bold text-emerald-600">무료 제공</span></div>
+                <div class="flex justify-between"><span>불시 인상 차액 100% 보상</span><span class="font-bold text-blue-600">+ 10,000원</span></div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -753,8 +1060,9 @@
           <!-- 검색 및 권역 필터 (유첨 도안 상단) -->
           <div class="border-b border-slate-200 pb-4">
             <div class="flex items-center gap-6 text-xs font-bold border-b border-slate-100 pb-2 mb-3">
-              <span class="text-slate-900 border-b-2 border-slate-900 pb-1 cursor-pointer">품목별 사장님 찾기</span>
-              <span class="text-slate-400 hover:text-slate-700 cursor-pointer">업태별 사장님 찾기</span>
+              <span class="text-slate-900 border-b-2 border-slate-900 pb-1 font-black cursor-pointer">권역별 사장님 찾기</span>
+              <span class="text-slate-400 font-medium hover:text-slate-700 cursor-pointer">품목별 사장님 찾기</span>
+              <span class="text-slate-400 font-medium hover:text-slate-700 cursor-pointer">업태별 사장님 찾기</span>
             </div>
             <div class="relative mb-3">
               <input type="text" value="서울 권역별 사장님 찾기" class="w-full px-4 py-2.5 text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl" readonly>
