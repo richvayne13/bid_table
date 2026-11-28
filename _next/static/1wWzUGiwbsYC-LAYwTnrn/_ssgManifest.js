@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fcontracts\u002F[id]\u002Faudit","\u002Frfq\u002F[id]\u002Fcompare","\u002Fsupplier\u002Frfqs\u002F[id]\u002Fbid"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
