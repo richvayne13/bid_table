@@ -4,6 +4,7 @@ const basePath = isProd ? "/selfbuyer" : "";
 
 const nextConfig = {
   output: "export",
+  outputFileTracing: false,
   basePath: basePath,
   assetPrefix: basePath ? `${basePath}/` : undefined,
   trailingSlash: true,
