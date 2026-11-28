@@ -208,14 +208,14 @@ export default function SupplierRegisterQuotePage() {
   const avgPrice = checkedItems.length > 0 ? Math.round(checkedItems.reduce((acc, c) => acc + c.unitPrice, 0) / checkedItems.length) : 0;
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] text-slate-900 pb-24">
+    <div className="min-h-screen bg-[#181a1d] text-zinc-100 pb-24">
       {/* 1. 상단 글로벌 브랜딩 바 */}
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-[#121416] border-b border-zinc-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+              className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition"
               title="홈으로 돌아가기"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -225,9 +225,9 @@ export default function SupplierRegisterQuotePage() {
                 <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded-full">
                   판매자(납품 유통사) 전용
                 </span>
-                <span className="text-xs text-slate-400 font-bold">1·3·10 믹스 모델</span>
+                <span className="text-xs text-zinc-500 font-bold">1·3·10 믹스 모델</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
+              <h1 className="text-xl sm:text-2xl font-black text-white mt-0.5">
                 자사 육류 단가 및 견적 직접 등록
               </h1>
             </div>
@@ -236,9 +236,9 @@ export default function SupplierRegisterQuotePage() {
           <div className="flex items-center gap-2">
             <Link
               href="/supplier/catalog"
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
             >
-              <FileSpreadsheet className="w-4 h-4 text-slate-500" /> 기존 단가표 보기
+              <FileSpreadsheet className="w-4 h-4 text-zinc-400" /> 기존 단가표 보기
             </Link>
             <Link
               href="/"
@@ -252,7 +252,7 @@ export default function SupplierRegisterQuotePage() {
 
       {/* 2. 진행 상태 프로그레스 바 (4단계) */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs mb-8">
+        <div className="bg-[#22252a] p-4 rounded-2xl border border-zinc-800 shadow-2xs mb-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
               { num: 1, title: "1. 품목 퀘스트", desc: "취급 육류 부위 다중선택" },
@@ -270,17 +270,17 @@ export default function SupplierRegisterQuotePage() {
                     isCurrent
                       ? "bg-emerald-600 text-white shadow-md ring-2 ring-emerald-500/30"
                       : isDone
-                      ? "bg-emerald-50 text-emerald-950 border border-emerald-200"
-                      : "bg-slate-50 text-slate-400 hover:bg-slate-100"
+                      ? "bg-emerald-950/60 text-emerald-300 border border-emerald-500/40"
+                      : "bg-[#181a1d] text-zinc-500 hover:bg-zinc-800"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`text-xs font-black ${isCurrent ? "text-emerald-100" : isDone ? "text-emerald-700" : "text-slate-400"}`}>
+                    <span className={`text-xs font-black ${isCurrent ? "text-emerald-100" : isDone ? "text-emerald-700" : "text-zinc-500"}`}>
                       {step.title}
                     </span>
                     {isDone && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
                   </div>
-                  <span className={`text-[11px] mt-1 truncate ${isCurrent ? "text-white" : isDone ? "text-emerald-800" : "text-slate-500"}`}>
+                  <span className={`text-[11px] mt-1 truncate ${isCurrent ? "text-white" : isDone ? "text-emerald-800" : "text-zinc-400"}`}>
                     {step.desc}
                   </span>
                 </button>
@@ -293,22 +293,22 @@ export default function SupplierRegisterQuotePage() {
             STEP 1: 숨고식 퀘스트 위저드 (취급 육류 부위 다중 선택 & 기타 추가)
             ======================================================== */}
         {currentStep === 1 && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-200 animate-in fade-in space-y-6">
-            <div className="border-b border-slate-100 pb-5">
+          <div className="bg-[#22252a] rounded-3xl p-6 sm:p-8 shadow-md border border-zinc-800 text-zinc-100 animate-in fade-in space-y-6">
+            <div className="border-b border-zinc-800 pb-5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> 숨고식 퀘스트 Step 1 of 4
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+              <h2 className="text-xl sm:text-2xl font-black text-white">
                 자사에서 공급 가능한 육류 부위를 모두 선택해 주세요
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
                 ※ 회의 결정 사항: 판매자는 월 사용량(kg)을 입력할 필요가 없으며, 취급 품목을 복수 선택 후 조건만 등록합니다.
               </p>
             </div>
 
             {/* 기타 직접 추가 인풋 토글 */}
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-600">
+              <span className="text-xs font-bold text-zinc-300">
                 선택된 품목: <strong>{checkedItems.length}개</strong>
               </span>
               <button
@@ -324,17 +324,17 @@ export default function SupplierRegisterQuotePage() {
             {showCustomInput && (
               <form
                 onSubmit={handleAddCustom}
-                className="p-5 bg-emerald-50/50 rounded-2xl border border-emerald-200 space-y-3 animate-in fade-in"
+                className="p-5 bg-[#181a1d] rounded-2xl border border-emerald-500/40 space-y-3 animate-in fade-in"
               >
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-black text-emerald-950 flex items-center gap-1">
+                  <h4 className="text-xs font-black text-emerald-300 flex items-center gap-1">
                     <Plus className="w-4 h-4 text-emerald-600" />
                     새로운 공급 부위 직접 추가 (회의록 필수 기능)
                   </h4>
                   <button
                     type="button"
                     onClick={() => setShowCustomInput(false)}
-                    className="text-xs text-slate-400 hover:text-slate-600 font-bold"
+                    className="text-xs text-zinc-500 hover:text-zinc-300 font-bold"
                   >
                     닫기
                   </button>
@@ -342,34 +342,34 @@ export default function SupplierRegisterQuotePage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">품목명</label>
+                    <label className="block text-[11px] font-bold text-zinc-300 mb-1">품목명</label>
                     <input
                       type="text"
                       required
                       placeholder="예: 우삼겹, 양지머리, 토마호크"
                       value={customName}
                       onChange={(e) => setCustomName(e.target.value)}
-                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white font-bold"
+                      className="w-full p-2.5 rounded-lg border border-zinc-700 bg-white font-bold"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">세부 규격/스펙</label>
+                    <label className="block text-[11px] font-bold text-zinc-300 mb-1">세부 규격/스펙</label>
                     <input
                       type="text"
                       placeholder="예: 냉장 1kg 슬라이스 / 진공포장"
                       value={customSpec}
                       onChange={(e) => setCustomSpec(e.target.value)}
-                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white"
+                      className="w-full p-2.5 rounded-lg border border-zinc-700 bg-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">예상 납품단가 (원/kg)</label>
+                    <label className="block text-[11px] font-bold text-zinc-300 mb-1">예상 납품단가 (원/kg)</label>
                     <input
                       type="number"
                       step={500}
                       value={customPrice}
                       onChange={(e) => setCustomPrice(Number(e.target.value))}
-                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white font-bold text-emerald-700"
+                      className="w-full p-2.5 rounded-lg border border-zinc-700 bg-white font-bold text-emerald-700"
                     />
                   </div>
                 </div>
@@ -378,7 +378,7 @@ export default function SupplierRegisterQuotePage() {
                   <button
                     type="button"
                     onClick={() => setShowCustomInput(false)}
-                    className="px-3.5 py-1.5 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-3.5 py-1.5 rounded-lg bg-slate-200 text-zinc-200 text-xs font-bold"
                   >
                     취소
                   </button>
@@ -401,20 +401,20 @@ export default function SupplierRegisterQuotePage() {
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-start justify-between ${
                     item.checked
                       ? "border-emerald-600 bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/20"
-                      : "border-slate-200 hover:border-slate-300 bg-white opacity-75"
+                      : "border-zinc-800 hover:border-zinc-700 bg-white opacity-75"
                   }`}
                 >
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
+                      <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-200">
                         {item.origin} · {item.brand}
                       </span>
                       <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${item.storage === "냉장" ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"}`}>
                         {item.storage}
                       </span>
                     </div>
-                    <h3 className="font-black text-base text-slate-900 mt-1">{item.name}</h3>
-                    <p className="text-xs text-slate-500 leading-snug">{item.spec}</p>
+                    <h3 className="font-black text-base text-white mt-1">{item.name}</h3>
+                    <p className="text-xs text-zinc-400 leading-snug">{item.spec}</p>
                     <div className="text-xs font-extrabold text-emerald-700 mt-2">
                       기준단가: {item.unitPrice.toLocaleString()}원/kg
                     </div>
@@ -424,7 +424,7 @@ export default function SupplierRegisterQuotePage() {
                     className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${
                       item.checked
                         ? "bg-emerald-600 text-white shadow-xs"
-                        : "border-2 border-slate-300 text-transparent"
+                        : "border-2 border-zinc-700 text-transparent"
                     }`}
                   >
                     <Check className="w-4 h-4 stroke-[3]" />
@@ -434,8 +434,8 @@ export default function SupplierRegisterQuotePage() {
             </div>
 
             {/* 하단 네비게이션 */}
-            <div className="flex items-center justify-between border-t border-slate-100 pt-6 mt-8">
-              <span className="text-xs font-bold text-slate-500">
+            <div className="flex items-center justify-between border-t border-zinc-800 pt-6 mt-8">
+              <span className="text-xs font-bold text-zinc-400">
                 총 <strong>{checkedItems.length}개</strong> 품목 선택 완료
               </span>
               <button
@@ -453,26 +453,26 @@ export default function SupplierRegisterQuotePage() {
             STEP 2: 공급 거래 조건 (회의록 RAWDATA: MOQ & 견적 유효기간 픽스)
             ======================================================== */}
         {currentStep === 2 && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-200 animate-in fade-in space-y-6">
-            <div className="border-b border-slate-100 pb-5">
+          <div className="bg-[#22252a] rounded-3xl p-6 sm:p-8 shadow-md border border-zinc-800 text-zinc-100 animate-in fade-in space-y-6">
+            <div className="border-b border-zinc-800 pb-5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
                 <Sliders className="w-3.5 h-3.5 text-emerald-600" /> 숨고식 퀘스트 Step 2 of 4
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+              <h2 className="text-xl sm:text-2xl font-black text-white">
                 납품 조건 (MOQ) 및 견적서 유효기간을 확정해 주세요
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
                 ※ 회의록 합의: &quot;견적 넣는 판매자가 이 견적서가 유효한 기간에 대한 설정을 할 수 있게끔 반영하고, MOQ를 설정한다.&quot;
               </p>
             </div>
 
             <div className="space-y-6 max-w-3xl text-xs sm:text-sm">
               {/* 1. MOQ 최소 주문 단위 */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                <label className="block font-black text-slate-900 text-sm">
+              <div className="p-4 rounded-2xl bg-[#181a1d] border border-zinc-800 space-y-2">
+                <label className="block font-black text-white text-sm">
                   1) 최소 주문 수량/금액 (MOQ)
                 </label>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-zinc-400">
                   외식업체가 1회 주문 시 맞춰야 하는 최소 규격을 선택하거나 직접 입력하세요.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
@@ -488,7 +488,7 @@ export default function SupplierRegisterQuotePage() {
                       className={`p-3 rounded-xl border text-left font-bold text-xs transition ${
                         defaultMoq === moqOpt
                           ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
+                          : "bg-white text-zinc-200 border-zinc-800 hover:border-zinc-700"
                       }`}
                     >
                       {moqOpt}
@@ -498,16 +498,16 @@ export default function SupplierRegisterQuotePage() {
               </div>
 
               {/* 2. 견적 유효 기간 픽스 */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div className="p-4 rounded-2xl bg-[#181a1d] border border-zinc-800 space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="block font-black text-slate-900 text-sm">
+                  <label className="block font-black text-white text-sm">
                     2) 견적 유효 기간 (단가 보증 기간) ★회의 필수 반영
                   </label>
                   <span className="text-[11px] text-amber-800 bg-amber-100 font-bold px-2 py-0.5 rounded">
                     단가 보증제
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-zinc-400">
                   축산물 시세 변동을 감안하여 제출하는 견적 단가를 고정 보장하는 기간입니다.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
@@ -523,7 +523,7 @@ export default function SupplierRegisterQuotePage() {
                       className={`p-3 rounded-xl border text-left font-bold text-xs transition ${
                         validDays === daysOpt
                           ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
+                          : "bg-white text-zinc-200 border-zinc-800 hover:border-zinc-700"
                       }`}
                     >
                       {daysOpt}
@@ -533,8 +533,8 @@ export default function SupplierRegisterQuotePage() {
               </div>
 
               {/* 3. 배송 및 콜드체인 조건 */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                <label className="block font-black text-slate-900 text-sm">
+              <div className="p-4 rounded-2xl bg-[#181a1d] border border-zinc-800 space-y-2">
+                <label className="block font-black text-white text-sm">
                   3) 물류 및 콜드체인 배송 주기
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
@@ -550,7 +550,7 @@ export default function SupplierRegisterQuotePage() {
                       className={`p-3 rounded-xl border text-left font-bold text-xs transition ${
                         deliveryTerms === delOpt
                           ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
+                          : "bg-white text-zinc-200 border-zinc-800 hover:border-zinc-700"
                       }`}
                     >
                       {delOpt}
@@ -561,10 +561,10 @@ export default function SupplierRegisterQuotePage() {
             </div>
 
             {/* 하단 진행 버튼 */}
-            <div className="flex items-center justify-between border-t border-slate-100 pt-6 mt-8">
+            <div className="flex items-center justify-between border-t border-zinc-800 pt-6 mt-8">
               <button
                 onClick={() => setCurrentStep(1)}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl border border-zinc-800 text-zinc-300 font-bold text-xs hover:bg-[#181a1d] flex items-center gap-1.5"
               >
                 <ArrowLeft className="w-4 h-4" /> 이전 단계
               </button>
@@ -582,23 +582,23 @@ export default function SupplierRegisterQuotePage() {
             STEP 3: 마장동 실무 엑셀 그리드 (회의록 3번 도안 실사판)
             ======================================================== */}
         {currentStep === 3 && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-200 animate-in fade-in space-y-6">
-            <div className="border-b border-slate-100 pb-5">
+          <div className="bg-[#22252a] rounded-3xl p-6 sm:p-8 shadow-md border border-zinc-800 text-zinc-100 animate-in fade-in space-y-6">
+            <div className="border-b border-zinc-800 pb-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
                     <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" /> 도안 3번 실사판: 마장동 실무 엑셀 그리드
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                  <h2 className="text-xl sm:text-2xl font-black text-white">
                     축산물 실무 납품 단가표 (Excel Matrix)
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                  <p className="text-xs sm:text-sm text-zinc-400 mt-1">
                     회의록 합의: &quot;원산지까지 기본 정보가 기재되어 있고, 우측 초록색 셀에 판매자가 단가만 써서 제출하면 견적서가 완성되는 구조&quot;
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl">
+                  <span className="text-xs font-bold text-zinc-300 bg-zinc-800 px-3 py-1.5 rounded-xl">
                     선택 품목: <strong>{checkedItems.length}종</strong>
                   </span>
                   <span className="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
@@ -609,44 +609,44 @@ export default function SupplierRegisterQuotePage() {
             </div>
 
             {/* 마장동 실무 엑셀 테이블 */}
-            <div className="border border-slate-300 rounded-2xl overflow-hidden shadow-2xs bg-white">
+            <div className="border border-zinc-700 rounded-2xl overflow-hidden shadow-2xs bg-white">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-100/80 text-slate-700 font-extrabold border-b border-slate-200 select-none">
-                      <th className="py-3 px-3 w-10 text-center border-r border-slate-200">#</th>
-                      <th className="py-3 px-3 min-w-[120px] border-r border-slate-200">품목명</th>
-                      <th className="py-3 px-3 min-w-[180px] border-r border-slate-200">세부 스펙 / 부위</th>
-                      <th className="py-3 px-3 min-w-[80px] border-r border-slate-200">원산지</th>
-                      <th className="py-3 px-3 min-w-[90px] border-r border-slate-200">브랜드</th>
-                      <th className="py-3 px-3 min-w-[70px] border-r border-slate-200 text-center">보관</th>
-                      <th className="py-3 px-3 min-w-[150px] border-r border-slate-200 bg-emerald-100/60 text-emerald-950 font-black">
+                    <tr className="bg-zinc-800/80 text-zinc-200 font-extrabold border-b border-zinc-800 select-none">
+                      <th className="py-3 px-3 w-10 text-center border-r border-zinc-800">#</th>
+                      <th className="py-3 px-3 min-w-[120px] border-r border-zinc-800">품목명</th>
+                      <th className="py-3 px-3 min-w-[180px] border-r border-zinc-800">세부 스펙 / 부위</th>
+                      <th className="py-3 px-3 min-w-[80px] border-r border-zinc-800">원산지</th>
+                      <th className="py-3 px-3 min-w-[90px] border-r border-zinc-800">브랜드</th>
+                      <th className="py-3 px-3 min-w-[70px] border-r border-zinc-800 text-center">보관</th>
+                      <th className="py-3 px-3 min-w-[150px] border-r border-zinc-800 bg-emerald-100/60 text-emerald-300 font-black">
                         ★ kg당 공급 단가 (원) [수정가능]
                       </th>
-                      <th className="py-3 px-3 min-w-[120px] border-r border-slate-200">MOQ 단위</th>
-                      <th className="py-3 px-3 min-w-[140px] border-r border-slate-200">견적 유효기간</th>
+                      <th className="py-3 px-3 min-w-[120px] border-r border-zinc-800">MOQ 단위</th>
+                      <th className="py-3 px-3 min-w-[140px] border-r border-zinc-800">견적 유효기간</th>
                       <th className="py-3 px-3 w-14 text-center">관리</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200 font-medium text-slate-800">
+                  <tbody className="divide-y divide-slate-200 font-medium text-zinc-100">
                     {checkedItems.map((item, index) => (
                       <tr key={item.id} className="hover:bg-emerald-50/20 transition group">
-                        <td className="py-2.5 px-3 text-center text-slate-400 font-mono border-r border-slate-200 bg-slate-50/40">
+                        <td className="py-2.5 px-3 text-center text-zinc-500 font-mono border-r border-zinc-800 bg-[#181a1d]/40">
                           {index + 1}
                         </td>
-                        <td className="py-2.5 px-3 font-extrabold text-slate-900 border-r border-slate-200">
+                        <td className="py-2.5 px-3 font-extrabold text-white border-r border-zinc-800">
                           {item.name}
                         </td>
-                        <td className="py-2.5 px-3 text-slate-600 border-r border-slate-200">
+                        <td className="py-2.5 px-3 text-zinc-300 border-r border-zinc-800">
                           {item.spec}
                         </td>
-                        <td className="py-2.5 px-3 text-slate-700 border-r border-slate-200">
+                        <td className="py-2.5 px-3 text-zinc-200 border-r border-zinc-800">
                           {item.origin}
                         </td>
-                        <td className="py-2.5 px-3 text-slate-700 border-r border-slate-200 font-semibold">
+                        <td className="py-2.5 px-3 text-zinc-200 border-r border-zinc-800 font-semibold">
                           {item.brand}
                         </td>
-                        <td className="py-2.5 px-3 text-center border-r border-slate-200">
+                        <td className="py-2.5 px-3 text-center border-r border-zinc-800">
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                               item.storage === "냉장"
@@ -658,7 +658,7 @@ export default function SupplierRegisterQuotePage() {
                           </span>
                         </td>
                         {/* 초록색 수정 가능 단가 인풋 셀 */}
-                        <td className="py-1.5 px-2 border-r border-slate-200 bg-emerald-50/50">
+                        <td className="py-1.5 px-2 border-r border-zinc-800 bg-emerald-50/50">
                           <div className="flex items-center gap-1.5">
                             <span className="text-emerald-700 font-bold text-xs">₩</span>
                             <input
@@ -666,27 +666,27 @@ export default function SupplierRegisterQuotePage() {
                               step={500}
                               value={item.unitPrice}
                               onChange={(e) => updatePrice(item.id, Number(e.target.value))}
-                              className="w-full px-2 py-1.5 bg-white border border-emerald-400 rounded-lg font-black text-emerald-950 text-sm focus:outline-emerald-600 focus:ring-1 focus:ring-emerald-500 shadow-2xs"
+                              className="w-full px-2 py-1.5 bg-white border border-emerald-400 rounded-lg font-black text-emerald-300 text-sm focus:outline-emerald-600 focus:ring-1 focus:ring-emerald-500 shadow-2xs"
                             />
-                            <span className="text-[10px] text-slate-500 font-bold whitespace-nowrap">/kg</span>
+                            <span className="text-[10px] text-zinc-400 font-bold whitespace-nowrap">/kg</span>
                           </div>
                         </td>
-                        <td className="py-2.5 px-3 text-slate-600 border-r border-slate-200">
+                        <td className="py-2.5 px-3 text-zinc-300 border-r border-zinc-800">
                           <input
                             type="text"
                             value={item.moq || defaultMoq}
                             onChange={(e) => updateMoq(item.id, e.target.value)}
-                            className="w-full px-1.5 py-1 bg-transparent border-0 border-b border-dashed border-slate-300 focus:border-emerald-500 focus:outline-hidden text-xs"
+                            className="w-full px-1.5 py-1 bg-transparent border-0 border-b border-dashed border-zinc-700 focus:border-emerald-500 focus:outline-hidden text-xs"
                           />
                         </td>
-                        <td className="py-2.5 px-3 text-slate-500 border-r border-slate-200 text-[11px]">
+                        <td className="py-2.5 px-3 text-zinc-400 border-r border-zinc-800 text-[11px]">
                           {validDays}
                         </td>
                         <td className="py-2.5 px-3 text-center">
                           <button
                             type="button"
                             onClick={() => deleteItem(item.id)}
-                            className="p-1 text-slate-400 hover:text-red-600 rounded transition"
+                            className="p-1 text-zinc-500 hover:text-red-600 rounded transition"
                             title="행 삭제"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -702,16 +702,16 @@ export default function SupplierRegisterQuotePage() {
             {/* 안내 팁 */}
             <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div className="text-xs text-emerald-950 leading-relaxed">
+              <div className="text-xs text-emerald-300 leading-relaxed">
                 <strong>마장동 유통사 실무 팁:</strong> 초록색 단가 셀의 수치를 수정하면 살롱순라 등 구매자 견적 비교표(행복쇼핑 뷰)에 실시간 최저가 경쟁 업체로 자동 반영됩니다.
               </div>
             </div>
 
             {/* 하단 버튼 */}
-            <div className="flex items-center justify-between border-t border-slate-100 pt-6 mt-8">
+            <div className="flex items-center justify-between border-t border-zinc-800 pt-6 mt-8">
               <button
                 onClick={() => setCurrentStep(2)}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl border border-zinc-800 text-zinc-300 font-bold text-xs hover:bg-[#181a1d] flex items-center gap-1.5"
               >
                 <ArrowLeft className="w-4 h-4" /> 이전 단계
               </button>
@@ -731,21 +731,21 @@ export default function SupplierRegisterQuotePage() {
         {currentStep === 4 && (
           <div className="space-y-6 animate-in fade-in">
             {/* 상단 액션 바 */}
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="bg-[#22252a] p-4 rounded-2xl border border-zinc-800 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
                   도안 10번 양식
                 </span>
-                <h3 className="text-base font-black text-slate-900 mt-1">
+                <h3 className="text-base font-black text-white mt-1">
                   공식 축산물 납품 견적서 발행 완료
                 </h3>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => window.print()}
-                  className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+                  className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
                 >
-                  <Printer className="w-4 h-4 text-slate-500" /> 견적서 인쇄 / PDF 저장
+                  <Printer className="w-4 h-4 text-zinc-400" /> 견적서 인쇄 / PDF 저장
                 </button>
                 <button
                   onClick={() => alert("견적서 링크가 클립보드에 복사되었습니다. 카카오톡/문자로 공유하세요!")}
@@ -757,21 +757,21 @@ export default function SupplierRegisterQuotePage() {
             </div>
 
             {/* 정식 견적서 페이퍼 뷰 (10번 미니멀 견적서 디자인) */}
-            <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-md border border-slate-200 max-w-4xl mx-auto space-y-8 font-sans">
+            <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-md border border-zinc-800 max-w-4xl mx-auto space-y-8 font-sans">
               {/* 견적서 헤더 */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-900 pb-6 gap-4">
                 <div>
                   <span className="text-xs font-bold tracking-widest text-emerald-700 uppercase">
                     Selfbuyer B2B Meat Quotation
                   </span>
-                  <h2 className="text-3xl font-black text-slate-900 tracking-tight mt-1">
+                  <h2 className="text-3xl font-black text-white tracking-tight mt-1">
                     축산물 납품 견적서
                   </h2>
-                  <p className="text-xs text-slate-400 font-mono mt-1">견적 번호: {supplierInfo.quoteNo}</p>
+                  <p className="text-xs text-zinc-500 font-mono mt-1">견적 번호: {supplierInfo.quoteNo}</p>
                 </div>
 
                 <div className="text-right text-xs space-y-1">
-                  <p className="text-slate-500">발행 일자: <strong>{supplierInfo.date}</strong></p>
+                  <p className="text-zinc-400">발행 일자: <strong>{supplierInfo.date}</strong></p>
                   <p className="text-emerald-700 font-bold">유효 기간: {validDays}</p>
                 </div>
               </div>
@@ -779,12 +779,12 @@ export default function SupplierRegisterQuotePage() {
               {/* 공급자 & 수신자 인포 박스 */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
                 {/* 공급받는자 */}
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                <div className="p-4 bg-[#181a1d] rounded-2xl border border-zinc-800 space-y-2">
+                  <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider block">
                     [공급받는 자 (외식 매장)]
                   </span>
-                  <div className="space-y-1 text-slate-700">
-                    <p className="text-base font-black text-slate-900">{targetStoreName}</p>
+                  <div className="space-y-1 text-zinc-200">
+                    <p className="text-base font-black text-white">{targetStoreName}</p>
                     <p>사업장 위치: 서울특별시 종로구 익선동</p>
                     <p>소싱 담당: 총괄 셰프 / 점주 귀하</p>
                     <p>배송 요청: {deliveryTerms}</p>
@@ -792,12 +792,12 @@ export default function SupplierRegisterQuotePage() {
                 </div>
 
                 {/* 공급자 */}
-                <div className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-200 space-y-2 relative">
+                <div className="p-4 bg-[#181a1d] rounded-2xl border border-emerald-500/40 space-y-2 relative">
                   <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block">
                     [공급자 (마장동 축산물 납품사)]
                   </span>
-                  <div className="space-y-1 text-slate-700">
-                    <p className="text-base font-black text-slate-900 flex items-center justify-between">
+                  <div className="space-y-1 text-zinc-200">
+                    <p className="text-base font-black text-white flex items-center justify-between">
                       {supplierInfo.company}
                       {/* 마장동 직인 심볼 */}
                       <span className="inline-block border-2 border-red-600 text-red-600 font-serif font-black text-[10px] px-1.5 py-0.5 rounded rotate-[-6deg]">
@@ -812,9 +812,9 @@ export default function SupplierRegisterQuotePage() {
               </div>
 
               {/* 견적 품목 표 */}
-              <div className="border border-slate-200 rounded-2xl overflow-hidden">
+              <div className="border border-zinc-800 rounded-2xl overflow-hidden">
                 <table className="w-full text-xs">
-                  <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 font-black">
+                  <thead className="bg-zinc-800 border-b border-zinc-800 text-zinc-200 font-black">
                     <tr>
                       <th className="py-2.5 px-3 text-center w-10">No</th>
                       <th className="py-2.5 px-3 text-left">품목 및 스펙</th>
@@ -824,24 +824,24 @@ export default function SupplierRegisterQuotePage() {
                       <th className="py-2.5 px-3 text-left">최소 발주 규격 (MOQ)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-800">
+                  <tbody className="divide-y divide-slate-100 text-zinc-100">
                     {checkedItems.map((item, idx) => (
-                      <tr key={item.id} className="hover:bg-slate-50/50">
-                        <td className="py-2.5 px-3 text-center text-slate-400 font-mono">{idx + 1}</td>
-                        <td className="py-2.5 px-3 font-extrabold text-slate-900">
+                      <tr key={item.id} className="hover:bg-[#181a1d]/50">
+                        <td className="py-2.5 px-3 text-center text-zinc-500 font-mono">{idx + 1}</td>
+                        <td className="py-2.5 px-3 font-extrabold text-white">
                           {item.name}
-                          <span className="block text-[11px] font-normal text-slate-500">{item.spec}</span>
+                          <span className="block text-[11px] font-normal text-zinc-400">{item.spec}</span>
                         </td>
-                        <td className="py-2.5 px-3 text-slate-600">{item.origin} / {item.brand}</td>
+                        <td className="py-2.5 px-3 text-zinc-300">{item.origin} / {item.brand}</td>
                         <td className="py-2.5 px-3 text-center">
-                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
+                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-200">
                             {item.storage}
                           </span>
                         </td>
-                        <td className="py-2.5 px-3 text-right font-black text-slate-900 text-sm">
+                        <td className="py-2.5 px-3 text-right font-black text-white text-sm">
                           {item.unitPrice.toLocaleString()}원
                         </td>
-                        <td className="py-2.5 px-3 text-slate-600 text-[11px]">{item.moq || defaultMoq}</td>
+                        <td className="py-2.5 px-3 text-zinc-300 text-[11px]">{item.moq || defaultMoq}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -849,8 +849,8 @@ export default function SupplierRegisterQuotePage() {
               </div>
 
               {/* 거래 약관 및 납품 안내 */}
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5 text-xs text-slate-600">
-                <h4 className="font-bold text-slate-800">[특약 및 납품 조건]</h4>
+              <div className="p-4 bg-[#181a1d] rounded-2xl border border-zinc-800 space-y-1.5 text-xs text-zinc-300">
+                <h4 className="font-bold text-zinc-100">[특약 및 납품 조건]</h4>
                 <ul className="list-disc list-inside space-y-1 text-[11px] leading-relaxed">
                   <li><strong>배송 조건:</strong> {deliveryTerms}</li>
                   <li><strong>결제 방식:</strong> {paymentTerms}</li>
@@ -860,14 +860,14 @@ export default function SupplierRegisterQuotePage() {
               </div>
 
               {/* 견적서 하단 서명란 */}
-              <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-                <span className="text-slate-400">
+              <div className="pt-6 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+                <span className="text-zinc-500">
                   플랫폼 검증 인증: <strong>selfbuyer Verified Supplier</strong>
                 </span>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setCurrentStep(3)}
-                    className="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50"
+                    className="px-4 py-2 border border-zinc-800 text-zinc-300 rounded-xl font-bold hover:bg-[#181a1d]"
                   >
                     단가 재수정하기
                   </button>

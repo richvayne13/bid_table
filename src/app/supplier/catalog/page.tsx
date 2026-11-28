@@ -167,9 +167,9 @@ export default function SupplierCatalogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 pb-16">
+    <div className="min-h-screen bg-[#181a1d] text-zinc-100 pb-16">
       {/* 상단 바 */}
-      <div className="bg-slate-900 text-white border-b border-slate-800">
+      <div className="bg-[#121416] text-white border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
@@ -188,7 +188,7 @@ export default function SupplierCatalogPage() {
                   마장동 축산 도소매
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 mt-0.5">
                 등록번호: 258-40-00129 · 대표: 김지선 · 소재지: 마장동 1층 · 사용매장: 살롱순라
               </p>
             </div>
@@ -220,16 +220,16 @@ export default function SupplierCatalogPage() {
 
       <div className="max-w-7xl mx-auto px-4 mt-6">
         {/* 안내 카드 */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div className="bg-white p-4 rounded-2xl border border-zinc-800 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900">
+              <h2 className="text-sm font-bold text-white">
                 실제 마장동 견적서 양식(26.10.30) 기반 단가표
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-zinc-400">
                 이곳에 등록된 단가는 살롱순라가 견적 요청하거나 탐색할 때 기준 납품단가로 즉시 연동됩니다.
               </p>
             </div>
@@ -242,10 +242,10 @@ export default function SupplierCatalogPage() {
         </div>
 
         {/* 단가표 스프레드시트 테이블 */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-zinc-800 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
-              <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <thead className="bg-slate-100 text-zinc-200 font-bold border-b border-zinc-800">
                 <tr>
                   <th className="p-3 border-r w-28">브랜드</th>
                   <th className="p-3 border-r w-28">등급</th>
@@ -258,28 +258,28 @@ export default function SupplierCatalogPage() {
                   <th className="p-3 text-center w-12">삭제</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-zinc-800">
                 {items.map((row) => (
-                  <tr key={row.id} className="hover:bg-slate-50/80 transition">
+                  <tr key={row.id} className="hover:bg-[#181a1d]/80 transition">
                     <td className="p-2 border-r">
                       <input
                         value={row.brand}
                         onChange={(e) => handleFieldChange(row.id, "brand", e.target.value)}
-                        className="w-full px-2 py-1 rounded border border-slate-200 font-semibold"
+                        className="w-full px-2 py-1 rounded border border-zinc-800 font-semibold"
                       />
                     </td>
                     <td className="p-2 border-r">
                       <input
                         value={row.grade}
                         onChange={(e) => handleFieldChange(row.id, "grade", e.target.value)}
-                        className="w-full px-2 py-1 rounded border border-slate-200 font-semibold"
+                        className="w-full px-2 py-1 rounded border border-zinc-800 font-semibold"
                       />
                     </td>
                     <td className="p-2 border-r">
                       <select
                         value={row.storage}
                         onChange={(e) => handleFieldChange(row.id, "storage", e.target.value)}
-                        className="w-full px-2 py-1 rounded border border-slate-200 font-bold text-slate-700"
+                        className="w-full px-2 py-1 rounded border border-zinc-800 font-bold text-zinc-200"
                       >
                         <option value="냉장">냉장</option>
                         <option value="냉동">냉동</option>
@@ -290,14 +290,14 @@ export default function SupplierCatalogPage() {
                       <input
                         value={row.item_name}
                         onChange={(e) => handleFieldChange(row.id, "item_name", e.target.value)}
-                        className="w-full px-2 py-1 rounded border border-slate-200 font-bold text-slate-900"
+                        className="w-full px-2 py-1 rounded border border-zinc-800 font-bold text-white"
                       />
                     </td>
                     <td className="p-2 border-r">
                       <input
                         value={row.origin}
                         onChange={(e) => handleFieldChange(row.id, "origin", e.target.value)}
-                        className="w-full px-2 py-1 rounded border border-slate-200 text-slate-600"
+                        className="w-full px-2 py-1 rounded border border-zinc-800 text-zinc-300"
                       />
                     </td>
                     <td className="p-2 border-r text-right">
@@ -305,14 +305,14 @@ export default function SupplierCatalogPage() {
                         type="number"
                         value={row.price}
                         onChange={(e) => handleFieldChange(row.id, "price", Number(e.target.value))}
-                        className="w-full text-right px-2 py-1 rounded border border-slate-200 font-black text-emerald-700"
+                        className="w-full text-right px-2 py-1 rounded border border-zinc-800 font-black text-emerald-700"
                       />
                     </td>
                     <td className="p-2 border-r">
                       <input
                         value={row.note}
                         onChange={(e) => handleFieldChange(row.id, "note", e.target.value)}
-                        className="w-full px-2 py-1 rounded border border-slate-200 text-slate-500"
+                        className="w-full px-2 py-1 rounded border border-zinc-800 text-zinc-400"
                       />
                     </td>
                     <td className="p-2 border-r">
@@ -323,7 +323,7 @@ export default function SupplierCatalogPage() {
                     <td className="p-2 text-center">
                       <button
                         onClick={() => removeRow(row.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded"
+                        className="p-1.5 text-zinc-500 hover:text-rose-600 hover:bg-rose-50 rounded"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>

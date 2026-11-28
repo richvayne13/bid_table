@@ -274,24 +274,24 @@ export default function NewRfqPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
-      {/* 상단 헤더 & 바로가기 바 */}
-      <div className="bg-slate-900 text-white border-b border-slate-800">
+      {/* 상단 헤더 & 바로가기 바 - BUYER 화이트 테마 */}
+      <div className="bg-white text-gray-900 border-b border-gray-200 shadow-xs">
         <div className="max-w-4xl mx-auto px-4 py-5 flex items-center justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold border border-blue-500/30 mb-1.5">
-              <Sparkles className="w-3.5 h-3.5" /> B-4. 3스텝 맞춤 견적 퀘스트
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200 mb-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" /> B-4. 3스텝 맞춤 견적 퀘스트 (화이트 테마)
             </div>
-            <h1 className="text-xl sm:text-2xl font-black">
+            <h1 className="text-xl sm:text-2xl font-black text-gray-900">
               살롱순라 정기 육류 납품 견적 요청
             </h1>
-            <p className="text-slate-400 text-xs mt-0.5">
+            <p className="text-gray-500 text-xs mt-0.5">
               사용하시는 부위와 월 예상 소요량만 선택하시면 마장동 유통사들이 최저가로 역제안합니다.
             </p>
           </div>
 
           <button
             onClick={() => setShowHaengbokCompare(true)}
-            className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition flex items-center gap-1"
+            className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-md transition flex items-center gap-1"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
             행복쇼핑 견적비교표 즉시보기
@@ -305,8 +305,8 @@ export default function NewRfqPage() {
               onClick={() => setCurrentStep(1)}
               className={`py-2 rounded-lg font-black transition border ${
                 currentStep === 1
-                  ? "bg-blue-600 text-white border-blue-500 shadow"
-                  : "bg-slate-800 text-slate-400 border-slate-700"
+                  ? "bg-blue-600 text-white border-blue-600 shadow"
+                  : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
               }`}
             >
               1. 품목 다중 선택 ({checkedItems.length}개 선택됨)
@@ -315,8 +315,8 @@ export default function NewRfqPage() {
               onClick={() => setCurrentStep(2)}
               className={`py-2 rounded-lg font-black transition border ${
                 currentStep === 2
-                  ? "bg-blue-600 text-white border-blue-500 shadow"
-                  : "bg-slate-800 text-slate-400 border-slate-700"
+                  ? "bg-blue-600 text-white border-blue-600 shadow"
+                  : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
               }`}
             >
               2. 품목별 월 사용량(kg) 조절
@@ -325,8 +325,8 @@ export default function NewRfqPage() {
               onClick={() => setCurrentStep(3)}
               className={`py-2 rounded-lg font-black transition border ${
                 currentStep === 3
-                  ? "bg-blue-600 text-white border-blue-500 shadow"
-                  : "bg-slate-800 text-slate-400 border-slate-700"
+                  ? "bg-blue-600 text-white border-blue-600 shadow"
+                  : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
               }`}
             >
               3. 마장동 매칭 발행 & 비교
@@ -356,7 +356,7 @@ export default function NewRfqPage() {
 
               <button
                 onClick={() => setShowCustomInput(true)}
-                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1 shadow-xs"
+                className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
               >
                 <Plus className="w-3.5 h-3.5 text-blue-400" />
                 기타 품목 직접 추가
@@ -555,8 +555,8 @@ export default function NewRfqPage() {
                       onClick={() => setDeliveryTime(opt)}
                       className={`flex-1 py-2 text-xs font-bold rounded-lg border transition ${
                         deliveryTime === opt
-                          ? "bg-slate-900 text-white border-slate-900"
-                          : "bg-white text-slate-700 border-slate-200"
+                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                       }`}
                     >
                       {opt}
@@ -566,7 +566,7 @@ export default function NewRfqPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">
                   선호 정산 방식
                 </label>
                 <div className="flex gap-2">
@@ -577,8 +577,8 @@ export default function NewRfqPage() {
                       onClick={() => setPaymentTerms(opt)}
                       className={`flex-1 py-2 text-xs font-bold rounded-lg border transition ${
                         paymentTerms === opt
-                          ? "bg-slate-900 text-white border-slate-900"
-                          : "bg-white text-slate-700 border-slate-200"
+                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                       }`}
                     >
                       {opt}

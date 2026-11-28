@@ -198,21 +198,21 @@ export default function SupplierRegisterPage() {
   if (isSuccess) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl border border-gray-200 p-8 max-w-md w-full text-center space-y-4 shadow-xl">
+        <div className="bg-[#22252a] rounded-3xl border border-zinc-800 p-8 text-white max-w-md w-full text-center space-y-4 shadow-xl">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600">
             <CheckCircle2 className="w-10 h-10" />
           </div>
-          <h2 className="text-2xl font-black text-gray-900">
+          <h2 className="text-2xl font-black text-white">
             판매자 회원가입이 완료되었습니다!
           </h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-zinc-300">
             <strong>{companyName}</strong> 계정으로 자동 로그인되었습니다.<br />
             유통사 마이페이지로 이동합니다...
           </p>
           <div className="pt-2">
             <Link
               href="/mypage"
-              className="inline-flex items-center space-x-1.5 px-6 py-3 rounded-xl bg-[#6366F1] text-white font-bold text-xs"
+              className="inline-flex items-center space-x-1.5 px-6 py-3 rounded-xl bg-emerald-600 text-white font-bold text-xs"
             >
               <span>내 마이페이지 바로가기</span>
               <ArrowRight className="w-4 h-4" />
@@ -224,18 +224,18 @@ export default function SupplierRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="min-h-screen bg-[#181a1d] text-zinc-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto bg-[#22252a] rounded-3xl border border-zinc-800 shadow-xl overflow-hidden text-zinc-100">
         {/* 상단 헤더 */}
-        <div className="bg-[#6366F1] text-white p-6 sm:p-8">
-          <div className="flex items-center space-x-2 text-indigo-200 text-xs font-bold mb-1">
+        <div className="bg-[#1a1d22] border-b border-zinc-800 text-white p-6 sm:p-8">
+          <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold mb-1">
             <Truck className="w-4 h-4" />
             <span>식자재 직거래 파트너 입점</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black">
             판매자(식자재 유통사) 회원가입
           </h1>
-          <p className="text-xs sm:text-sm text-indigo-100 mt-1">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
             가입비 0원, 중개 수수료 0원! 등록 즉시 외식업 사장님들의 실시간 입찰 요청서에 참여하세요.
           </p>
         </div>
@@ -251,16 +251,16 @@ export default function SupplierRegisterPage() {
 
           {/* 1. 로그인 계정 정보 & 이메일 인증 */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2 pb-2 border-b border-gray-100">
-              <Mail className="w-4 h-4 text-indigo-600" />
-              <h2 className="text-sm font-black text-gray-900">
+            <div className="flex items-center space-x-2 pb-2 border-b border-zinc-800">
+              <Mail className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-sm font-black text-white">
                 1. 로그인 계정 정보 &amp; 이메일 인증
               </h2>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-gray-700 mb-1">
+                <label className="block font-bold text-zinc-200 mb-1">
                   이메일 주소 (아이디) <span className="text-rose-500">*</span>
                 </label>
                 <div className="flex space-x-2">
@@ -271,7 +271,7 @@ export default function SupplierRegisterPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="예: food@supplier.co.kr"
-                    className="flex-1 p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm disabled:bg-gray-100"
+                    className="flex-1 p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm disabled:bg-zinc-800"
                   />
                   <button
                     type="button"
@@ -303,12 +303,12 @@ export default function SupplierRegisterPage() {
                       value={inputCode}
                       onChange={(e) => setInputCode(e.target.value)}
                       placeholder="6자리 숫자"
-                      className="flex-1 p-2.5 rounded-lg border border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 font-mono text-center tracking-widest text-base font-bold bg-white"
+                      className="flex-1 p-2.5 rounded-lg border border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 font-mono text-center tracking-widest text-base font-bold bg-[#181a1d]"
                     />
                     <button
                       type="button"
                       onClick={handleConfirmCode}
-                      className="px-4 py-2.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold text-xs"
+                      className="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs"
                     >
                       인증 확인
                     </button>
@@ -325,7 +325,7 @@ export default function SupplierRegisterPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block font-bold text-gray-700 mb-1">
+                  <label className="block font-bold text-zinc-200 mb-1">
                     비밀번호 <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -334,11 +334,11 @@ export default function SupplierRegisterPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="6자리 이상 입력"
-                    className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-gray-700 mb-1">
+                  <label className="block font-bold text-zinc-200 mb-1">
                     비밀번호 확인 <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -347,7 +347,7 @@ export default function SupplierRegisterPage() {
                     value={passwordConfirm}
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                     placeholder="비밀번호 재입력"
-                    className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                   />
                 </div>
               </div>
@@ -356,16 +356,16 @@ export default function SupplierRegisterPage() {
 
           {/* 2. 유통사 사업자 정보 */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2 pb-2 border-b border-gray-100">
-              <Building2 className="w-4 h-4 text-indigo-600" />
-              <h2 className="text-sm font-black text-gray-900">
+            <div className="flex items-center space-x-2 pb-2 border-b border-zinc-800">
+              <Building2 className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-sm font-black text-white">
                 2. 유통사 사업자 정보
               </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div>
-                <label className="block font-bold text-gray-700 mb-1">
+                <label className="block font-bold text-zinc-200 mb-1">
                   상호명 (유통사 이름) <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -374,12 +374,12 @@ export default function SupplierRegisterPage() {
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="예: (주)한결축산 유통"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                  className="w-full p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-gray-700 mb-1">
+                <label className="block font-bold text-zinc-200 mb-1">
                   사업자등록번호 <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -388,12 +388,12 @@ export default function SupplierRegisterPage() {
                   value={bizNumber}
                   onChange={(e) => setBizNumber(e.target.value)}
                   placeholder="예: 123-45-67890"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                  className="w-full p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-gray-700 mb-1">
+                <label className="block font-bold text-zinc-200 mb-1">
                   대표자 성명
                 </label>
                 <input
@@ -401,12 +401,12 @@ export default function SupplierRegisterPage() {
                   value={repName}
                   onChange={(e) => setRepName(e.target.value)}
                   placeholder="예: 홍길동"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                  className="w-full p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-gray-700 mb-1">
+                <label className="block font-bold text-zinc-200 mb-1">
                   담당자 연락처 (휴대폰)
                 </label>
                 <input
@@ -414,7 +414,7 @@ export default function SupplierRegisterPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="예: 010-1234-5678"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                  className="w-full p-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                 />
               </div>
             </div>
@@ -422,16 +422,16 @@ export default function SupplierRegisterPage() {
 
           {/* 3. 취급 품목 및 물류 인프라 */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2 pb-2 border-b border-gray-100">
-              <ShieldCheck className="w-4 h-4 text-indigo-600" />
-              <h2 className="text-sm font-black text-gray-900">
+            <div className="flex items-center space-x-2 pb-2 border-b border-zinc-800">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-sm font-black text-white">
                 3. 취급 품목 및 배송 인프라
               </h2>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-gray-700 mb-1.5">
+                <label className="block font-bold text-zinc-200 mb-1.5">
                   주력 취급 식자재 품목 (다중 선택 가능) <span className="text-rose-500">*</span>
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -443,7 +443,7 @@ export default function SupplierRegisterPage() {
                       className={`px-3 py-1.5 rounded-lg border font-bold text-xs transition-all ${
                         selectedCats.includes(cat)
                           ? "bg-indigo-50 border-indigo-500 text-indigo-700"
-                          : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                          : "bg-[#181a1d] border-zinc-700 text-zinc-300 hover:bg-[#181a1d]"
                       }`}
                     >
                       {selectedCats.includes(cat) ? "✓ " : ""}{cat}
@@ -453,7 +453,7 @@ export default function SupplierRegisterPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-gray-700 mb-1.5">
+                <label className="block font-bold text-zinc-200 mb-1.5">
                   배송 가능 권역 (다중 선택 가능)
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -465,7 +465,7 @@ export default function SupplierRegisterPage() {
                       className={`px-3 py-1.5 rounded-lg border font-bold text-xs transition-all ${
                         selectedRegions.includes(reg)
                           ? "bg-indigo-50 border-indigo-500 text-indigo-700"
-                          : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                          : "bg-[#181a1d] border-zinc-700 text-zinc-300 hover:bg-[#181a1d]"
                       }`}
                     >
                       {selectedRegions.includes(reg) ? "✓ " : ""}{reg}
@@ -476,7 +476,7 @@ export default function SupplierRegisterPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block font-bold text-gray-700 mb-1">
+                  <label className="block font-bold text-zinc-200 mb-1">
                     보유 냉장·냉동 탑차 대수
                   </label>
                   <input
@@ -484,12 +484,12 @@ export default function SupplierRegisterPage() {
                     min="1"
                     value={trucks}
                     onChange={(e) => setTrucks(Number(e.target.value))}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full p-2.5 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-gray-700 mb-1">
+                  <label className="block font-bold text-zinc-200 mb-1">
                     1회 최소주문금액(MOQ)
                   </label>
                   <input
@@ -497,7 +497,7 @@ export default function SupplierRegisterPage() {
                     value={moq}
                     onChange={(e) => setMoq(e.target.value)}
                     placeholder="예: 10만원 (무료배송)"
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full p-2.5 rounded-xl border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm"
                   />
                 </div>
               </div>
@@ -505,17 +505,17 @@ export default function SupplierRegisterPage() {
           </div>
 
           {/* 약관 동의 */}
-          <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-2 text-xs">
+          <div className="p-4 rounded-2xl bg-[#181a1d] border border-zinc-800 space-y-2 text-xs">
             <label className="flex items-center space-x-2 cursor-pointer font-bold text-gray-800">
               <input
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
-                className="w-4 h-4 text-indigo-600 rounded border-gray-300"
+                className="w-4 h-4 text-emerald-400 rounded border-zinc-700"
               />
               <span>[필수] 견적식탁 판매자 이용약관 및 정산 정책에 동의합니다.</span>
             </label>
-            <p className="text-[11px] text-gray-500 pl-6">
+            <p className="text-[11px] text-zinc-400 pl-6">
               ※ 견적식탁은 유통사와 식당 간의 거래에 중개 수수료를 부과하지 않으며, 결제 및 세금계산서는 양자 직거래로 발행됩니다.
             </p>
           </div>
@@ -523,14 +523,14 @@ export default function SupplierRegisterPage() {
           {/* 제출 버튼 */}
           <button
             type="submit"
-            className="w-full py-4 rounded-2xl bg-[#6366F1] hover:bg-[#4F46E5] text-white font-black text-base shadow-lg transition-all"
+            className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base shadow-lg transition-all"
           >
             판매자 회원가입 완료 및 시작하기 →
           </button>
 
-          <div className="text-center text-xs text-gray-400">
+          <div className="text-center text-xs text-zinc-500">
             이미 계정이 있으신가요?{" "}
-            <Link href="/login" className="text-indigo-600 font-bold hover:underline">
+            <Link href="/login" className="text-emerald-400 font-bold hover:underline">
               로그인하기
             </Link>
           </div>
@@ -540,21 +540,21 @@ export default function SupplierRegisterPage() {
       {/* 이메일 발송 시뮬레이션 알림 모달 */}
       {emailAlert && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 space-y-4">
-            <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mx-auto">
+          <div className="bg-[#181a1d] rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 space-y-4">
+            <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-emerald-400 mx-auto">
               <Mail className="w-6 h-6" />
             </div>
             <div className="text-center space-y-1">
-              <h3 className="text-base font-black text-gray-900">
+              <h3 className="text-base font-black text-white">
                 인증 메일이 발송되었습니다
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-zinc-400">
                 입력하신 이메일로 6자리 인증코드가 전송되었습니다.
               </p>
             </div>
-            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 text-center space-y-1">
-              <span className="text-[11px] text-gray-400">인증번호</span>
-              <p className="text-2xl font-mono font-black text-indigo-600 tracking-widest">
+            <div className="p-4 rounded-2xl bg-[#181a1d] border border-zinc-800 text-center space-y-1">
+              <span className="text-[11px] text-zinc-500">인증번호</span>
+              <p className="text-2xl font-mono font-black text-emerald-400 tracking-widest">
                 {verificationCode}
               </p>
             </div>
@@ -564,7 +564,7 @@ export default function SupplierRegisterPage() {
                 setInputCode(verificationCode);
                 setEmailAlert(null);
               }}
-              className="w-full py-3 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold text-xs shadow-sm transition-colors"
+              className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm transition-colors"
             >
               인증번호 자동 입력 및 닫기
             </button>
