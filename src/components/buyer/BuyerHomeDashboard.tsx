@@ -83,33 +83,6 @@ export function BuyerHomeDashboard() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 py-6">
-      {/* 1. 상단 히어로: 살롱순라 구매자 대시보드 요약 */}
-      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl border border-blue-900/40 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30 mb-3">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-            살롱순라 (익선동 한옥 다이닝) 공식 구매 대시보드
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            &quot;매달 쓰는 그 고기 그대로, <span className="text-blue-400">마장동 최저가</span>로 원클릭 갱신&quot;
-          </h2>
-          <p className="text-slate-300 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
-            바쁜 주방에서 매번 단가 협상할 필요 없습니다. 살롱순라 소싱 스펙을 기준으로 
-            마장동 유통사들이 경쟁하여 가장 저렴하고 신선한 고기를 배송합니다.
-          </p>
-        </div>
-
-        <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center min-w-[220px]">
-          <span className="text-xs text-blue-200 font-semibold">이번 달 예상 원가 절감액</span>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">
-            월 {savedTotal.toLocaleString()}원
-          </div>
-          <span className="text-[11px] text-slate-300 mt-0.5 block">
-            기존 대비 약 {Math.round((savedTotal / currentTotal) * 100)}% 마진 개선
-          </span>
-        </div>
-      </div>
-
       {/* 2. 메인 섹션 A: 살롱순라 원클릭 정기 식자재 바구니 */}
       <section className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
