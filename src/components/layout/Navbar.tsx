@@ -73,6 +73,13 @@ export function Navbar() {
                   공급·유통사
                 </span>
               </Link>
+              <Link
+                href="/pilot"
+                className="transition-colors hover:bg-indigo-100 text-indigo-700 font-bold flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200/80 text-xs"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <span>시범체험(Pilot)</span>
+              </Link>
             </nav>
           </div>
 
@@ -162,6 +169,17 @@ export function Navbar() {
               >
                 <span>SUPPLIER</span>
                 <span className="text-xs text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-full font-medium">공급·유통업체</span>
+              </Link>
+              <Link
+                href="/pilot"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2.5 rounded-lg font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-sm flex items-center justify-between"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-indigo-600" />
+                  <span>시범 사이트 체험 (Pilot)</span>
+                </span>
+                <span className="text-xs text-indigo-500 font-normal">구매업무 경감</span>
               </Link>
             </div>
 

@@ -102,10 +102,11 @@ export default function HomePage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
-                className="inline-flex items-center justify-center space-x-2 px-5 py-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-sm sm:text-base transition-all"
+                href="/pilot"
+                className="inline-flex items-center justify-center space-x-2 px-5 py-3.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-sm sm:text-base transition-all"
               >
-                <span>실제 견적비교표 예시보기</span>
+                <Sparkles className="w-4 h-4 text-indigo-600" />
+                <span>구매업무 경감 시범 사이트 체험</span>
               </Link>
             </div>
           </div>
@@ -240,6 +241,13 @@ export default function HomePage() {
             >
               <span>1분 만에 구매 업무 덜어내기</span>
               <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/pilot"
+              className="px-8 py-4 rounded-2xl bg-white hover:bg-gray-50 text-blue-600 border-2 border-blue-600 font-bold text-base sm:text-lg shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center space-x-2"
+            >
+              <Sparkles className="w-5 h-5 text-blue-600" />
+              <span>시범 사이트에서 즉시 체험하기</span>
             </Link>
           </div>
 

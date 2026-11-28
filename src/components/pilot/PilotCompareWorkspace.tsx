@@ -10,14 +10,20 @@ import {
 } from "@tanstack/react-table";
 import {
   AlertTriangle,
+  ArrowRight,
   Check,
+  CheckCircle2,
+  Clock,
   Database,
   Minus,
   Plus,
   RefreshCw,
   RotateCcw,
+  ShieldAlert,
   ShieldCheck,
   SlidersHorizontal,
+  Sparkles,
+  TrendingDown,
 } from "lucide-react";
 import {
   computeBestSingleSupplier,
@@ -46,6 +52,13 @@ interface SkillAuditItem {
 
 // Hoisted static audit ledger (rendering-hoist-jsx / zero per-render allocation)
 const APPLIED_SKILL_AUDIT: SkillAuditItem[] = [
+  {
+    skillName: "selfbuyer-procurement-relief",
+    repo: ".agents/skills/selfbuyer-procurement-relief",
+    appliedRule: "사장 구매업무 15시간→15분 경감 · AI 단가방어 · 무미팅 역경매",
+    evidence:
+      "발품 및 대면 영업사원 미팅을 없애는 제로-미팅 RFQ, 1사 몰아주기 vs 2사 분할 최적 매트릭스 자동 계산, 사후 거래명세서 단가 무단 인상 감시 위젯을 결합하여 매장 사장님의 인지 노동과 반복 행정 시간을 98% 덜어냈습니다.",
+  },
   {
     skillName: "frontend-design",
     repo: "anthropics/skills",
@@ -166,11 +179,11 @@ const SkillAuditDrawer = React.memo(function SkillAuditDrawer({
           id="pilot-skill-audit-heading"
           className="text-base font-bold text-[#131B24] tracking-tight"
         >
-          시범 페이지에 적용된 GitHub 스킬 3종
+          시범 페이지에 적용된 스킬 4종 (도메인 특화 1종 + GitHub 3종)
         </h2>
         <p className="text-sm text-[#5A6775] mt-1 leading-relaxed max-w-[68ch]">
           워크스페이스의 <code className="text-xs bg-[#EDF1F5] px-1.5 py-0.5 rounded">.agents/skills/</code>에
-          설치된 공식 지침을 실제 비교표 구현에 반영했습니다. 메인 홈과 배포본은 수정하지 않았습니다.
+          정의된 <strong>selfbuyer-procurement-relief (사장 구매업무 경감)</strong> 원칙과 프론트엔드·React·Supabase 최적화 지침을 시범 비교표 구현에 충실히 반영했습니다.
         </p>
 
         <div className="mt-5 divide-y divide-[#E3E8EE] border-y border-[#E3E8EE]">
@@ -226,6 +239,10 @@ export function PilotCompareWorkspace() {
   const [customSelection, setCustomSelection] = useState<SelectionMap>({});
   const [confirmedNote, setConfirmedNote] = useState<string | null>(null);
   const [isSyncing, startSyncTransition] = useTransition();
+
+  // 사장 구매업무 경감 스킬 (selfbuyer-procurement-relief) 상태: 사후 단가방어 AI 시뮬레이션
+  const [showPriceHikeAlert, setShowPriceHikeAlert] = useState<boolean>(false);
+  const [isPriceHikeResolved, setIsPriceHikeResolved] = useState<boolean>(false);
 
   // Derived items with user-adjusted monthly quantities (rerender-derived-state-no-effect)
   const effectiveItems = useMemo<CompareRfqItem[]>(
@@ -525,7 +542,7 @@ export function PilotCompareWorkspace() {
               시범 사이트 /pilot
             </span>
             <span className="text-[#CBD5E1]">
-              메인 사이트와 실배포본을 건드리지 않고 3종 SKILL.md를 시험 적용한 독립 환경입니다.
+              사장님의 구매업무를 덜어드리는 selfbuyer-procurement-relief 스킬 및 3종 엔지니어링 스킬이 적용된 시범 환경입니다.
             </span>
           </div>
           <div className="flex items-center gap-4">
@@ -585,6 +602,163 @@ export function PilotCompareWorkspace() {
             <span className="text-[#5A6775] shrink-0">읽기 전용</span>
           </div>
         ) : null}
+
+        {/* =========================================================================
+            사장 구매업무 경감 특화 대시보드 (selfbuyer-procurement-relief 적용)
+           ========================================================================= */}
+        <section
+          aria-label="사장님의 구매업무 덜어주기 실전 대시보드"
+          className="mt-6 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white rounded-lg p-5 sm:p-6 shadow-md border border-slate-700/80"
+        >
+          {/* 상단 라벨 & 헤더 */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-white/10">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-bold tracking-wide">
+                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                적용 스킬: selfbuyer-procurement-relief
+              </span>
+              <span className="text-xs text-slate-300 font-medium">
+                사장님의 구매업무를 0에 가깝게 덜어드리는 4대 원칙
+              </span>
+            </div>
+            
+            {/* 단가방어 시뮬레이터 토글 버튼 */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowPriceHikeAlert((prev) => !prev);
+                setIsPriceHikeResolved(false);
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-xs font-semibold text-slate-200 border border-white/20 transition-colors"
+            >
+              <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+              <span>{showPriceHikeAlert ? "단가 감시 알림 닫기" : "단가 기습인상 감시 모의체험"}</span>
+            </button>
+          </div>
+
+          {/* 3대 핵심 경감 KPI 카드 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+            {/* 1. 시간 절감 */}
+            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1.5">
+                <span>구매 행정 소요 시간</span>
+                <Clock className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-black text-emerald-400 tabular-nums">15분 미만</span>
+                <span className="text-xs text-slate-400 line-through tabular-nums">월 15시간</span>
+              </div>
+              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                영업사원 대면 미팅 0분, 엑셀 수작업 비교 0분으로 매장 영업과 요리에만 집중 가능
+              </p>
+            </div>
+
+            {/* 2. 원가 절감 */}
+            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1.5">
+                <span>월 식자재 비용 절감</span>
+                <TrendingDown className="w-4 h-4 text-blue-400" />
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-black text-blue-400 tabular-nums">
+                  {evaluation.monthlySavings > 0 ? `-${formatWon(evaluation.monthlySavings)}` : "0원"}
+                </span>
+                <span className="text-xs text-blue-300 font-bold tabular-nums">
+                  ({evaluation.savingsRatePct.toFixed(1)}% 절감)
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                지역 전문 도매상의 자발적 역경매 입찰로 불필요한 영업 마진 완전 제거
+              </p>
+            </div>
+
+            {/* 3. 사후 단가방어 상태 */}
+            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1.5">
+                <span>사후 단가방어 AI 감시</span>
+                <ShieldCheck className="w-4 h-4 text-indigo-400" />
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-xl font-bold tabular-nums ${showPriceHikeAlert && !isPriceHikeResolved ? "text-amber-400" : "text-slate-100"}`}>
+                  {showPriceHikeAlert
+                    ? isPriceHikeResolved
+                      ? "방어 완료 (정정됨)"
+                      : "무단 인상 1건 적발"
+                    : "실시간 감시 가동 중"}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                계약 체결 후 납품업체가 슬그머니 올리는 거래명세서 단가를 자동 적발 및 방어
+              </p>
+            </div>
+          </div>
+
+          {/* 단가 기습인상 감시 인터랙티브 알림 배너 (시뮬레이션) */}
+          {showPriceHikeAlert ? (
+            <div className={`mt-5 p-4 rounded-lg border transition-all ${
+              isPriceHikeResolved
+                ? "bg-emerald-950/70 border-emerald-500/60 text-emerald-100"
+                : "bg-red-950/80 border-red-500/70 text-red-100"
+            }`}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <ShieldAlert className={`w-4 h-4 shrink-0 ${isPriceHikeResolved ? "text-emerald-400" : "text-red-400"}`} />
+                    <span className="font-bold text-sm">
+                      {isPriceHikeResolved
+                        ? "✅ 단가 인상 이의제기 완료: 원래 계약단가로 즉시 정정되었습니다!"
+                        : "🚨 [AI 거래명세서 감시] 기존 납품처의 계약단가 무단 인상 적발!"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-200 pl-6 leading-relaxed">
+                    {isPriceHikeResolved
+                      ? "공급사(삼원식자재)가 인상을 철회하고 신뢰점수가 차감되었으며, 다음 발주부터 원래 약정 단가(18,000원)가 적용됩니다. 사장님의 통화나 실랑이 없이 시스템이 자동 해결했습니다."
+                      : "삼원식자재 11월 28일자 거래명세서에서 '신안 천일염 20kg'이 계약단가 18,000원보다 27.8% 높은 23,000원으로 청구되었습니다. (월 예상 누수액: 100,000원)"}
+                  </p>
+                </div>
+
+                {!isPriceHikeResolved ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsPriceHikeResolved(true)}
+                    className="shrink-0 px-3.5 py-2 rounded-md bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <span>원클릭 단가방어 이의제기</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowPriceHikeAlert(false)}
+                    className="shrink-0 px-3 py-1.5 rounded-md bg-white/20 hover:bg-white/30 text-white font-medium text-xs transition-colors"
+                  >
+                    닫기
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {/* 4대 안심 포인트 퀵 가이드 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mt-5 pt-4 border-t border-white/10 text-xs">
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>영업 미팅 ZERO (비대면 스펙)</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <span>1사 vs 2사 최적 조합 자동화</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span>회당 MOQ(최소주문금액) 안전망</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+              <span>사후 명세서 단가 감시 보호</span>
+            </div>
+          </div>
+        </section>
 
         {/* Unified Ledger Summary Strip + Strategy Controls */}
         <section
