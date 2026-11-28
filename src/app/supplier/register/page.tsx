@@ -171,10 +171,15 @@ export default function SupplierRegisterPage() {
       businessNumber: bizNumber.trim(),
       representative: repName.trim() || companyName.trim(),
       phone: phone.trim(),
+      address: `${selectedRegions[0] || "서울"} 물류센터`,
       categories: selectedCats,
       regions: selectedRegions,
       trucks: Number(trucks) || 1,
       moq: moq || "10만원",
+      moqAmount: parseInt(moq.replace(/[^0-9]/g, "") || "10") * 10000,
+      trustScore: 100,
+      isHaccp: true,
+      status: "ACTIVE",
     });
 
     if (!regResult.success || !regResult.user) {

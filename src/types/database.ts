@@ -132,3 +132,34 @@ export interface InvoiceAudit {
   created_at: string;
   contract?: Contract;
 }
+
+export type MemberStatus = "ACTIVE" | "PENDING" | "SUSPENDED";
+
+export interface MemberRecord {
+  id: string;
+  role: UserRole;
+  email: string;
+  company_name: string;
+  representative: string;
+  business_number: string;
+  phone: string;
+  address: string;
+  region: string;
+  
+  // 구매자(외식업 매장 사장님) 전용 필드
+  cuisine_category?: string;
+  monthly_spend?: string;
+  payment_terms?: string;
+  
+  // 공급사(납품 유통업체) 전용 필드
+  supply_categories?: string[];
+  delivery_regions?: string[];
+  refrigerated_trucks?: number;
+  moq_amount?: number;
+  trust_score?: number;
+  is_haccp?: boolean;
+  
+  status: MemberStatus;
+  created_at: string;
+  updated_at?: string;
+}

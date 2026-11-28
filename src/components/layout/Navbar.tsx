@@ -10,6 +10,7 @@ import {
   User,
   LogOut,
   Sparkles,
+  FileSpreadsheet,
 } from "lucide-react";
 import BidTableLogo from "@/components/layout/BidTableLogo";
 
@@ -25,14 +26,26 @@ export function Navbar() {
     router.push("/");
   };
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleNavModeClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    mode: "buyer" | "supplier" | "service"
+  ) => {
     if (pathname === "/") {
       e.preventDefault();
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+      if (mode === "service") {
+        const el = document.getElementById("service");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.hash = mode;
+        window.dispatchEvent(
+          new CustomEvent("selfbuyer:mode_change", { detail: mode })
+        );
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
+    } else {
+      router.push(`/#${mode}`);
     }
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -48,15 +61,15 @@ export function Navbar() {
             <nav className="hidden md:flex items-center space-x-8 text-[15px] font-semibold text-gray-700">
               <Link
                 href="/#service"
-                onClick={(e) => scrollToSection(e, "service")}
+                onClick={(e) => handleNavModeClick(e, "service")}
                 className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold"
               >
                 서비스소개
               </Link>
               <Link
                 href="/#buyer"
-                onClick={(e) => scrollToSection(e, "buyer")}
-                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5"
+                onClick={(e) => handleNavModeClick(e, "buyer")}
+                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-blue-50/60"
               >
                 <span>BUYER</span>
                 <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium border border-blue-200">
@@ -65,8 +78,8 @@ export function Navbar() {
               </Link>
               <Link
                 href="/#supplier"
-                onClick={(e) => scrollToSection(e, "supplier")}
-                className="transition-colors hover:text-zinc-900 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5"
+                onClick={(e) => handleNavModeClick(e, "supplier")}
+                className="transition-colors hover:text-zinc-900 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-zinc-100"
               >
                 <span>SUPPLIER</span>
                 <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-medium border border-zinc-200">
@@ -87,6 +100,15 @@ export function Navbar() {
           <div className="flex items-center space-x-2 sm:space-x-4">
             {currentUser ? (
               <div className="flex items-center space-x-2">
+                {currentUser.role === "ADMIN" && (
+                  <Link
+                    href="/admin/members"
+                    className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all shadow-xs"
+                  >
+                    <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>회원명부 엑셀</span>
+                  </Link>
+                )}
                 <Link
                   href="/mypage"
                   className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs sm:text-sm font-bold transition-all"
@@ -114,7 +136,7 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/#buyer"
-                  onClick={(e) => scrollToSection(e, "buyer")}
+                  onClick={(e) => handleNavModeClick(e, "buyer")}
                   className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all flex items-center gap-1.5"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -140,35 +162,26 @@ export function Navbar() {
             <div className="flex flex-col space-y-1">
               <Link
                 href="/#service"
-                onClick={(e) => {
-                  scrollToSection(e, "service");
-                  setMobileMenuOpen(false);
-                }}
+                onClick={(e) => handleNavModeClick(e, "service")}
                 className="px-3 py-2.5 rounded-lg font-bold text-gray-800 hover:bg-blue-50 hover:text-blue-600 text-sm"
               >
                 서비스소개
               </Link>
               <Link
                 href="/#buyer"
-                onClick={(e) => {
-                  scrollToSection(e, "buyer");
-                  setMobileMenuOpen(false);
-                }}
+                onClick={(e) => handleNavModeClick(e, "buyer")}
                 className="px-3 py-2.5 rounded-lg font-bold text-gray-800 hover:bg-blue-50 hover:text-blue-600 text-sm flex items-center justify-between"
               >
                 <span>BUYER</span>
-                <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-medium">외식업 사장님</span>
+                <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-medium">외식업 사장님 (화이트)</span>
               </Link>
               <Link
                 href="/#supplier"
-                onClick={(e) => {
-                  scrollToSection(e, "supplier");
-                  setMobileMenuOpen(false);
-                }}
+                onClick={(e) => handleNavModeClick(e, "supplier")}
                 className="px-3 py-2.5 rounded-lg font-bold text-gray-800 hover:bg-zinc-100 hover:text-zinc-900 text-sm flex items-center justify-between"
               >
                 <span>SUPPLIER</span>
-                <span className="text-xs text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-full font-medium">공급·유통업체</span>
+                <span className="text-xs text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-full font-medium">공급·유통업체 (블랙)</span>
               </Link>
               <Link
                 href="/pilot"
@@ -181,6 +194,19 @@ export function Navbar() {
                 </span>
                 <span className="text-xs text-indigo-500 font-normal">구매업무 경감</span>
               </Link>
+              {currentUser?.role === "ADMIN" && (
+                <Link
+                  href="/admin/members"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2.5 rounded-lg font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 text-sm flex items-center justify-between border border-emerald-200"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                    <span>입점 회원 엑셀 명부</span>
+                  </span>
+                  <span className="text-xs text-emerald-600 font-normal">관리자 전용</span>
+                </Link>
+              )}
             </div>
 
             <div className="border-t border-gray-100 pt-3 flex items-center justify-between">
@@ -202,10 +228,7 @@ export function Navbar() {
                   </Link>
                   <Link
                     href="/#buyer"
-                    onClick={(e) => {
-                      scrollToSection(e, "buyer");
-                      setMobileMenuOpen(false);
-                    }}
+                    onClick={(e) => handleNavModeClick(e, "buyer")}
                     className="flex-1 py-2 text-center rounded-lg bg-blue-600 text-white text-xs font-bold"
                   >
                     시작하기

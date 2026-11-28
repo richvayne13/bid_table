@@ -160,8 +160,13 @@ export default function RestaurantRegisterPage() {
       businessNumber: bizNumber.trim(),
       representative: repName.trim() || restaurantName.trim(),
       phone: phone.trim(),
+      address: `${region} ${restaurantName.trim()}`,
+      cuisine: cuisine,
+      monthlySpend: monthlySpend,
+      paymentTerms: "월말정산",
       categories: [cuisine],
       regions: [region],
+      status: "ACTIVE",
     });
 
     if (!regResult.success || !regResult.user) {
