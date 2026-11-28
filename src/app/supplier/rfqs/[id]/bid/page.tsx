@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import BidClient from "./BidClient";
 
 export function generateStaticParams() {
@@ -9,5 +10,9 @@ export function generateStaticParams() {
 }
 
 export default function BidPage() {
-  return <BidClient />;
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-zinc-400">입찰 페이지 로딩 중...</div>}>
+      <BidClient />
+    </Suspense>
+  );
 }

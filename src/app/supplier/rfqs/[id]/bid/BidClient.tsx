@@ -847,9 +847,9 @@ export default function SupplierBidPage() {
                                   package_weight: e.target.value,
                                 })
                               }
-                              className="w-20 px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs font-mono font-bold text-right bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-20 px-2.5 py-1.5 rounded-lg border border-zinc-700 text-xs font-mono font-bold text-right bg-[#181a1d] text-white disabled:bg-zinc-900 disabled:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                             />
-                            <span className="text-xs font-mono font-semibold text-gray-500">
+                            <span className="text-xs font-mono font-semibold text-zinc-400">
                               {row.base_unit}
                             </span>
                           </div>
@@ -869,22 +869,22 @@ export default function SupplierBidPage() {
                                   package_price: e.target.value,
                                 })
                               }
-                              className="w-28 px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs font-mono font-bold text-right bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-28 px-2.5 py-1.5 rounded-lg border border-zinc-700 text-xs font-mono font-bold text-right bg-[#181a1d] text-white disabled:bg-zinc-900 disabled:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                             />
-                            <span className="text-xs text-gray-500">원</span>
+                            <span className="text-xs text-zinc-400">원</span>
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4 text-right bg-blue-50/40 whitespace-nowrap">
+                        <td className="py-3.5 px-4 text-right bg-emerald-950/20 whitespace-nowrap">
                           {normalizedUnit !== null ? (
                             <div className="space-y-0.5">
-                              <div className="font-extrabold text-blue-700 text-sm font-mono">
+                              <div className="font-extrabold text-emerald-400 text-sm font-mono">
                                 {formatPrice(normalizedUnit)} / {row.base_unit}
                               </div>
                               {diffPct !== null && (
                                 <div
                                   className={`text-[10px] font-bold ${
-                                    diffPct > 0 ? "text-emerald-600" : "text-rose-500"
+                                    diffPct > 0 ? "text-emerald-600" : "text-rose-400"
                                   }`}
                                 >
                                   {diffPct > 0
@@ -896,13 +896,13 @@ export default function SupplierBidPage() {
                               )}
                             </div>
                           ) : (
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs text-zinc-500">
                               {row.handled ? "단가 입력 대기" : "미취급"}
                             </span>
                           )}
                         </td>
 
-                        <td className="py-3.5 px-4 text-right font-bold text-xs text-gray-800 whitespace-nowrap">
+                        <td className="py-3.5 px-4 text-right font-bold text-xs text-zinc-200 whitespace-nowrap">
                           {monthlySubtotal !== null ? formatPrice(monthlySubtotal) : "-"}
                         </td>
                       </tr>
@@ -913,17 +913,17 @@ export default function SupplierBidPage() {
             </div>
 
             {/* Bottom Summary & Submit Bar */}
-            <div className="p-6 bg-slate-50 border-t border-gray-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="p-6 bg-[#181a1d] border-t border-zinc-800 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
                 <div>
                   <span className="text-gray-400 block">취급 품목 (취급률)</span>
-                  <span className="text-base font-extrabold text-gray-900">
+                  <span className="text-base font-extrabold text-white">
                     {summary.handledCount} / {rows.length}개 ({summary.coveragePct}%)
                   </span>
                 </div>
                 <div>
                   <span className="text-gray-400 block">예상 월 수주액</span>
-                  <span className="text-base font-extrabold text-blue-700">
+                  <span className="text-base font-extrabold text-emerald-400">
                     {formatPrice(summary.estimatedMonthlyTotal)}
                   </span>
                 </div>
@@ -943,7 +943,7 @@ export default function SupplierBidPage() {
               <div className="flex items-center space-x-2.5 self-end lg:self-auto">
                 <Link
                   href="/supplier/rfqs"
-                  className="px-4 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold text-sm"
+                  className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-sm"
                 >
                   취소
                 </Link>
@@ -951,7 +951,7 @@ export default function SupplierBidPage() {
                   type="button"
                   onClick={handleSubmitBid}
                   disabled={submitting || summary.handledCount === 0}
-                  className="px-7 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 text-white font-extrabold text-sm flex items-center space-x-2 shadow-lg shadow-blue-500/20 transition-all"
+                  className="px-7 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-sm flex items-center space-x-2 shadow-lg shadow-emerald-500/20 transition-all"
                 >
                   <Check className="w-4 h-4" />
                   <span>
