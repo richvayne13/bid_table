@@ -32,6 +32,7 @@ import {
 export default function AdminDashboardPage() {
   const supabase = useMemo(() => createClient(), []);
   const [rfqs, setRfqs] = useState<UnifiedRfq[]>([]);
+  const [selectedRfqId, setSelectedRfqId] = useState<string>("");
   const [registeredUsersCount, setRegisteredUsersCount] = useState({ restaurants: 1, suppliers: 2 });
   const [loading, setLoading] = useState(false);
 
@@ -39,6 +40,9 @@ export default function AdminDashboardPage() {
     setLoading(true);
     const list = getUnifiedRfqs();
     setRfqs(list);
+    if (!selectedRfqId && list.length > 0) {
+      setSelectedRfqId(list[0].id);
+    }
 
     const users = getRegisteredUsers();
     const restaurants = users.filter((u) => u.role === "RESTAURANT").length;
@@ -47,38 +51,51 @@ export default function AdminDashboardPage() {
 
     setTimeout(() => {
       setLoading(false);
-    }, 300);
+    }, 200);
   };
 
   useEffect(() => {
     loadData();
-  }, []);
 
-  // 살롱순라 단독 공고 데이터 (살롱순라 1건 단독 분석)
-  const salonRfq = rfqs[0] || null;
+    // 실시간 커뮤니티 동기화 리스너: A구매자 공고 등록 또는 판매자 투찰 시 즉시 새로고침
+    const handleSync = () => {
+      loadData();
+    };
 
-  // 수치화 통계 계산
-  const metrics = useMemo(() => {
-    if (!salonRfq) {
-      return {
-        totalVolume: 6555000,
-        estimatedSaving: 625000,
-        savingRate: 9.5,
-        bidCount: 2,
-        trustRate: 99.8,
-      };
+    if (typeof window !== "undefined") {
+      window.addEventListener("selfbuyer:rfq_updated", handleSync);
+      window.addEventListener("storage", handleSync);
     }
 
-    // 살롱순라 기존 매입 총액 계산
-    let totalVolume = 0;
-    (salonRfq.rfq_items || []).forEach((item) => {
-      if (item.current_unit_price && item.monthly_qty) {
-        totalVolume += item.current_unit_price * item.monthly_qty;
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("selfbuyer:rfq_updated", handleSync);
+        window.removeEventListener("storage", handleSync);
       }
+    };
+  }, []);
+
+  // 현재 선택된 공고 (A구매자 공고 또는 살롱순라)
+  const activeRfq = useMemo(() => {
+    return rfqs.find((r) => r.id === selectedRfqId) || rfqs[0] || null;
+  }, [rfqs, selectedRfqId]);
+
+  // 전체 통합 수치화 통계 계산
+  const metrics = useMemo(() => {
+    let totalVolume = 0;
+    let totalBids = 0;
+
+    rfqs.forEach((r) => {
+      totalBids += r.bids?.length || 0;
+      (r.rfq_items || []).forEach((item) => {
+        if (item.current_unit_price && item.monthly_qty) {
+          totalVolume += item.current_unit_price * item.monthly_qty;
+        } else if (item.monthly_qty) {
+          totalVolume += item.monthly_qty * 32000;
+        }
+      });
     });
 
-    // 유통사 입찰 기반 최저가 절감액 계산 (한결축산 + 가락농산 분할 기준)
-    const bidCount = salonRfq.bids?.length || 2;
     const estimatedSaving = Math.round(totalVolume * 0.095); // 평균 9.5% 절감
     const savingRate = 9.5;
 
@@ -86,10 +103,11 @@ export default function AdminDashboardPage() {
       totalVolume: totalVolume > 0 ? totalVolume : 6555000,
       estimatedSaving,
       savingRate,
-      bidCount,
+      bidCount: totalBids || 2,
+      totalRfqs: rfqs.length,
       trustRate: 99.8,
     };
-  }, [salonRfq]);
+  }, [rfqs]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-white">
@@ -320,49 +338,77 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* 4. 살롱순라 단독 공고 실시간 상세 관제 카드 (파란색 테마) */}
+      {/* 4. 실시간 활성 역경매 공고 전체 관제 피드 (A구매자 포함) */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
             <h3 className="text-lg font-black text-white">
-              현재 활성 역경매 공고 (살롱순라 1건 단독 관제)
+              실시간 활성 역경매 공고 피드 (총 {rfqs.length}건 관제)
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold">
-              진행 중
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold animate-pulse">
+              실시간 LIVE
             </span>
           </div>
           <span className="text-xs text-blue-300">
-            단일 살롱순라 정밀 모니터링 활성 상태
+            A구매자 등 신규 견적 요청서 등록 시 실시간 자동 반영
           </span>
         </div>
 
-        {salonRfq && (
+        {/* 공고 선택 탭 바 (모든 구매자 공고 탭) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+          {rfqs.map((r, idx) => {
+            const isSelected = activeRfq?.id === r.id;
+            return (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setSelectedRfqId(r.id)}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap shrink-0 flex items-center gap-2 border ${
+                  isSelected
+                    ? "bg-blue-600 text-white border-blue-400 shadow-md font-black"
+                    : "bg-[#0b2240] text-blue-300 border-blue-800/80 hover:bg-blue-900/60 hover:text-white"
+                }`}
+              >
+                <Store className="w-3.5 h-3.5" />
+                <span>{r.profiles?.company_name || `구매자 공고 ${idx + 1}`}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                  isSelected ? "bg-white/20 text-white" : "bg-blue-950 text-blue-300"
+                }`}>
+                  {r.rfq_items?.length || 0}개 품목 · 입찰 {r.bids?.length || 0}건
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 활성 공고 상세 관제 카드 */}
+        {activeRfq && (
           <div className="bg-[#0b2240] rounded-3xl border border-blue-800 p-6 sm:p-7 shadow-lg space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-blue-800/80 pb-4">
               <div>
                 <div className="flex items-center space-x-2">
                   <span className="px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300 font-black text-xs border border-blue-400/30">
-                    발주처: 살롱순라
+                    발주처: {activeRfq.profiles?.company_name || "A구매자 매장"}
                   </span>
                   <span className="text-xs text-blue-200">
-                    서울 종로구 율곡로 8길 75 (익선동)
+                    {activeRfq.region}
                   </span>
                 </div>
                 <h4 className="text-xl font-black text-white mt-1">
-                  {salonRfq.title}
+                  {activeRfq.title}
                 </h4>
               </div>
 
               <div className="flex items-center space-x-2">
                 <Link
-                  href={`/rfq/${salonRfq.id}/compare`}
+                  href={`/rfq/d0000000-0000-0000-0000-000000000001/compare`}
                   className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition-colors"
                 >
                   <Scale className="w-4 h-4" />
                   <span>비교 매트릭스 보기</span>
                 </Link>
                 <Link
-                  href={`/supplier/rfqs/${salonRfq.id}/bid`}
+                  href={`/supplier/rfqs/demo/bid?id=${activeRfq.id}`}
                   className="px-4 py-2.5 rounded-xl border border-blue-700 bg-blue-900/40 hover:bg-blue-900/80 text-blue-200 font-bold text-xs flex items-center space-x-1.5 transition-colors"
                 >
                   <Truck className="w-4 h-4 text-blue-300" />
@@ -375,29 +421,29 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-blue-950/60 border border-blue-900/60 p-4 rounded-2xl">
               <div>
                 <span className="text-blue-300 block">배송 권역</span>
-                <span className="font-bold text-white">{salonRfq.region}</span>
+                <span className="font-bold text-white">{activeRfq.region}</span>
               </div>
               <div>
                 <span className="text-blue-300 block">희망 계약 기간</span>
-                <span className="font-bold text-white">{salonRfq.contract_months}개월 고정단가</span>
+                <span className="font-bold text-white">{activeRfq.contract_months}개월 고정단가</span>
               </div>
               <div>
                 <span className="text-blue-300 block">정기 배송 요일</span>
-                <span className="font-bold text-blue-300">{salonRfq.delivery_days?.join(", ")} (새벽배송)</span>
+                <span className="font-bold text-blue-300">{activeRfq.delivery_days?.join(", ") || "월, 수, 금"} (새벽배송)</span>
               </div>
               <div>
                 <span className="text-blue-300 block">결제 조건</span>
-                <span className="font-bold text-white">{salonRfq.payment_terms}</span>
+                <span className="font-bold text-white">{activeRfq.payment_terms}</span>
               </div>
             </div>
 
             {/* 요청 품목 리스트 */}
             <div>
               <h5 className="text-xs font-bold text-blue-300 mb-2">
-                살롱순라 요청 식자재 품목 (총 {salonRfq.rfq_items?.length || 4}건)
+                {activeRfq.profiles?.company_name} 요청 식자재 품목 (총 {activeRfq.rfq_items?.length || 0}건)
               </h5>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                {(salonRfq.rfq_items || []).map((it) => (
+                {(activeRfq.rfq_items || []).map((it) => (
                   <div key={it.id} className="p-3 rounded-xl border border-blue-800/80 bg-blue-950/50 shadow-xs">
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-900/80 text-blue-300 font-bold">
                       {it.standard_items?.category || "식자재"}
@@ -406,9 +452,9 @@ export default function AdminDashboardPage() {
                       {it.standard_items?.item_name}
                     </p>
                     <div className="flex justify-between items-center text-[11px] text-blue-200 mt-1">
-                      <span>월 {formatNumber(it.monthly_qty)}{it.standard_items?.base_unit}</span>
+                      <span>월 {formatNumber(it.monthly_qty)}{it.standard_items?.base_unit || "kg"}</span>
                       <span className="font-bold text-blue-400">
-                        {it.current_unit_price ? `${formatPrice(it.current_unit_price)}/${it.standard_items?.base_unit}` : "-"}
+                        {it.current_unit_price ? `${formatPrice(it.current_unit_price)}/${it.standard_items?.base_unit || "kg"}` : "-"}
                       </span>
                     </div>
                   </div>
@@ -419,21 +465,25 @@ export default function AdminDashboardPage() {
             {/* 입찰 참여사 현황 배지 */}
             <div className="pt-3 border-t border-blue-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
               <div className="flex items-center space-x-2">
-                <span className="text-blue-300 font-bold">투찰 완료 유통사:</span>
-                {(salonRfq.bids || []).map((b) => (
-                  <span
-                    key={b.id}
-                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 font-bold"
-                  >
-                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                    <span>{b.profiles?.company_name}</span>
-                    <span className="text-[10px] text-blue-300">({b.price_lock_type === "FIXED" ? "단가고정" : "변동연동"})</span>
-                  </span>
-                ))}
+                <span className="text-blue-300 font-bold">투찰 완료 유통사 (총 {activeRfq.bids?.length || 0}건):</span>
+                {(activeRfq.bids && activeRfq.bids.length > 0) ? (
+                  activeRfq.bids.map((b) => (
+                    <span
+                      key={b.id}
+                      className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 font-bold"
+                    >
+                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                      <span>{b.profiles?.company_name}</span>
+                      <span className="text-[10px] text-blue-300">({b.price_lock_type === "FIXED" ? "단가고정" : "변동연동"})</span>
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-zinc-400 text-xs">현재 유통사 투찰 대기 중 (실시간 공고 진행 중)</span>
+                )}
               </div>
 
               <div className="text-blue-300 text-[11px]">
-                최적 조합: <strong className="text-emerald-400 font-black">한결축산(육류) + 가락농산(채소/오일)</strong> 분할 발주 시 최저가 보장
+                최적 조합: <strong className="text-emerald-400 font-black">역경매 최저가 알고리즘 가동 중</strong>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRole, DEMO_USERS, DemoUser } from "@/contexts/RoleContext";
 import { formatPrice, formatNumber } from "@/lib/utils";
@@ -47,7 +47,9 @@ interface BidRowState {
 
 export default function SupplierBidPage() {
   const params = useParams();
-  const rfqId = typeof params?.id === "string" ? params.id : "";
+  const searchParams = useSearchParams();
+  const rawId = searchParams.get("id") || (typeof params?.id === "string" ? params.id : "");
+  const rfqId = rawId || "d0000000-0000-0000-0000-000000000001";
   const router = useRouter();
   const { currentUser, setCurrentUser } = useRole();
   const supabase = useMemo(() => createClient(), []);
@@ -470,12 +472,12 @@ export default function SupplierBidPage() {
     : null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 text-zinc-100">
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <Link
           href="/supplier/rfqs"
-          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-500 hover:text-blue-700 transition-colors"
+          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-zinc-400 hover:text-emerald-400 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>입찰 공고함 (/supplier/rfqs)으로 돌아가기</span>
@@ -483,7 +485,7 @@ export default function SupplierBidPage() {
 
         {/* Quick Supplier Switcher */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs text-gray-400 font-semibold mr-1">입찰 유통사:</span>
+          <span className="text-xs text-zinc-500 font-semibold mr-1">입찰 유통사:</span>
           {SUPPLIER_DEMO_USERS.map((sup) => (
             <button
               key={sup.id}
@@ -491,8 +493,8 @@ export default function SupplierBidPage() {
               onClick={() => setCurrentUser(sup)}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors ${
                 activeSupplier.id === sup.id
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400"
+                  : "bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700"
               }`}
             >
               {sup.name.split(" ")[0]}
@@ -502,24 +504,24 @@ export default function SupplierBidPage() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center space-x-2">
-          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+        <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800 text-xs text-rose-300 flex items-center space-x-2">
+          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
           <span className="font-medium">{errorMsg}</span>
         </div>
       )}
 
       {loading ? (
-        <div className="bg-white rounded-3xl border border-gray-200 p-12 text-center text-sm text-gray-400">
+        <div className="bg-[#22252a] rounded-3xl border border-zinc-800 p-12 text-center text-sm text-zinc-400">
           견적 요청서와 자사 단가표를 불러오는 중...
         </div>
       ) : !rfq ? (
-        <div className="bg-white rounded-3xl border border-gray-200 p-12 text-center space-y-3">
-          <p className="text-sm font-bold text-gray-800">
+        <div className="bg-[#22252a] rounded-3xl border border-zinc-800 p-12 text-center space-y-3">
+          <p className="text-sm font-bold text-zinc-300">
             해당 견적 요청서를 찾을 수 없습니다.
           </p>
           <Link
             href="/supplier/rfqs"
-            className="inline-flex items-center px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold"
           >
             공고 목록으로 이동
           </Link>
@@ -527,68 +529,68 @@ export default function SupplierBidPage() {
       ) : (
         <>
           {/* RFQ Overview Header */}
-          <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm space-y-4">
+          <div className="bg-[#22252a] rounded-3xl border border-zinc-800 p-6 shadow-md space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     <Truck className="w-3.5 h-3.5" />
-                    <span>{activeSupplier.name} 입찰서 작성</span>
+                    <span>{activeSupplier.name} 입찰서 작성 (검은색 테마)</span>
                   </span>
                   {existingBidId && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-950/70 text-indigo-300 border border-indigo-700/60">
                       기존 투찰 내역 수정 모드
                     </span>
                   )}
                   {ddayNum !== null && (
-                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800">
+                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-950/60 text-amber-300 border border-amber-600/50">
                       {ddayNum < 0 ? "마감 경과" : `마감 D-${ddayNum}`}
                     </span>
                   )}
                 </div>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-white">
                   {rfq.title}
                 </h1>
               </div>
 
-              <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 space-y-0.5">
-                <div className="font-bold text-gray-800">
+              <div className="text-xs text-zinc-400 bg-[#181a1d] border border-zinc-800 rounded-2xl px-4 py-2.5 space-y-0.5">
+                <div className="font-bold text-zinc-200">
                   발주 식당: {rfq.profiles?.company_name || "살롱순라"}
                 </div>
-                <div className="flex items-center space-x-1 text-blue-700 font-medium">
+                <div className="flex items-center space-x-1 text-emerald-400 font-medium">
                   <MapPin className="w-3.5 h-3.5" />
                   <span>{rfq.region}</span>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-gray-100 text-xs">
-              <div className="flex items-center space-x-1.5 text-gray-600">
-                <Calendar className="w-4 h-4 text-blue-500" />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-zinc-800 text-xs">
+              <div className="flex items-center space-x-1.5 text-zinc-400">
+                <Calendar className="w-4 h-4 text-emerald-400" />
                 <span>
-                  계약기간: <strong className="text-gray-900">{rfq.contract_months}개월</strong>
+                  계약기간: <strong className="text-zinc-200">{rfq.contract_months}개월</strong>
                 </span>
               </div>
-              <div className="flex items-center space-x-1.5 text-gray-600">
-                <Truck className="w-4 h-4 text-blue-500" />
+              <div className="flex items-center space-x-1.5 text-zinc-400">
+                <Truck className="w-4 h-4 text-emerald-400" />
                 <span>
                   배송요일:{" "}
-                  <strong className="text-gray-900">
+                  <strong className="text-zinc-200">
                     {Array.isArray(rfq.delivery_days) ? rfq.delivery_days.join(", ") : "-"}
                   </strong>
                 </span>
               </div>
-              <div className="flex items-center space-x-1.5 text-gray-600">
-                <CreditCard className="w-4 h-4 text-blue-500" />
+              <div className="flex items-center space-x-1.5 text-zinc-400">
+                <CreditCard className="w-4 h-4 text-emerald-400" />
                 <span>
-                  결제조건: <strong className="text-gray-900">{rfq.payment_terms}</strong>
+                  결제조건: <strong className="text-zinc-200">{rfq.payment_terms}</strong>
                 </span>
               </div>
-              <div className="flex items-center space-x-1.5 text-gray-600">
-                <Clock className="w-4 h-4 text-blue-500" />
+              <div className="flex items-center space-x-1.5 text-zinc-400">
+                <Clock className="w-4 h-4 text-emerald-400" />
                 <span>
                   마감일:{" "}
-                  <strong className="text-gray-900">
+                  <strong className="text-zinc-200">
                     {new Date(rfq.deadline).toLocaleDateString("ko-KR")}
                   </strong>
                 </span>
@@ -597,16 +599,16 @@ export default function SupplierBidPage() {
           </div>
 
           {/* 1. 기본 입찰 조건 입력 */}
-          <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm space-y-5">
-            <h2 className="text-base font-extrabold text-gray-900 flex items-center space-x-2">
-              <ShieldCheck className="w-5 h-5 text-blue-600" />
+          <div className="bg-[#22252a] rounded-3xl border border-zinc-800 p-6 shadow-md space-y-5">
+            <h2 className="text-base font-extrabold text-white flex items-center space-x-2">
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
               <span>1. 기본 입찰 조건</span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* MOQ */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-gray-700">
+                <label className="block text-xs font-bold text-zinc-300">
                   1회 최소주문금액 (MOQ, 원) *
                 </label>
                 <div className="relative">
@@ -616,9 +618,9 @@ export default function SupplierBidPage() {
                     step="10000"
                     value={moqAmount}
                     onChange={(e) => setMoqAmount(Math.max(0, Number(e.target.value)))}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 font-mono font-bold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-[#181a1d] text-white font-mono font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
-                  <span className="absolute right-4 top-2.5 text-xs text-gray-400 font-bold">
+                  <span className="absolute right-4 top-2.5 text-xs text-zinc-500 font-bold">
                     원 / 회
                   </span>
                 </div>
@@ -630,22 +632,22 @@ export default function SupplierBidPage() {
                       onClick={() => setMoqAmount(preset)}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-colors ${
                         moqAmount === preset
-                          ? "bg-blue-50 border-blue-400 text-blue-800"
-                          : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+                          ? "bg-emerald-950/60 border-emerald-500 text-emerald-300"
+                          : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700"
                       }`}
                     >
                       {preset / 10000}만원
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] text-zinc-500">
                   식당의 2사 분할 최적 조합 알고리즘에서 회당 발주액 충족 검증에 사용됩니다.
                 </p>
               </div>
 
               {/* Price Lock Type */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-gray-700">
+                <label className="block text-xs font-bold text-zinc-300">
                   단가 보장 유형 *
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -654,15 +656,15 @@ export default function SupplierBidPage() {
                     onClick={() => setPriceLockType("FIXED")}
                     className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                       priceLockType === "FIXED"
-                        ? "border-blue-600 bg-blue-50/70 text-blue-950"
-                        : "border-gray-200 hover:bg-gray-50 text-gray-700"
+                        ? "border-emerald-500 bg-emerald-950/30 text-white"
+                        : "border-zinc-700 bg-zinc-800/60 hover:bg-zinc-800 text-zinc-300"
                     }`}
                   >
                     <div className="flex items-center space-x-1.5 font-extrabold text-xs">
-                      <Lock className="w-3.5 h-3.5 text-blue-600" />
+                      <Lock className="w-3.5 h-3.5 text-emerald-400" />
                       <span>고정단가형 (FIXED)</span>
                     </div>
-                    <p className="text-[11px] text-gray-500 mt-1">
+                    <p className="text-[11px] text-zinc-400 mt-1">
                       계약 기간 동안 확정 단가 100% 고정 (인상 불가)
                     </p>
                   </button>
@@ -672,15 +674,15 @@ export default function SupplierBidPage() {
                     onClick={() => setPriceLockType("INDEXED")}
                     className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                       priceLockType === "INDEXED"
-                        ? "border-blue-600 bg-blue-50/70 text-blue-950"
-                        : "border-gray-200 hover:bg-gray-50 text-gray-700"
+                        ? "border-emerald-500 bg-emerald-950/30 text-white"
+                        : "border-zinc-700 bg-zinc-800/60 hover:bg-zinc-800 text-zinc-300"
                     }`}
                   >
                     <div className="flex items-center space-x-1.5 font-extrabold text-xs">
-                      <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
+                      <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
                       <span>시세연동 상한형 (INDEXED)</span>
                     </div>
-                    <p className="text-[11px] text-gray-500 mt-1">
+                    <p className="text-[11px] text-zinc-400 mt-1">
                       시세 급등 시 확정 단가 대비 최대 +10% 상한 내 허용
                     </p>
                   </button>
@@ -690,16 +692,16 @@ export default function SupplierBidPage() {
           </div>
 
           {/* 2. 자동 견적 채우기 + 품목별 단가 입력 테이블 */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#22252a] rounded-3xl border border-zinc-800 shadow-md overflow-hidden">
             {/* Auto-fill Toolbar */}
-            <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50/60 via-indigo-50/30 to-white space-y-4">
+            <div className="p-6 border-b border-zinc-800 bg-[#1e2126] space-y-4">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-base font-extrabold text-gray-900 flex items-center space-x-2">
-                    <Calculator className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-base font-extrabold text-white flex items-center space-x-2">
+                    <Calculator className="w-5 h-5 text-emerald-400" />
                     <span>2. 품목별 공급 단가 입력 및 자동 환산</span>
                   </h2>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-zinc-400 mt-0.5">
                     취급 가능한 품목을 체크하고 자사 포장단위와 공급가를 입력하면 기준단위(1kg/1L/1ea)
                     환산 단가가 실시간 계산됩니다.
                   </p>
@@ -710,7 +712,7 @@ export default function SupplierBidPage() {
                   <button
                     type="button"
                     onClick={handleAutoMatchCatalog}
-                    className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-colors"
+                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center space-x-1.5 shadow-md transition-colors"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>
@@ -718,8 +720,8 @@ export default function SupplierBidPage() {
                     </span>
                   </button>
 
-                  <label className="cursor-pointer px-3.5 py-2 rounded-xl bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-colors">
-                    <Upload className="w-3.5 h-3.5 text-blue-600" />
+                  <label className="cursor-pointer px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 text-xs font-bold flex items-center space-x-1.5 transition-colors">
+                    <Upload className="w-3.5 h-3.5 text-emerald-400" />
                     <span>엑셀/CSV 단가표 업로드</span>
                     <input
                       ref={fileInputRef}
@@ -733,18 +735,18 @@ export default function SupplierBidPage() {
                   <button
                     type="button"
                     onClick={handleDownloadSampleCsv}
-                    className="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold flex items-center space-x-1 transition-colors"
+                    className="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-xs font-semibold flex items-center space-x-1 transition-colors"
                     title="현재 요청 품목 기준 엑셀 단가표 양식 다운로드"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <Download className="w-3.5 h-3.5 text-zinc-400" />
                     <span>샘플 엑셀</span>
                   </button>
                 </div>
               </div>
 
               {autoFillNotice && (
-                <div className="p-3 rounded-xl bg-white border border-blue-200 text-xs text-blue-950 flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div className="p-3 rounded-xl bg-[#181a1d] border border-emerald-500/40 text-xs text-emerald-300 flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>{autoFillNotice}</span>
                 </div>
               )}
@@ -752,21 +754,21 @@ export default function SupplierBidPage() {
 
             {/* Pricing Input Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-gray-50 text-xs text-gray-500 font-semibold border-b border-gray-200">
+              <table className="w-full text-left text-sm text-zinc-200">
+                <thead className="bg-[#181a1d] text-xs text-zinc-400 font-semibold border-b border-zinc-800">
                   <tr>
                     <th className="py-3.5 px-4 w-16 text-center">취급</th>
                     <th className="py-3.5 px-4">요청 품목 / 규격</th>
                     <th className="py-3.5 px-4 text-right">월 소요량</th>
                     <th className="py-3.5 px-4 w-36">포장단위 (kg/L/ea)</th>
                     <th className="py-3.5 px-4 w-44">포장공급가 (원)</th>
-                    <th className="py-3.5 px-4 text-right bg-blue-50/60 text-blue-900 font-bold">
+                    <th className="py-3.5 px-4 text-right bg-emerald-950/30 text-emerald-400 font-bold">
                       기준단위 환산 단가 (자동)
                     </th>
                     <th className="py-3.5 px-4 text-right">월 예상 공급액</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-zinc-800">
                   {rows.map((row) => {
                     const weightNum = Number(row.package_weight);
                     const priceNum = Number(row.package_price);
@@ -795,7 +797,7 @@ export default function SupplierBidPage() {
                       <tr
                         key={row.rfq_item_id}
                         className={`transition-colors ${
-                          row.handled ? "bg-white" : "bg-gray-50/60 opacity-70"
+                          row.handled ? "bg-[#22252a] hover:bg-zinc-800/50" : "bg-zinc-900/60 opacity-60"
                         }`}
                       >
                         <td className="py-3.5 px-4 text-center">
@@ -805,21 +807,21 @@ export default function SupplierBidPage() {
                             onChange={(e) =>
                               updateRow(row.rfq_item_id, { handled: e.target.checked })
                             }
-                            className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
+                            className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
                             aria-label={`${row.item_name} 취급 여부`}
                           />
                         </td>
 
                         <td className="py-3.5 px-4">
                           <div className="flex items-center space-x-1.5">
-                            <span className="font-bold text-gray-900 text-xs sm:text-sm">
+                            <span className="font-bold text-white text-xs sm:text-sm">
                               {row.item_name}
                             </span>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 font-semibold border border-zinc-700">
                               {row.category}
                             </span>
                           </div>
-                          <div className="text-[11px] text-gray-400 mt-0.5">
+                          <div className="text-[11px] text-zinc-400 mt-0.5">
                             {row.spec}
                             {row.current_unit_price
                               ? ` · 기존 매입가 ${formatPrice(row.current_unit_price)}/${row.base_unit}`
@@ -827,7 +829,7 @@ export default function SupplierBidPage() {
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4 text-right font-mono text-xs font-semibold text-gray-700 whitespace-nowrap">
+                        <td className="py-3.5 px-4 text-right font-mono text-xs font-semibold text-zinc-300 whitespace-nowrap">
                           {formatNumber(row.monthly_qty)} {row.base_unit}
                         </td>
 

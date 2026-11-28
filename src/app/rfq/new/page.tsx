@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRole } from "@/contexts/RoleContext";
 import { HaengbokMeatCompare } from "@/components/compare/HaengbokMeatCompare";
+import { createUnifiedRfq } from "@/lib/unified-rfq-store";
 import {
   Sparkles,
   CheckCircle2,
@@ -23,6 +24,7 @@ import {
   HelpCircle,
   Clock,
   Layers,
+  ShieldCheck,
 } from "lucide-react";
 
 interface QuestMeatItem {
@@ -193,13 +195,71 @@ export default function NewRfqPage() {
   const checkedItems = items.filter((it) => it.checked);
   const totalQty = checkedItems.reduce((acc, it) => acc + it.monthlyQty, 0);
 
-  // 견적 요청서 최종 발행 및 행복쇼핑 화면으로 전환
+  // 구매자 매장 정보 상태 (실제 로그인된 사용자명 또는 입력된 상호명)
+  const [restaurantName, setRestaurantName] = useState<string>(
+    currentUser?.name || "A구매자 식당"
+  );
+  const [restaurantRegion, setRestaurantRegion] = useState<string>(
+    currentUser?.description || "서울 종로구 율곡로 8길 75 (익선동)"
+  );
+  const [createdRfqResult, setCreatedRfqResult] = useState<any>(null);
+
+  // 로그인 유저 변경 시 상호명 동기화
+  useEffect(() => {
+    if (currentUser?.name) {
+      setRestaurantName(currentUser.name);
+    }
+  }, [currentUser]);
+
+  // 견적 요청서 최종 발행 (실제 로컬 스토리지 & 전역 브로드캐스트)
   const handlePublishRfq = () => {
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    try {
+      const newRfq = createUnifiedRfq(
+        {
+          restaurant_id: currentUser?.id || `buyer-${Date.now()}`,
+          title: `${restaurantName} 정기 식자재 역경매 공고 (${checkedItems.length}종)`,
+          region: restaurantRegion,
+          contract_months: 3,
+          delivery_days: deliveryDays,
+          payment_terms: paymentTerms,
+          deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+        {
+          company_name: restaurantName,
+          address: restaurantRegion,
+          business_number: currentUser?.businessNumber || "220-81-12345",
+          representative: currentUser?.name || restaurantName,
+          phone: currentUser?.phone || "010-1234-5678",
+        },
+        checkedItems.map((it, idx) => ({
+          standard_item_id: it.id,
+          item_name: it.name,
+          category: it.category,
+          spec: it.spec,
+          base_unit: "kg",
+          monthly_qty: it.monthlyQty,
+          current_unit_price: 32000,
+        }))
+      );
+
+      // 전역 이벤트 브로드캐스트 (실시간 커뮤니티 동기화)
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("selfbuyer:rfq_updated", { detail: newRfq })
+        );
+      }
+
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setCreatedRfqResult(newRfq);
+      }, 700);
+    } catch (e) {
+      console.error("Failed to create unified rfq:", e);
       setIsSubmitting(false);
       setShowHaengbokCompare(true);
-    }, 1200);
+    }
   };
 
   // 만약 행복쇼핑 화면이 활성화된 경우 -> 캡처된 행복쇼핑 화면을 그대로 렌더링!
@@ -584,21 +644,95 @@ export default function NewRfqPage() {
               </div>
             </div>
 
-            {/* 배송 및 매장 정보 */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-              <div>
-                <span className="text-slate-400 font-semibold block">납품 매장</span>
-                <span className="font-bold text-slate-900">살롱순라 (종로구 익선동)</span>
+            {/* 배송 및 매장 정보 (실제 로그인된 사장님 정보 반영 및 직접 수정 가능) */}
+            <div className="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200 space-y-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-slate-500 font-bold block mb-1">
+                    발주 매장명 (상호명)
+                  </label>
+                  <input
+                    type="text"
+                    value={restaurantName}
+                    onChange={(e) => setRestaurantName(e.target.value)}
+                    placeholder="예: A구매자 고기식당"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-slate-500 font-bold block mb-1">
+                    납품 배송 권역 (주소)
+                  </label>
+                  <input
+                    type="text"
+                    value={restaurantRegion}
+                    onChange={(e) => setRestaurantRegion(e.target.value)}
+                    placeholder="예: 서울 종로구 익선동"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
               </div>
-              <div>
-                <span className="text-slate-400 font-semibold block">배송 희망 주기</span>
-                <span className="font-bold text-slate-900">{deliveryTime}</span>
-              </div>
-              <div>
-                <span className="text-slate-400 font-semibold block">정산 방식</span>
-                <span className="font-bold text-slate-900">{paymentTerms}</span>
+
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200">
+                <div>
+                  <span className="text-slate-400 font-semibold block">배송 희망 주기</span>
+                  <span className="font-bold text-slate-900">{deliveryTime}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 font-semibold block">정산 방식</span>
+                  <span className="font-bold text-slate-900">{paymentTerms}</span>
+                </div>
               </div>
             </div>
+
+            {/* 실시간 등록 완료 인터랙티브 알림 카드 */}
+            {createdRfqResult && (
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950 via-slate-900 to-blue-950 text-white border border-emerald-500/60 shadow-xl space-y-4 animate-in fade-in zoom-in-95">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500 text-slate-950 flex items-center justify-center shrink-0 font-black text-lg">
+                    ✓
+                  </div>
+                  <div className="space-y-1">
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 text-[11px] font-black border border-emerald-400/40">
+                      실시간 커뮤니티 공고함 등록 완료
+                    </span>
+                    <h3 className="text-base sm:text-lg font-black text-white">
+                      [{createdRfqResult.profiles.company_name}]의 견적 요청이 실시간 등록되었습니다!
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      이제 <strong>판매자(공급사) 화면</strong>과 <strong>운영관리자 관제 화면</strong>에서 즉시 확인되며, 유통사들이 실시간으로 최저가 투찰을 진행합니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
+                  <Link
+                    href="/supplier/rfqs"
+                    className="p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-center font-bold text-xs text-emerald-300 flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <Truck className="w-4 h-4 text-emerald-400" />
+                    <span>판매자 공고함에서 보기</span>
+                  </Link>
+
+                  <Link
+                    href="/admin"
+                    className="p-3 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 border border-blue-400/30 text-center font-bold text-xs text-blue-200 flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-blue-400" />
+                    <span>운영관리자 실시간 관제</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowHaengbokCompare(true)}
+                    className="p-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-center font-black text-xs text-slate-950 flex items-center justify-center gap-1.5 shadow-md transition-all"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>행복쇼핑 비교표 확인</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* 매칭 발행 로딩 및 버튼 */}
             <div className="pt-4 border-t border-slate-200 space-y-4">
@@ -606,20 +740,33 @@ export default function NewRfqPage() {
                 <div className="text-center py-6 space-y-3 bg-blue-50/60 rounded-xl border border-blue-200">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
                   <h4 className="font-black text-slate-900 text-sm">
-                    마장동 축산 유통사 6개사에 실시간 매칭 알림 전송 중...
+                    {restaurantName} 견적 공고를 실시간 판매자 커뮤니티에 브로드캐스트 중...
                   </h4>
                   <p className="text-xs text-slate-500">
-                    벨엘미트, 마장축산, 태양미트 등에서 최저가 단가를 산출하여 견적비교표를 생성합니다.
+                    전국 식자재 공급사 및 운영관리자 화면으로 실시간 견적 공고가 전달됩니다.
                   </p>
                 </div>
-              ) : (
+              ) : !createdRfqResult ? (
                 <button
                   onClick={handlePublishRfq}
                   className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-base rounded-2xl shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-5 h-5 text-yellow-300" />
-                  맞춤 견적 요청서 발행 & 행복쇼핑 견적비교표 확인
+                  실시간 견적 요청서 발행 & 판매자 매칭 시작
                 </button>
+              ) : (
+                <div className="flex items-center justify-between text-xs text-slate-500 pt-2">
+                  <button
+                    onClick={() => {
+                      setCreatedRfqResult(null);
+                      setCurrentStep(1);
+                    }}
+                    className="text-blue-600 font-bold hover:underline"
+                  >
+                    + 다른 품목으로 새 견적 또 요청하기
+                  </button>
+                  <span className="text-emerald-600 font-bold">● 실시간 공고 진행 중</span>
+                </div>
               )}
 
               <div className="flex items-center justify-between text-xs text-slate-500">

@@ -120,6 +120,23 @@ function SupplierRfqsContent() {
 
   useEffect(() => {
     loadData();
+
+    // 실시간 커뮤니티 동기화: A구매자가 견적을 올리면 즉시 화면 갱신
+    const handleSync = () => {
+      loadData();
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("selfbuyer:rfq_updated", handleSync);
+      window.addEventListener("storage", handleSync);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("selfbuyer:rfq_updated", handleSync);
+        window.removeEventListener("storage", handleSync);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSupplier.id]);
 
@@ -130,12 +147,19 @@ function SupplierRfqsContent() {
     return [];
   }, [supplierProfile]);
 
+  // 실시간 피드 탭: "all" (전체 커뮤니티 공고) | "matched" (권역 일치)
+  const [rfqFilterTab, setRfqFilterTab] = useState<"all" | "matched">("all");
+
   // 배송 권역 일치 OPEN RFQ 필터링
   const matchedRfqs = useMemo(() => {
-    return allOpenRfqs.filter((rfq) =>
+    if (rfqFilterTab === "all" || deliveryRegions.length === 0) {
+      return allOpenRfqs;
+    }
+    const filtered = allOpenRfqs.filter((rfq) =>
       isRegionMatched(deliveryRegions, rfq.region)
     );
-  }, [allOpenRfqs, deliveryRegions]);
+    return filtered.length > 0 ? filtered : allOpenRfqs;
+  }, [allOpenRfqs, deliveryRegions, rfqFilterTab]);
 
   const handleSelectSupplier = (sup: DemoUser) => {
     setCurrentUser(sup);
@@ -152,47 +176,47 @@ function SupplierRfqsContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Top Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-blue-500/15 space-y-5">
+      {/* Top Header - SUPPLIER 블랙 테마 */}
+      <div className="bg-[#1f2329] border border-zinc-800 rounded-3xl p-6 sm:p-8 text-zinc-100 shadow-xl space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs font-semibold">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
               <Truck className="w-3.5 h-3.5" />
-              <span>유통사 입찰 공고함 · 배송 권역 자동 매칭</span>
+              <span>유통사 입찰 공고함 · 배송 권역 자동 매칭 (블랙 테마)</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
               배송 권역 일치 오픈 견적 요청 (OPEN)
             </h1>
-            <p className="text-blue-100 text-xs sm:text-sm max-w-2xl">
+            <p className="text-zinc-400 text-xs sm:text-sm max-w-2xl">
               선택한 유통업체의 배송 가능 권역(delivery_regions)과 일치하는 식당의 OPEN 견적
               요청서만 자동 필터링하여 표시합니다.
             </p>
           </div>
 
-          <div className="flex items-center space-x-3 bg-white/10 backdrop-blur rounded-2xl px-4 py-3 border border-white/20 self-start md:self-auto">
+          <div className="flex items-center space-x-3 bg-zinc-900/90 rounded-2xl px-4 py-3 border border-zinc-700/80 self-start md:self-auto">
             <div>
-              <div className="text-[11px] text-blue-100">단가 준수 신뢰도</div>
-              <div className="text-xl font-extrabold flex items-center space-x-1">
+              <div className="text-[11px] text-zinc-400">단가 준수 신뢰도</div>
+              <div className="text-xl font-extrabold flex items-center space-x-1 text-white">
                 <span>{supplierProfile?.trust_score ?? 100}점</span>
-                <BadgeCheck className="w-5 h-5 text-emerald-300" />
+                <BadgeCheck className="w-5 h-5 text-emerald-400" />
               </div>
             </div>
-            <div className="h-8 w-px bg-white/20" />
+            <div className="h-8 w-px bg-zinc-700" />
             <div>
-              <div className="text-[11px] text-blue-100">등록 단가표</div>
-              <div className="text-xl font-extrabold">{catalogCount}종</div>
+              <div className="text-[11px] text-zinc-400">등록 단가표</div>
+              <div className="text-xl font-extrabold text-white">{catalogCount}종</div>
             </div>
           </div>
         </div>
 
         {/* Demo Supplier Switcher (3개 유통업체 원클릭 전환) */}
-        <div className="bg-white/10 backdrop-blur rounded-2xl p-3.5 border border-white/15 space-y-2.5">
+        <div className="bg-zinc-900/80 rounded-2xl p-3.5 border border-zinc-800 space-y-2.5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span className="text-xs font-bold text-blue-50 flex items-center space-x-1.5">
-              <Building2 className="w-4 h-4" />
+            <span className="text-xs font-bold text-zinc-200 flex items-center space-x-1.5">
+              <Building2 className="w-4 h-4 text-emerald-400" />
               <span>데모 유통업체 계정 전환 (3곳 중 선택)</span>
             </span>
-            <span className="text-[11px] text-blue-100">
+            <span className="text-[11px] text-zinc-400">
               업체별 배송 권역 및 보유 단가표에 따라 매칭 공고가 달라집니다.
             </span>
           </div>
@@ -207,8 +231,8 @@ function SupplierRfqsContent() {
                   onClick={() => handleSelectSupplier(sup)}
                   className={`text-left p-3 rounded-xl border transition-all ${
                     isSelected
-                      ? "bg-white text-blue-950 border-white shadow-md"
-                      : "bg-blue-950/30 text-blue-50 border-white/20 hover:bg-blue-950/50"
+                      ? "bg-zinc-800 text-white border-emerald-500 shadow-lg ring-1 ring-emerald-500/40"
+                      : "bg-[#181a1d] text-zinc-300 border-zinc-800 hover:bg-zinc-800/60 hover:text-white"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -216,8 +240,8 @@ function SupplierRfqsContent() {
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
                         isSelected
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-white/15 text-blue-100"
+                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                          : "bg-zinc-800 text-zinc-400"
                       }`}
                     >
                       {sup.badge}
@@ -225,7 +249,7 @@ function SupplierRfqsContent() {
                   </div>
                   <p
                     className={`text-[11px] mt-1 truncate ${
-                      isSelected ? "text-gray-500" : "text-blue-200"
+                      isSelected ? "text-zinc-300" : "text-zinc-500"
                     }`}
                   >
                     {sup.description}
@@ -239,8 +263,8 @@ function SupplierRfqsContent() {
 
       {/* Submitted Banner */}
       {submittedRfqId && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center space-x-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-700/60 text-xs text-emerald-300 flex items-center space-x-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>
             <strong>입찰서가 성공적으로 제출되었습니다!</strong> 제출된 포장단위 공급가는 기준단위(kg/L/ea)로
             자동 환산되어 식당의 비교 매트릭스에 즉시 반영됩니다.
@@ -249,44 +273,71 @@ function SupplierRfqsContent() {
       )}
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-800">
+        <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800 text-xs text-rose-300">
           {errorMsg}
         </div>
       )}
 
-      {/* Active Supplier Delivery Regions Bar */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      {/* Active Supplier Delivery Regions Bar & 실시간 커뮤니티 필터 탭 */}
+      <div className="bg-[#22252a] rounded-2xl border border-zinc-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 text-zinc-200">
         <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="inline-flex items-center space-x-1 font-bold text-gray-700">
-            <Filter className="w-3.5 h-3.5 text-blue-600" />
+          {/* 커뮤니티 탭 */}
+          <div className="inline-flex rounded-xl bg-zinc-900 p-1 border border-zinc-700/80 mr-2">
+            <button
+              type="button"
+              onClick={() => setRfqFilterTab("all")}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                rfqFilterTab === "all"
+                  ? "bg-emerald-500 text-zinc-950 font-black shadow-xs"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>실시간 커뮤니티 전체 피드 ({allOpenRfqs.length})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setRfqFilterTab("matched")}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                rfqFilterTab === "matched"
+                  ? "bg-emerald-500 text-zinc-950 font-black shadow-xs"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              <span>배송 권역 매칭 ({matchedRfqs.length})</span>
+            </button>
+          </div>
+
+          <span className="inline-flex items-center space-x-1 font-bold text-zinc-300">
+            <Filter className="w-3.5 h-3.5 text-emerald-400" />
             <span>{supplierProfile?.company_name || activeSupplier.name} 배송 권역:</span>
           </span>
           {deliveryRegions.length > 0 ? (
             deliveryRegions.map((reg) => (
               <span
                 key={reg}
-                className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 font-semibold"
+                className="px-2.5 py-1 rounded-full bg-emerald-950/40 text-emerald-300 border border-emerald-700/50 font-semibold"
               >
                 {reg}
               </span>
             ))
           ) : (
-            <span className="text-gray-400">등록된 배송 권역 없음</span>
+            <span className="text-zinc-500">등록된 배송 권역 없음 (전체 권역 수신 가능)</span>
           )}
         </div>
 
         <div className="flex items-center space-x-3 text-xs shrink-0">
-          <span className="text-gray-500">
-            전체 OPEN {allOpenRfqs.length}건 중{" "}
-            <strong className="text-blue-700">권역 일치 {matchedRfqs.length}건</strong>
+          <span className="text-zinc-400">
+            총 <strong className="text-emerald-400">{matchedRfqs.length}건</strong> 공고 수신 중
           </span>
           <button
             type="button"
             onClick={loadData}
-            className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600"
+            className="p-1.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center gap-1"
             title="새로고침"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-emerald-400" : ""}`} />
+            <span className="text-[11px] hidden sm:inline">실시간 새로고침</span>
           </button>
         </div>
       </div>
@@ -298,23 +349,23 @@ function SupplierRfqsContent() {
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="bg-white rounded-3xl border border-gray-200 p-6 animate-pulse space-y-3"
+                className="bg-[#22252a] rounded-3xl border border-zinc-800 p-6 animate-pulse space-y-3"
               >
-                <div className="h-5 bg-gray-200 rounded w-1/3" />
-                <div className="h-4 bg-gray-100 rounded w-1/2" />
-                <div className="h-14 bg-gray-100 rounded-2xl" />
+                <div className="h-5 bg-zinc-800 rounded w-1/3" />
+                <div className="h-4 bg-zinc-800 rounded w-1/2" />
+                <div className="h-14 bg-zinc-800/60 rounded-2xl" />
               </div>
             ))}
           </div>
         ) : matchedRfqs.length === 0 ? (
-          <div className="bg-white rounded-3xl border border-dashed border-gray-200 p-12 text-center space-y-3">
-            <MapPin className="w-10 h-10 text-gray-300 mx-auto" />
-            <h2 className="text-base font-bold text-gray-800">
+          <div className="bg-[#22252a] rounded-3xl border border-dashed border-zinc-800 p-12 text-center space-y-3">
+            <MapPin className="w-10 h-10 text-zinc-600 mx-auto" />
+            <h2 className="text-base font-bold text-zinc-300">
               현재 배송 권역과 일치하는 OPEN 견적 요청서가 없습니다
             </h2>
-            <p className="text-xs text-gray-500 max-w-md mx-auto">
+            <p className="text-xs text-zinc-500 max-w-md mx-auto">
               상단에서 다른 데모 유통업체를 선택하거나, 식당 모드에서{" "}
-              <strong>{deliveryRegions[0] || "충북 청주시 흥덕구"}</strong> 권역의 새 견적
+              <strong className="text-zinc-400">{deliveryRegions[0] || "충북 청주시 흥덕구"}</strong> 권역의 새 견적
               요청서를 등록해 보세요.
             </p>
           </div>
@@ -328,26 +379,26 @@ function SupplierRfqsContent() {
             return (
               <div
                 key={rfq.id}
-                className={`bg-white rounded-3xl border p-6 shadow-sm hover:shadow-md transition-all space-y-4 ${
+                className={`bg-[#22252a] rounded-3xl border p-6 shadow-lg transition-all space-y-4 ${
                   submittedRfqId === rfq.id
-                    ? "border-blue-400 ring-2 ring-blue-100"
-                    : "border-gray-200 hover:border-blue-300"
+                    ? "border-emerald-500 ring-2 ring-emerald-500/20"
+                    : "border-zinc-800 hover:border-zinc-700"
                 }`}
               >
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
                   <div className="space-y-1.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold ${dday.style}`}
+                        className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-zinc-800 text-amber-300 border border-amber-500/30"
                       >
                         {dday.label}
                       </span>
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         OPEN
                       </span>
                       {myBid && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 inline-flex items-center space-x-1">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-950/60 text-indigo-300 border border-indigo-700/50 inline-flex items-center space-x-1">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
                           <span>
                             투찰 완료 ({myBidItemCount}/{rfqItems.length}품목 · MOQ{" "}
                             {formatNumber(myBid.moq_amount)}원)
@@ -356,66 +407,66 @@ function SupplierRfqsContent() {
                       )}
                     </div>
 
-                    <h2 className="text-lg font-extrabold text-gray-900">
+                    <h2 className="text-lg font-extrabold text-white">
                       {rfq.title}
                     </h2>
 
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
-                      <span className="font-semibold text-gray-800">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-400">
+                      <span className="font-semibold text-zinc-300">
                         발주 식당: {rfq.profiles?.company_name || "식당"}
                       </span>
                       <span>•</span>
-                      <span className="inline-flex items-center space-x-1 text-blue-700 font-semibold">
+                      <span className="inline-flex items-center space-x-1 text-emerald-400 font-semibold">
                         <MapPin className="w-3.5 h-3.5" />
                         <span>{rfq.region}</span>
                       </span>
                       <span>•</span>
                       <span className="inline-flex items-center space-x-1">
-                        <CreditCard className="w-3.5 h-3.5 text-gray-400" />
+                        <CreditCard className="w-3.5 h-3.5 text-zinc-500" />
                         <span>{rfq.payment_terms}</span>
                       </span>
                     </div>
                   </div>
 
                   <Link
-                    href={`/supplier/rfqs/${rfq.id}/bid`}
-                    className={`px-5 py-3 rounded-2xl text-sm font-extrabold flex items-center justify-center space-x-1.5 shadow-sm transition-all self-start lg:self-auto shrink-0 ${
+                    href={`/supplier/rfqs/demo/bid?id=${rfq.id}`}
+                    className={`px-5 py-3 rounded-2xl text-sm font-extrabold flex items-center justify-center space-x-1.5 shadow-md transition-all self-start lg:self-auto shrink-0 ${
                       myBid
-                        ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                        : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20"
+                        ? "bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/40"
+                        : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20"
                     }`}
                   >
-                    <span>{myBid ? "입찰서 수정하기" : "입찰하기"}</span>
+                    <span>{myBid ? "입찰서 수정하기" : "입찰하기 (견적 제출)"}</span>
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
 
                 {/* Key Info Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50/80 p-3.5 rounded-2xl text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#181a1d] p-3.5 rounded-2xl text-xs border border-zinc-800/80">
                   <div>
-                    <span className="text-gray-400 block text-[11px]">식당 배송 위치</span>
-                    <span className="font-bold text-gray-900 mt-0.5 block">
+                    <span className="text-zinc-500 block text-[11px]">식당 배송 위치</span>
+                    <span className="font-bold text-zinc-200 mt-0.5 block">
                       {rfq.region}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">희망 계약 기간</span>
-                    <span className="font-bold text-gray-900 mt-0.5 flex items-center space-x-1">
-                      <Calendar className="w-3.5 h-3.5 text-blue-500" />
+                    <span className="text-zinc-500 block text-[11px]">희망 계약 기간</span>
+                    <span className="font-bold text-zinc-200 mt-0.5 flex items-center space-x-1">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
                       <span>{rfq.contract_months}개월</span>
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">희망 배송 요일</span>
-                    <span className="font-bold text-gray-900 mt-0.5 block">
+                    <span className="text-zinc-500 block text-[11px]">희망 배송 요일</span>
+                    <span className="font-bold text-zinc-200 mt-0.5 block">
                       {Array.isArray(rfq.delivery_days)
                         ? `${rfq.delivery_days.join(", ")} (주 ${rfq.delivery_days.length}회)`
                         : "-"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">요청 품목 / 마감일</span>
-                    <span className="font-bold text-blue-700 mt-0.5 flex items-center space-x-1">
+                    <span className="text-zinc-500 block text-[11px]">요청 품목 / 마감일</span>
+                    <span className="font-bold text-emerald-400 mt-0.5 flex items-center space-x-1">
                       <Clock className="w-3.5 h-3.5" />
                       <span>
                         {rfqItems.length}개 품목 ·{" "}
@@ -428,17 +479,17 @@ function SupplierRfqsContent() {
                 {/* Requested Items Chips */}
                 {rfqItems.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="inline-flex items-center space-x-1 text-[11px] font-semibold text-gray-400 mr-1">
+                    <span className="inline-flex items-center space-x-1 text-[11px] font-semibold text-zinc-500 mr-1">
                       <Package className="w-3.5 h-3.5" />
                       <span>요청 식자재:</span>
                     </span>
                     {rfqItems.map((it: any) => (
                       <span
                         key={it.id}
-                        className="px-2.5 py-1 rounded-lg bg-blue-50/70 border border-blue-100 text-blue-950 text-[11px] font-medium"
+                        className="px-2.5 py-1 rounded-lg bg-[#181a1d] border border-zinc-800 text-zinc-300 text-[11px] font-medium"
                       >
                         {it.standard_items?.item_name}{" "}
-                        <strong className="font-mono text-blue-700">
+                        <strong className="font-mono text-emerald-400">
                           {formatNumber(it.monthly_qty)}
                           {it.standard_items?.base_unit}
                         </strong>
