@@ -8,6 +8,7 @@ import { HaengbokMeatCompare } from "@/components/compare/HaengbokMeatCompare";
 import { createUnifiedRfq } from "@/lib/unified-rfq-store";
 import {
   Sparkles,
+  Bell,
   CheckCircle2,
   Check,
   Plus,
@@ -261,6 +262,179 @@ export default function NewRfqPage() {
       setShowHaengbokCompare(true);
     }
   };
+
+  // =========================================================================
+  // 실시간 견적 대기실 (Live Waiting Room)
+  // 구매자가 견적 요청을 딱 띄우고 대기하는 동안 공급자 알림 및 금액 직접 산출 대기
+  // =========================================================================
+  if (createdRfqResult) {
+    return (
+      <div className="min-h-screen bg-slate-50 text-gray-900 pb-20">
+        {/* 상단 글로벌 바 */}
+        <div className="bg-white border-b border-gray-200 shadow-xs py-4 px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
+              </span>
+              <span className="font-extrabold text-sm sm:text-base text-gray-900">
+                실시간 공급업체 견적 산출 대기실 (Live Waiting Room)
+              </span>
+            </div>
+            <Link
+              href="/rfq"
+              className="text-xs text-gray-500 hover:text-blue-600 font-bold flex items-center gap-1"
+            >
+              <span>내 공고 목록</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 mt-8 space-y-6">
+          {/* 1. 상태 배너 */}
+          <div className="bg-white rounded-3xl border border-blue-200 p-6 sm:p-8 shadow-sm space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200">
+              <Sparkles className="w-4 h-4 text-blue-600" />
+              <span>실시간 견적 요청이 성공적으로 발행되었습니다!</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-950">
+              [{createdRfqResult.profiles?.company_name || restaurantName}] 사장님의 견적 요청이 전송되었습니다
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              권역 내 식자재 전문 공급사들에게 <strong>실시간 알림</strong>이 전달되었습니다. 공급업체들은 사전에 저장된 고정단가가 아닌, 사장님의 요청 조건({checkedItems.length}개 품목 · 월 {totalQty}kg)에 맞춰 <strong>금액을 일일이 직접 산출하여 제출</strong>하고 있습니다.
+            </p>
+
+            {/* 실시간 진행 바 */}
+            <div className="pt-2">
+              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 font-bold">
+                  <div className="text-[11px] text-blue-600 mb-0.5">STEP 1</div>
+                  견적 요청 발행 완료 ✓
+                </div>
+                <div className="p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 font-bold animate-pulse">
+                  <div className="text-[11px] text-amber-600 mb-0.5">STEP 2</div>
+                  공급사 실시간 금액 산출 중 ⚡
+                </div>
+                <div className="p-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-400 font-medium">
+                  <div className="text-[11px] text-gray-400 mb-0.5">STEP 3</div>
+                  견적서 비교 & 거래처 선정
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. 권역 내 공급사 실시간 응답 현황 */}
+          <div className="bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm space-y-5">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+              <div>
+                <h2 className="text-base sm:text-lg font-black text-gray-900 flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-blue-600" />
+                  <span>권역 내 공급사 실시간 투찰 현황 (배송 권역: {restaurantRegion})</span>
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  공급사가 금액을 입력하여 제출하는 즉시 아래 상태가 실시간으로 갱신됩니다.
+                </p>
+              </div>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                실시간 동기화 중
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                {
+                  name: "벨엘미트 (마장동 축산 도소매)",
+                  badge: "마장동 직거래 전문",
+                  status: "견적서 제출 완료",
+                  statusColor: "bg-emerald-50 text-emerald-800 border-emerald-300",
+                  note: "요청 품목 4종 전체 맞춤 단가 기입 완료",
+                  isDone: true,
+                },
+                {
+                  name: "하나미트 (수입육 전문)",
+                  badge: "호주·미국산 원육 직수입",
+                  status: "품목별 금액 산출 중...",
+                  statusColor: "bg-amber-50 text-amber-800 border-amber-300 animate-pulse",
+                  note: "콜드체인 직배송 조건 반영하여 금액 검토 중",
+                  isDone: false,
+                },
+                {
+                  name: "대성푸드 (종합식자재)",
+                  badge: "수도권 콜드체인",
+                  status: "견적 요청서 열람 및 검토 중",
+                  statusColor: "bg-blue-50 text-blue-800 border-blue-200",
+                  note: "월 소요량 및 포장단위 확인 중",
+                  isDone: false,
+                },
+              ].map((sup, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-2xl border border-gray-200 hover:border-gray-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center font-black text-gray-700 shrink-0">
+                      🥩
+                    </div>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="font-extrabold text-sm text-gray-900">{sup.name}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-semibold">
+                          {sup.badge}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5">{sup.note}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2 self-start sm:self-auto">
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold border ${sup.statusColor}`}>
+                      {sup.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. 하단 액션 버튼 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+            <Link
+              href={`/rfq/${createdRfqResult.id}/compare`}
+              className="py-4 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-sm sm:text-base flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/25 transition-all text-center"
+            >
+              <FileSpreadsheet className="w-5 h-5" />
+              <span>도착한 실시간 견적비교표 열람하기</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link
+              href={`/supplier/rfqs/${createdRfqResult.id}/bid`}
+              className="py-4 px-6 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-emerald-400 font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 shadow-md transition-all text-center border border-zinc-700"
+            >
+              <Truck className="w-4 h-4 text-emerald-400" />
+              <span>공급자 화면 체험: 해당 건 금액 직접 입력해보기</span>
+            </Link>
+          </div>
+
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setCreatedRfqResult(null);
+                setCurrentStep(1);
+              }}
+              className="text-xs text-gray-500 hover:text-gray-800 font-bold underline"
+            >
+              + 다른 품목으로 새 견적 요청서 작성하기
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // 만약 행복쇼핑 화면이 활성화된 경우 -> 캡처된 행복쇼핑 화면을 그대로 렌더링!
   if (showHaengbokCompare) {

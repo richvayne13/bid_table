@@ -300,17 +300,11 @@ export function SupplierHomeDashboard() {
           </div>
           <div className="flex items-center gap-2">
             <Link
-              href="/supplier/register-quote"
+              href="/supplier/rfqs"
               className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black rounded-xl shadow-xs whitespace-nowrap transition flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>견적 직접 등록 (1·3·10 믹스)</span>
-            </Link>
-            <Link
-              href="/supplier/catalog"
-              className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-bold rounded-xl shadow-2xs whitespace-nowrap transition"
-            >
-              단가표 관리
+              <span>실시간 견적 공고함 열람 (금액 직접 입력)</span>
             </Link>
           </div>
         </div>

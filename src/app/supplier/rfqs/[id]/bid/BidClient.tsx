@@ -691,65 +691,30 @@ export default function SupplierBidPage() {
             </div>
           </div>
 
-          {/* 2. 자동 견적 채우기 + 품목별 단가 입력 테이블 */}
+          {/* 2. 요청 품목별 공급 금액 일일이 직접 기입 */}
           <div className="bg-[#22252a] rounded-3xl border border-zinc-800 shadow-md overflow-hidden">
-            {/* Auto-fill Toolbar */}
-            <div className="p-6 border-b border-zinc-800 bg-[#1e2126] space-y-4">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-base font-extrabold text-white flex items-center space-x-2">
+            {/* Live Waiting Alert & Manual Input Guide */}
+            <div className="p-6 border-b border-zinc-800 bg-[#1e2126] space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1.5">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold animate-pulse">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>구매자 실시간 대기 중 · 맞춤 금액 직접 산출 건</span>
+                  </div>
+                  <h2 className="text-base sm:text-lg font-black text-white flex items-center space-x-2">
                     <Calculator className="w-5 h-5 text-emerald-400" />
-                    <span>2. 품목별 공급 단가 입력 및 자동 환산</span>
+                    <span>2. 품목별 공급 금액 일일이 직접 기입 (사전 기준단가 X)</span>
                   </h2>
-                  <p className="text-xs text-zinc-400 mt-0.5">
-                    취급 가능한 품목을 체크하고 자사 포장단위와 공급가를 입력하면 기준단위(1kg/1L/1ea)
-                    환산 단가가 실시간 계산됩니다.
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    구매자의 월간 소요량과 배송 조건을 확인하고, 이번 견적 건에 제시할 자사의 <strong>포장단위</strong>와 <strong>공급 금액(원)</strong>을 아래 표에 일일이 직접 입력해 주세요.
                   </p>
                 </div>
 
-                {/* Auto-Fill Buttons */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleAutoMatchCatalog}
-                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center space-x-1.5 shadow-md transition-colors"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>
-                      자사 표준 단가표 자동 매칭 ({Object.keys(catalogMap).length}종)
-                    </span>
-                  </button>
-
-                  <label className="cursor-pointer px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 text-xs font-bold flex items-center space-x-1.5 transition-colors">
-                    <Upload className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>엑셀/CSV 단가표 업로드</span>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".xlsx,.xls,.csv"
-                      onChange={handleSpreadsheetUpload}
-                      className="hidden"
-                    />
-                  </label>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadSampleCsv}
-                    className="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-xs font-semibold flex items-center space-x-1 transition-colors"
-                    title="현재 요청 품목 기준 엑셀 단가표 양식 다운로드"
-                  >
-                    <Download className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>샘플 엑셀</span>
-                  </button>
+                <div className="px-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-700/80 text-right shrink-0">
+                  <span className="text-[11px] text-zinc-400 block font-semibold">입찰 방식</span>
+                  <span className="text-xs font-bold text-emerald-400">품목별 수기 산출 (실시간 자동 환산)</span>
                 </div>
               </div>
-
-              {autoFillNotice && (
-                <div className="p-3 rounded-xl bg-[#181a1d] border border-emerald-500/40 text-xs text-emerald-300 flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>{autoFillNotice}</span>
-                </div>
-              )}
             </div>
 
             {/* Pricing Input Table */}
@@ -958,8 +923,8 @@ export default function SupplierBidPage() {
                     {submitting
                       ? "입찰서 저장 중..."
                       : existingBidId
-                      ? "입찰서 수정 제출하기"
-                      : "입찰서 제출하기"}
+                      ? "수정한 맞춤 견적서 즉시 재발송"
+                      : "작성한 맞춤 견적서 구매자에게 즉시 발송"}
                   </span>
                 </button>
               </div>

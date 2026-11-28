@@ -28,22 +28,16 @@ export function Navbar() {
 
   const handleNavModeClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    mode: "buyer" | "supplier" | "service"
+    targetId: "buyer" | "supplier" | "service"
   ) => {
     if (pathname === "/") {
       e.preventDefault();
-      if (mode === "service") {
-        const el = document.getElementById("service");
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.location.hash = mode;
-        window.dispatchEvent(
-          new CustomEvent("selfbuyer:mode_change", { detail: mode })
-        );
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      router.push(`/#${mode}`);
+      router.push(`/#${targetId}`);
     }
     setMobileMenuOpen(false);
   };

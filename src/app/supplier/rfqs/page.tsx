@@ -202,9 +202,9 @@ function SupplierRfqsContent() {
               </div>
             </div>
             <div className="h-8 w-px bg-zinc-700" />
-            <div>
-              <div className="text-[11px] text-zinc-400">등록 단가표</div>
-              <div className="text-xl font-extrabold text-white">{catalogCount}종</div>
+<div>
+              <div className="text-[11px] text-zinc-400">실시간 대기 견적</div>
+              <div className="text-xl font-extrabold text-emerald-400">{allOpenRfqs.length}건</div>
             </div>
           </div>
         </div>
@@ -342,6 +342,23 @@ function SupplierRfqsContent() {
         </div>
       </div>
 
+      {/* 실시간 견적 요청 긴급 수신 알림 배너 */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-zinc-900 to-zinc-900 border border-amber-500/50 shadow-lg text-xs space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 text-amber-300 font-extrabold text-xs sm:text-sm">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+            </span>
+            <span>🚨 [실시간 견적 요청 알림] 구매자가 견적을 요청하고 공급사의 금액 제출을 대기하고 있습니다!</span>
+          </div>
+          <span className="text-[11px] text-zinc-400 font-mono hidden sm:inline">실시간 알림 수신 중</span>
+        </div>
+        <p className="text-zinc-300 text-[11px] sm:text-xs leading-relaxed">
+          공급업체는 사전에 등록된 기준단가가 아닌, 아래 공고를 확인하고 <strong>해당 견적 건에 대해 금액을 일일이 직접 입력</strong>하여 최적의 단가를 제안해 주세요.
+        </p>
+      </div>
+
       {/* Matched OPEN RFQ Cards */}
       <div className="space-y-4">
         {loading ? (
@@ -436,7 +453,7 @@ function SupplierRfqsContent() {
                         : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20"
                     }`}
                   >
-                    <span>{myBid ? "입찰서 수정하기" : "입찰하기 (견적 제출)"}</span>
+                    <span>{myBid ? "입찰 금액 수정하기" : "금액 직접 입력 & 견적 제출"}</span>
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
