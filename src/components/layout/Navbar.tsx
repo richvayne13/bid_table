@@ -5,250 +5,113 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useRole } from "@/contexts/RoleContext";
 import {
-  UtensilsCrossed,
-  Search,
-  Sparkles,
   Menu,
   X,
-  ChevronDown,
-  ShieldCheck,
-  Truck,
   User,
   LogOut,
-  Building2,
-  Store,
+  Sparkles,
 } from "lucide-react";
 import BidTableLogo from "@/components/layout/BidTableLogo";
 
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { currentUser, logout, isLoggedIn } = useRole();
+  const { currentUser, logout } = useRole();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/suppliers?q=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      router.push("/rfq/categories");
-    }
-  };
 
   const handleLogout = () => {
     logout();
-    setUserDropdownOpen(false);
     setMobileMenuOpen(false);
     router.push("/");
   };
 
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(href + "/");
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur border-b border-gray-200">
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Logo & Main Nav Links */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-8 sm:space-x-12">
             <BidTableLogo size="md" />
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-5 text-[14px] font-semibold text-gray-800">
+            {/* Desktop Navigation: 서비스소개 / BUYER / SUPPLIER */}
+            <nav className="hidden md:flex items-center space-x-8 text-[15px] font-semibold text-gray-700">
               <Link
-                href="/"
-                className={`transition-colors hover:text-blue-600 ${
-                  isActive("/") && !isActive("/prototypes") ? "text-blue-600 font-bold" : "text-gray-700"
-                }`}
+                href="/#service"
+                onClick={(e) => scrollToSection(e, "service")}
+                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold"
               >
-                원클릭 발주
+                서비스소개
               </Link>
               <Link
-                href="/prototypes"
-                className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
-                  isActive("/prototypes")
-                    ? "bg-emerald-600 text-white shadow-sm"
-                    : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200"
-                }`}
+                href="/#buyer"
+                onClick={(e) => scrollToSection(e, "buyer")}
+                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                <span>도안 20선 갤러리</span>
+                <span>BUYER</span>
+                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium border border-blue-200">
+                  매장 사장님
+                </span>
               </Link>
               <Link
-                href="/supplier/register-quote"
-                className={`transition-colors hover:text-emerald-600 ${
-                  isActive("/supplier/register-quote") ? "text-emerald-600 font-black" : "text-gray-700 font-semibold"
-                }`}
+                href="/#supplier"
+                onClick={(e) => scrollToSection(e, "supplier")}
+                className="transition-colors hover:text-zinc-900 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5"
               >
-                견적 직접 등록
+                <span>SUPPLIER</span>
+                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-medium border border-zinc-200">
+                  공급·유통사
+                </span>
               </Link>
-              <Link
-                href="/supplier/catalog"
-                className={`transition-colors hover:text-amber-600 ${
-                  isActive("/supplier/catalog") ? "text-amber-600 font-bold" : "text-gray-700"
-                }`}
-              >
-                단가표 관리
-              </Link>
-              <Link
-                href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
-                className={`transition-colors hover:text-blue-600 ${
-                  isActive("/rfq") ? "text-blue-600 font-bold" : "text-gray-700"
-                }`}
-              >
-                견적 비교
-              </Link>
-              <Link
-                href="/contracts/e0000000-0000-0000-0000-000000000001/audit"
-                className={`transition-colors hover:text-blue-600 ${
-                  isActive("/contracts") ? "text-blue-600 font-bold" : "text-gray-700"
-                }`}
-              >
-                명세서 AI 감시
-              </Link>
-
-              {/* 로그인 상태별 전용 링크 */}
-              {currentUser?.role === "SUPPLIER" && (
-                <Link
-                  href="/supplier/rfqs"
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
-                    isActive("/supplier/rfqs")
-                      ? "bg-indigo-600 text-white shadow-sm"
-                      : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
-                  }`}
-                >
-                  <Truck className="w-3.5 h-3.5" />
-                  <span>내 입찰공고함</span>
-                </Link>
-              )}
-
-              {currentUser?.role === "RESTAURANT" && (
-                <Link
-                  href="/rfq/new"
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
-                    isActive("/rfq/new")
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                  }`}
-                >
-                  <UtensilsCrossed className="w-3.5 h-3.5" />
-                  <span>견적 요청서 작성</span>
-                </Link>
-              )}
-
-              {currentUser?.role === "ADMIN" && (
-                <Link
-                  href="/admin"
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 ${
-                    isActive("/admin")
-                      ? "bg-emerald-600 text-white shadow-sm"
-                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                  }`}
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>운영 관리자</span>
-                </Link>
-              )}
             </nav>
           </div>
 
-          {/* Center Search Bar (Soomgo style) */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="hidden lg:flex items-center flex-1 max-w-md relative"
-          >
-            <div className="relative w-full">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="거래처 발굴부터 견적 비교까지, 셀프바이어"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-24 py-2 bg-gray-100 hover:bg-gray-50 focus:bg-white text-sm rounded-full border border-transparent focus:border-indigo-400 focus:outline-none transition-all placeholder:text-gray-400 text-gray-800"
-              />
-              <button
-                type="submit"
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-[#6366F1] hover:bg-indigo-50 rounded-full transition-colors"
-              >
-                <Sparkles className="w-3 h-3 text-[#6366F1]" />
-                <span>AI 견적</span>
-              </button>
-            </div>
-          </form>
-
-          {/* Right Action Links (실제 로그인 상태에 따른 완벽한 UI 분기) */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Right Action Links */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {currentUser ? (
-              // 1. 로그인 상태일 때 (마이페이지 & 로그아웃 & 사용자 프로필 뱃지)
               <div className="flex items-center space-x-2">
                 <Link
                   href="/mypage"
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs font-bold transition-all shadow-xs"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs sm:text-sm font-bold transition-all"
                 >
-                  {currentUser.role === "RESTAURANT" && (
-                    <Store className="w-3.5 h-3.5 text-blue-500" />
-                  )}
-                  {currentUser.role === "SUPPLIER" && (
-                    <Truck className="w-3.5 h-3.5 text-indigo-500" />
-                  )}
-                  {currentUser.role === "ADMIN" && (
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                  )}
-                  <span className="max-w-[120px] truncate">{currentUser.name}</span>
-                  <span className="text-[10px] px-1 py-0.2 rounded bg-white text-gray-500 border border-gray-200 font-semibold">
-                    {currentUser.role === "RESTAURANT"
-                      ? "식당"
-                      : currentUser.role === "SUPPLIER"
-                      ? "유통사"
-                      : "관리자"}
-                  </span>
-                </Link>
-
-                <Link
-                  href="/mypage"
-                  className="hidden sm:inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-xs"
-                >
-                  <User className="w-3.5 h-3.5" />
-                  <span>마이페이지</span>
+                  <User className="w-4 h-4 text-blue-600" />
+                  <span className="max-w-[100px] truncate">{currentUser.name}</span>
                 </Link>
 
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition-colors flex items-center space-x-1"
-                  title="로그아웃"
+                  className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition-colors flex items-center space-x-1"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">로그아웃</span>
                 </button>
               </div>
             ) : (
-              // 2. 비로그인 상태일 때 (로그인, 구매자 가입, 판매자 가입)
-              <div className="flex items-center space-x-1.5 sm:space-x-2">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <Link
                   href="/login"
-                  className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-blue-600 px-2 py-1.5 transition-colors"
+                  className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-blue-600 px-2 py-1.5 transition-colors"
                 >
                   로그인
                 </Link>
-
                 <Link
-                  href="/restaurant/register"
-                  className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold border border-blue-200 bg-blue-50/80 hover:bg-blue-100 text-blue-700 transition-all shadow-xs"
+                  href="/#buyer"
+                  onClick={(e) => scrollToSection(e, "buyer")}
+                  className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all flex items-center gap-1.5"
                 >
-                  구매자 가입
-                </Link>
-
-                <Link
-                  href="/supplier/register"
-                  className="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all"
-                >
-                  판매자 가입
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>시작하기</span>
                 </Link>
               </div>
             )}
@@ -256,7 +119,8 @@ export function Navbar() {
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+              className="md:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -265,109 +129,69 @@ export function Navbar() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 py-3 space-y-3 animate-in fade-in">
-            <form onSubmit={handleSearchSubmit} className="px-2">
-              <div className="relative">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="거래처 발굴부터 견적 비교까지, 셀프바이어"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-gray-100 text-sm rounded-lg border-0 focus:ring-2 focus:ring-indigo-400"
-                />
-              </div>
-            </form>
-
-            <div className="grid grid-cols-3 gap-1 px-2 text-center text-xs font-semibold">
+          <div className="md:hidden border-t border-gray-100 py-4 px-2 space-y-3 bg-white animate-in slide-in-from-top-2">
+            <div className="flex flex-col space-y-1">
               <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600 font-bold"
+                href="/#service"
+                onClick={(e) => {
+                  scrollToSection(e, "service");
+                  setMobileMenuOpen(false);
+                }}
+                className="px-3 py-2.5 rounded-lg font-bold text-gray-800 hover:bg-blue-50 hover:text-blue-600 text-sm"
               >
-                원클릭 발주
+                서비스소개
               </Link>
               <Link
-                href="/prototypes"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold border border-emerald-200"
+                href="/#buyer"
+                onClick={(e) => {
+                  scrollToSection(e, "buyer");
+                  setMobileMenuOpen(false);
+                }}
+                className="px-3 py-2.5 rounded-lg font-bold text-gray-800 hover:bg-blue-50 hover:text-blue-600 text-sm flex items-center justify-between"
               >
-                도안 20선 갤러리
+                <span>BUYER</span>
+                <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-medium">외식업 사장님</span>
               </Link>
               <Link
-                href="/supplier/catalog"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-amber-50 text-amber-800 hover:bg-amber-100 font-bold"
+                href="/#supplier"
+                onClick={(e) => {
+                  scrollToSection(e, "supplier");
+                  setMobileMenuOpen(false);
+                }}
+                className="px-3 py-2.5 rounded-lg font-bold text-gray-800 hover:bg-zinc-100 hover:text-zinc-900 text-sm flex items-center justify-between"
               >
-                단가표 관리
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-1 px-2 text-center text-xs font-semibold">
-              <Link
-                href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600"
-              >
-                견적 비교
-              </Link>
-              <Link
-                href="/contracts/e0000000-0000-0000-0000-000000000001/audit"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600"
-              >
-                명세서 AI 감시
+                <span>SUPPLIER</span>
+                <span className="text-xs text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-full font-medium">공급·유통업체</span>
               </Link>
             </div>
 
-            {/* Mobile Auth Drawer */}
-            <div className="border-t border-gray-100 pt-3 px-2">
+            <div className="border-t border-gray-100 pt-3 flex items-center justify-between">
               {currentUser ? (
-                <div className="space-y-2">
-                  <div className="p-2.5 rounded-xl bg-gray-50 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold text-gray-800">{currentUser.name} 님</p>
-                      <p className="text-[10px] text-gray-400">{currentUser.email}</p>
-                    </div>
-                    <Link
-                      href="/mypage"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-2.5 py-1 rounded-md bg-[#6366F1] text-white text-xs font-bold"
-                    >
-                      마이페이지
-                    </Link>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full py-2 text-center text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg"
-                  >
-                    로그아웃
-                  </button>
-                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full py-2 text-center text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg"
+                >
+                  로그아웃
+                </button>
               ) : (
-                <div className="flex items-center justify-between gap-2">
+                <div className="w-full flex items-center gap-2">
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="text-xs text-gray-700 font-bold px-2 py-1"
+                    className="flex-1 py-2 text-center rounded-lg border border-gray-200 text-xs font-bold text-gray-700"
                   >
                     로그인
                   </Link>
-                  <div className="flex items-center space-x-1.5">
-                    <Link
-                      href="/restaurant/register"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1.5 rounded-md"
-                    >
-                      구매자 가입
-                    </Link>
-                    <Link
-                      href="/supplier/register"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs font-bold text-white bg-[#6366F1] px-2.5 py-1.5 rounded-md"
-                    >
-                      판매자 가입
-                    </Link>
-                  </div>
+                  <Link
+                    href="/#buyer"
+                    onClick={(e) => {
+                      scrollToSection(e, "buyer");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex-1 py-2 text-center rounded-lg bg-blue-600 text-white text-xs font-bold"
+                  >
+                    시작하기
+                  </Link>
                 </div>
               )}
             </div>

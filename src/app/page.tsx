@@ -1,661 +1,338 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useRole } from "@/contexts/RoleContext";
-import { SupplierHomeDashboard } from "@/components/supplier/SupplierHomeDashboard";
-import { BuyerHomeDashboard } from "@/components/buyer/BuyerHomeDashboard";
 import {
-  Search,
-  Sparkles,
-  ChevronDown,
-  Star,
-  Bookmark,
-  ShieldCheck,
-  Truck,
   ArrowRight,
-  TrendingDown,
   CheckCircle2,
-  Building2,
-  Clock,
-  MapPin,
-  ChevronRight,
-  Info,
+  AlertCircle,
+  Sparkles,
   Store,
-  Briefcase,
-  Layers,
+  Truck,
+  TrendingDown,
+  ShieldCheck,
+  Search,
+  ChevronDown,
 } from "lucide-react";
 
-// 육류/축산 전용 카테고리 (우육/소고기, 돈육, 가공육 등)
-const CATEGORIES = [
-  { id: "beef", name: "소고기 (우육)", icon: "🥩", count: "14종", hot: true },
-  { id: "steak", name: "스테이크 부위 (살치/채끝/안심)", icon: "🥩", count: "8종", hot: true },
-  { id: "bulk", name: "구이·로스 (알목심/척아이롤)", icon: "🥓", count: "5종", hot: true },
-  { id: "thin", name: "세절육 (차돌박이/우삼겹)", icon: "🍖", count: "4종" },
-  { id: "pork", name: "돼지고기 (한돈/이베리코)", icon: "🐖", count: "6종" },
-  { id: "chilled", name: "냉장 원육 (Chilled)", icon: "❄️", count: "10종" },
-  { id: "frozen", name: "동결/급랭육 (Frozen)", icon: "🧊", count: "9종" },
-];
-
-// 살롱순라 실제 육류 납품 및 견적 후기
-const RESTAURANT_REVIEWS = [
-  {
-    id: 1,
-    restaurant: "살롱순라",
-    location: "서울 종로구 익선동",
-    category: "축산/우육",
-    title: "초이스 냉장 살치살 kg당 2,500원 절감 계약 체결",
-    content: "기존 35,000원에 납품받던 살치살을 마장동 벨엘미트 역제안을 통해 32,500원에 동일 스펙으로 전환했습니다. 월 150kg 기준 매달 37만원 이상 원가가 절감됩니다.",
-    tag: "#초이스살치살 #마장동직송 #원가절감",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 2,
-    restaurant: "살롱순라",
-    location: "서울 종로구 익선동",
-    category: "축산/우육",
-    title: "프라임 알목심 & TEYS 채끝등심 정기 납품으로 스테이크 품질 향상",
-    content: "마장동 유통사의 직접 제안을 받아 주 3회 신선 냉장으로 공급받고 있습니다. 고기 육질이 균일해서 손님 반응이 매우 좋습니다.",
-    tag: "#알목심 #TEYS채끝 #주3회배송",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80",
-  },
-];
-
-// 오늘의 공식 육류 납품 파트너
-const SPONSORED_SUPPLIERS = [
-  {
-    id: "sup-belel",
-    name: "벨엘미트 (마장동 축산 도소매)",
-    badge: "공식 납품사",
-    rating: 5.0,
-    reviewCount: 52,
-    experience: "업력 16년",
-    clients: "살롱순라 등 외식 매장 정기 납품 중",
-    trustScore: "단가준수율 100%",
-    moq: "최소주문 1박스 (약 10만원)",
-    delivery: "서울 전역 / 종로구 익선동 매일 새벽 콜드체인 직배송",
-    items: ["초이스 냉장 살치살", "프라임 알목심", "호주산 AMH S안심", "TEYS 곡물 채끝"],
-    images: [
-      "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=500&auto=format&fit=crop&q=80",
-    ],
-  },
-];
-
 export default function HomePage() {
-  const router = useRouter();
-  const { currentUser } = useRole();
-  const [selectedRegion, setSelectedRegion] = useState("서울 종로구");
-  const [searchWord, setSearchWord] = useState("");
-  const [activeTab, setActiveTab] = useState<"compare" | "regular">("compare");
-  const [reviewFilter, setReviewFilter] = useState("전체");
-  const [savedReviewIds, setSavedReviewIds] = useState<number[]>([]);
-  const [supplierTab, setSupplierTab] = useState("전체");
-  
-  // 판매자 뷰 / 구매자 뷰 토글 상태 (기본값: 'auto' -> 로그인 롤에 따름)
-  const [viewModeOverride, setViewModeOverride] = useState<"auto" | "buyer" | "supplier">("auto");
-
-  // URL query parameter ?view=supplier 지원 (정적 빌드 안전)
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const viewParam = params.get("view");
-      if (viewParam === "supplier") {
-        setViewModeOverride("supplier");
-      } else if (viewParam === "buyer") {
-        setViewModeOverride("buyer");
-      }
-    }
-  }, []);
-
-  const isSupplier = currentUser?.role === "SUPPLIER";
-  const showSupplierHome =
-    viewModeOverride === "supplier" || (viewModeOverride === "auto" && isSupplier);
-
-  // 1. 판매자로 로그인했거나, 판매자 모드를 선택했을 때: 유첨 스케치 기반 [판매자 초기화면]
-  if (showSupplierHome) {
-    return (
-      <div className="relative min-h-screen bg-slate-900 text-white">
-        {/* 상단 뷰 모드 알림 및 스위처 바 */}
-        <div className="bg-slate-950 text-white px-4 py-2.5 border-b border-slate-800 text-xs sticky top-16 z-40">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="font-extrabold text-emerald-400">
-                [👔 판매자 모드 가동 중] {isSupplier ? "(벨엘미트 납품사 로그인)" : "(마장동 유통사 시점 화면)"}
-              </span>
-              <span className="text-slate-400 hidden sm:inline">| 권역별(종로구 등) 식당 발굴 및 자율 역제안</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setViewModeOverride("buyer")}
-                className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition shadow-xs flex items-center gap-1"
-              >
-                🍽️ 식당 사장님 화면으로 전환
-              </button>
-              <Link
-                href="/prototypes"
-                className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-lg font-bold border border-slate-700 transition"
-              >
-                🎨 도안 20선 쇼케이스
-              </Link>
-              <Link
-                href="/supplier/catalog"
-                className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-black transition"
-              >
-                📋 엑셀 단가표 등록
-              </Link>
-            </div>
-          </div>
-        </div>
-        <SupplierHomeDashboard />
-      </div>
-    );
-  }
-
-  const regions = [
-    "서울 종로구",
-    "서울 강남구",
-    "서울 마포구",
-    "서울 중구",
-    "서울 영등포구",
-    "서울 송파구",
-    "경기 성남시",
-    "충북 청주시",
-  ];
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchWord.trim()) {
-      router.push(`/suppliers?q=${encodeURIComponent(searchWord.trim())}&region=${encodeURIComponent(selectedRegion)}`);
-    } else {
-      router.push("/rfq/categories");
-    }
-  };
-
-  const toggleSaveReview = (id: number) => {
-    setSavedReviewIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  const filteredReviews =
-    reviewFilter === "전체"
-      ? RESTAURANT_REVIEWS
-      : RESTAURANT_REVIEWS.filter((r) => r.category.includes(reviewFilter));
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* 🌟 [신규 오픈] 육류 특화 레이아웃 도안 10선 & 박세현 님 파트너 역제안 모델 배너 */}
-      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white py-3 px-4 border-b border-emerald-800/40 shadow-md sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="p-1 bg-emerald-500 rounded-lg text-slate-950 font-bold text-sm">🥩</span>
-            <div>
-              <span className="font-extrabold text-emerald-400 mr-2">[셀프바이어 selfbuyer 구매자 모드]</span>
-              <span className="text-slate-200">
-                거래처 발굴부터, 견적 비교까지 · 살롱순라 구매자 × 마장동 벨엘미트 실시간 연동
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* 판매자 화면 즉시 전환 버튼 */}
-            <button
-              onClick={() => setViewModeOverride("supplier")}
-              className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-lg shadow transition flex items-center gap-1"
-            >
-              <Briefcase className="w-3.5 h-3.5" /> 👔 유통사(판매자) 화면 보기
-            </button>
-            <Link
-              href="/prototypes"
-              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-lg shadow transition flex items-center gap-1"
-            >
-              <Sparkles className="w-3.5 h-3.5" /> 🎨 도안 20선 체험
-            </Link>
-            <Link
-              href="/supplier/catalog"
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold rounded-lg border border-slate-700"
-            >
-              📋 벨엘미트 단가표 등록
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* 🚀 살롱순라 맞춤 구매자 대시보드 (원클릭 발주 + OCR 명세서 감시 + 마장동 실시간 시세) */}
-      <BuyerHomeDashboard />
-
-      {/* 구분선 */}
-      <div className="max-w-7xl mx-auto px-4 my-8">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
-              전체 식자재 카테고리 검색 & 파트너 탐색
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 1. 상단 히어로 & 검색 섹션 (숨고 메인 상단 벤치마킹) */}
-      <section className="pt-8 pb-6 max-w-4xl mx-auto px-4 text-center">
-        {/* 지역 선택 드롭다운 + 타이틀 */}
-        <div className="inline-flex items-center space-x-2 text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
-          <div className="relative inline-block text-left">
-            <select
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-              className="appearance-none bg-transparent pr-8 text-[#6366F1] font-black cursor-pointer focus:outline-none border-b-2 border-[#6366F1] pb-0.5"
-            >
-              {regions.map((reg) => (
-                <option key={reg} value={reg} className="text-gray-800 text-base">
-                  {reg}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="w-5 h-5 text-[#6366F1] absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-          <span>에서 어떤 식자재가 필요하세요?</span>
-        </div>
-
-        {/* 검색 인풋 바 */}
-        <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto shadow-sm">
-          <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchWord}
-            onChange={(e) => setSearchWord(e.target.value)}
-            placeholder="예: 삼겹살, 양파, 식용유, 치즈, 거래명세서 사진 첨부"
-            className="w-full pl-12 pr-32 py-3.5 bg-gray-100 hover:bg-gray-50 focus:bg-white rounded-full text-base text-gray-900 border border-transparent focus:border-indigo-400 focus:outline-none transition-all placeholder:text-gray-400"
-          />
-          <button
-            type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center space-x-1.5 px-4 py-2 rounded-full bg-[#6366F1] hover:bg-[#4F46E5] text-white text-sm font-bold shadow-md transition-all"
+    <div className="w-full flex flex-col bg-white overflow-hidden">
+      
+      {/* =========================================================================
+          SECTION 1. 첫 화면: 좌우 분리 Hero (BUYER vs SUPPLIER)
+          - 유첨 1번 이미지 기반: 좌측(BUYER/화이트) vs 우측(SUPPLIER/차콜 그레이)
+         ========================================================================= */}
+      <section id="split-hero" className="w-full border-b border-gray-200">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-5rem)]">
+          
+          {/* ----------------- 좌측: BUYER (매장 사장님) ----------------- */}
+          <div
+            id="buyer"
+            className="flex flex-col justify-between p-8 sm:p-12 lg:p-16 xl:p-20 bg-white text-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200"
           >
-            <Sparkles className="w-4 h-4" />
-            <span>AI 견적 요청</span>
-          </button>
-        </form>
-
-        {/* 견적비교 / 정기납품 서브 탭 */}
-        <div className="flex justify-center space-x-8 mt-8 border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab("compare")}
-            className={`pb-3 text-base font-bold transition-all relative ${
-              activeTab === "compare"
-                ? "text-gray-900 border-b-2 border-gray-900"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            견적비교
-          </button>
-          <button
-            onClick={() => setActiveTab("regular")}
-            className={`pb-3 text-base font-bold transition-all relative flex items-center space-x-1 ${
-              activeTab === "regular"
-                ? "text-gray-900 border-b-2 border-gray-900"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            <span>정기납품 직거래</span>
-            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-          </button>
-        </div>
-
-        {/* 식자재 카테고리 10종 아이콘 그리드 */}
-        <div className="grid grid-cols-5 sm:grid-cols-10 gap-3 sm:gap-2 mt-6">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/rfq/categories?cat=${cat.id}`}
-              className="flex flex-col items-center p-2 rounded-xl hover:bg-gray-50 transition-transform hover:-translate-y-0.5 group"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-gray-100 group-hover:bg-indigo-50 flex items-center justify-center text-2xl transition-colors shadow-xs">
-                {cat.icon}
-              </div>
-              <span className="text-xs font-semibold text-gray-700 mt-2 group-hover:text-[#6366F1]">
-                {cat.name}
-              </span>
-              {cat.hot && (
-                <span className="text-[9px] text-[#6366F1] font-bold mt-0.5">인기</span>
-              )}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 2. 사전 알림 및 단가방어 이벤트 배너 */}
-      <section className="max-w-5xl mx-auto px-4 my-6">
-        <Link
-          href="/rfq/new"
-          className="block rounded-2xl bg-gradient-to-r from-[#1E1B4B] via-[#312E81] to-[#4338CA] text-white p-6 sm:p-7 shadow-lg relative overflow-hidden group"
-        >
-          <div className="flex items-center justify-between relative z-10">
-            <div>
-              <span className="inline-block px-2.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 text-xs font-bold mb-2">
-                선착순 100개 식당 한정
-              </span>
-              <h3 className="text-lg sm:text-2xl font-black tracking-tight">
-                선착순 식자재 단가 방어 30% 지원 사전 알림 신청하기
-              </h3>
-              <p className="text-xs sm:text-sm text-indigo-200 mt-1">
-                기존 거래명세서만 올려도 평균 24% 원가 절감 + 불시 단가 인상 시 차액 100% 보상
-              </p>
-            </div>
-            <div className="hidden sm:flex items-center justify-center w-20 h-20 rounded-2xl bg-white/10 border border-white/20 backdrop-blur text-3xl font-black text-indigo-300">
-              30%
-            </div>
-          </div>
-          <div className="absolute right-0 bottom-0 translate-x-8 translate-y-8 w-48 h-48 rounded-full bg-indigo-400/10 blur-2xl"></div>
-        </Link>
-      </section>
-
-      {/* 3. 식당 개인사업자들의 생생한 납품 & 단가방어 후기 그리드 (숨고 이사후기 벤치마킹) */}
-      <section className="max-w-5xl mx-auto px-4 py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <div>
-            <p className="text-xs font-bold text-gray-500">
-              최근 {selectedRegion} 주변에서 많이 본
-            </p>
-            <h2 className="text-xl sm:text-2xl font-black text-gray-900 mt-0.5">
-              식당 사장님들의 식자재 절감 및 납품 고민 해결법
-            </h2>
-          </div>
-          <Link
-            href="/explore"
-            className="text-xs sm:text-sm font-bold text-gray-500 hover:text-gray-900 flex items-center space-x-1"
-          >
-            <span>더보기</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        {/* 후기 카테고리 필터 칩 */}
-        <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
-          {["전체", "유제품", "육류", "공산품", "면류", "채소"].map((chip) => (
-            <button
-              key={chip}
-              onClick={() => setReviewFilter(chip)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
-                reviewFilter === chip
-                  ? "bg-gray-900 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {chip === "전체" ? "전체 품목 보기" : `${chip} 납품`}
-            </button>
-          ))}
-        </div>
-
-        {/* 후기 사진 카드 그리드 */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-4">
-          {filteredReviews.map((rev) => (
-            <div
-              key={rev.id}
-              className="group flex flex-col bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all"
-            >
-              <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
-                <img
-                  src={rev.image}
-                  alt={rev.restaurant}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <button
-                  onClick={() => toggleSaveReview(rev.id)}
-                  className="absolute bottom-2 right-2 p-1.5 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur"
-                >
-                  <Bookmark
-                    className={`w-3.5 h-3.5 ${
-                      savedReviewIds.includes(rev.id) ? "fill-amber-400 text-amber-400" : ""
-                    }`}
-                  />
-                </button>
-                <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/60 text-[10px] text-white font-medium backdrop-blur">
-                  {rev.category}
+            <div className="space-y-8">
+              {/* 상단 레이블 & 타이틀 */}
+              <div className="space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 font-extrabold text-xs tracking-wider uppercase border border-blue-200">
+                  <Store className="w-4 h-4" />
+                  <span>BUYER (외식업 사장님)</span>
                 </div>
+                <p className="text-xs sm:text-sm font-semibold text-gray-400 leading-relaxed">
+                  SELFBUYER의 페인 포인트와 이 불편함이 SELFBUYER에서 해소되는 느낌이 들도록
+                </p>
+                <h1 className="text-2xl sm:text-3xl xl:text-4xl font-extrabold text-gray-900 leading-snug tracking-tight">
+                  구매할 품목 정보만 기재하면<br />
+                  <span className="text-blue-600">여러 SUPPLIER</span>로부터 견적을 받고<br />
+                  가장 합리적인 거래처 선정까지,
+                </h1>
               </div>
 
-              <div className="p-2.5 flex flex-col flex-1 justify-between">
-                <div>
-                  <h4 className="text-xs font-bold text-gray-900 line-clamp-2 leading-snug">
-                    {rev.title}
-                  </h4>
-                  <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">
-                    {rev.content}
+              {/* BUYER 페인포인트 & 솔루션 리스트 1~4 */}
+              <div className="space-y-4 pt-4 border-t border-gray-100">
+                {/* 1번 */}
+                <div className="flex items-start space-x-3.5 p-3.5 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 transition-colors">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-xs mt-0.5">
+                    1
+                  </div>
+                  <p className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed">
+                    기존 납품처의 단가인상에 대처할 수 없는 당혹스러움
                   </p>
                 </div>
-                <div className="mt-2 pt-2 border-t border-gray-50 flex items-center justify-between text-[10px] text-gray-400">
-                  <span className="font-semibold text-gray-600">{rev.restaurant}</span>
-                  <div className="flex items-center text-amber-500">
-                    <Star className="w-2.5 h-2.5 fill-current" />
-                    <span className="ml-0.5 font-bold">{rev.rating}</span>
+
+                {/* 2번 */}
+                <div className="flex items-start space-x-3.5 p-3.5 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 transition-colors">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-xs mt-0.5">
+                    2
                   </div>
+                  <p className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed">
+                    그래서 대체업체를 찾아보았지만, 잘 노출되어 있는 대형 거래처들은 단가의 메리트가 적음
+                  </p>
+                </div>
+
+                {/* 3번 */}
+                <div className="flex items-start space-x-3.5 p-3.5 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 transition-colors">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-xs mt-0.5">
+                    3
+                  </div>
+                  <p className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed">
+                    수소문해서 인근의 영세한 업자를 찾더라도, 직접 매장에서 일하는 사장님이 거래처와의 미팅을 하고, 견적서를 받아 직접 견적 비교하기엔 시간적으로 여유가 부족함
+                  </p>
+                </div>
+
+                {/* 4번 (해결/결과 강조) */}
+                <div className="flex items-start space-x-3.5 p-4 rounded-xl bg-blue-50/90 border border-blue-200/80 shadow-sm">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-xs mt-0.5 shadow-xs">
+                    4
+                  </div>
+                  <p className="text-sm sm:text-base text-blue-900 font-bold leading-relaxed">
+                    사용하는 품목과 월간 사용량만 기재되면, 여러 업체로부터 견적을 받아 가장 합리적인 구매를 진행할 수 있게되는 사장님
+                  </p>
                 </div>
               </div>
             </div>
-          ))}
+
+            {/* 좌측 하단 CTA 버튼 */}
+            <div className="pt-8 sm:pt-10 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/rfq/new"
+                className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+              >
+                <span>품목 등록하고 무료 견적 받기</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/rfq/d0000000-0000-0000-0000-000000000001/compare"
+                className="inline-flex items-center justify-center space-x-2 px-5 py-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-sm sm:text-base transition-all"
+              >
+                <span>실제 견적비교표 예시보기</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* ----------------- 우측: SUPPLIER (공급·유통사) ----------------- */}
+          <div
+            id="supplier"
+            className="flex flex-col justify-between p-8 sm:p-12 lg:p-16 xl:p-20 bg-[#3a3c42] text-white"
+          >
+            <div className="space-y-8">
+              {/* 상단 레이블 & 타이틀 */}
+              <div className="space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/10 text-zinc-200 font-extrabold text-xs tracking-wider uppercase border border-white/20 backdrop-blur-sm">
+                  <Truck className="w-4 h-4 text-emerald-400" />
+                  <span>SUPPLIER (납품·유통업체)</span>
+                </div>
+                <p className="text-xs sm:text-sm font-semibold text-zinc-400 leading-relaxed">
+                  SUPPLIER의 페인 포인트와 이 불편함이 SELFBUYER에서 해소되는 느낌이 들도록
+                </p>
+                <h2 className="text-2xl sm:text-3xl xl:text-4xl font-extrabold text-white leading-snug tracking-tight">
+                  권역별, 업태별 사장님을 한 눈에 확인하고,<br />
+                  별도의 미팅없이 견적시 필요한 정보를 열람,<br />
+                  <span className="text-emerald-400">자신있는 단가제시</span>로 새로운 거래처 발굴까지
+                </h2>
+              </div>
+
+              {/* SUPPLIER 페인포인트 & 솔루션 리스트 1~4 */}
+              <div className="space-y-4 pt-4 border-t border-zinc-700">
+                {/* 1번 */}
+                <div className="flex items-start space-x-3.5 p-3.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold text-xs mt-0.5">
+                    1
+                  </div>
+                  <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed">
+                    합리적인 단가엔 자신있지만, 거래처 발굴이 어려움
+                  </p>
+                </div>
+
+                {/* 2번 */}
+                <div className="flex items-start space-x-3.5 p-3.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold text-xs mt-0.5">
+                    2
+                  </div>
+                  <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed">
+                    어쩔수없이 마케팅과 영업에 비용을 씀으로써, 자신있었던 <span className="text-white font-bold">"합리적인 단가"</span>에서 경쟁력을 잃고 있음.
+                  </p>
+                </div>
+
+                {/* 3번 */}
+                <div className="flex items-start space-x-3.5 p-3.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold text-xs mt-0.5">
+                    3
+                  </div>
+                  <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed">
+                    여러 매장을 발로 뛰며 방문해도, 연락이 오는 사장님은 50명중 하나
+                  </p>
+                </div>
+
+                {/* 4번 (해결/결과 강조) */}
+                <div className="flex items-start space-x-3.5 p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/50 shadow-sm">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-emerald-500 text-zinc-950 flex items-center justify-center font-black text-xs mt-0.5 shadow-xs">
+                    4
+                  </div>
+                  <p className="text-sm sm:text-base text-emerald-300 font-bold leading-relaxed">
+                    SELFBUYER에서 별도의 마케팅과 영업 비용없이 직접 거래처를 찾게 되는 SUPPLIER
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 우측 하단 CTA 버튼 */}
+            <div className="pt-8 sm:pt-10 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/supplier/register-quote"
+                className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm sm:text-base shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02]"
+              >
+                <span>단가 직접 등록하고 거래처 찾기</span>
+                <ArrowRight className="w-4 h-4 text-zinc-950" />
+              </Link>
+              <Link
+                href="/supplier/rfqs"
+                className="inline-flex items-center justify-center space-x-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base transition-all border border-white/10"
+              >
+                <span>외식 매장 견적 공고함 열람</span>
+              </Link>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* 4. 오늘의 추천 유통업체 (광고①) - 두 번째 사진 대응 */}
-      <section className="bg-gray-50/70 border-y border-gray-200/80 py-10">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="flex items-center space-x-1.5 mb-1">
-            <h2 className="text-xl sm:text-2xl font-black text-gray-900">
-              오늘의 추천 유통업체
-            </h2>
-            <span className="text-xs px-1.5 py-0.5 rounded bg-gray-200 text-gray-600 font-semibold">
-              광고 ⓘ
-            </span>
+
+      {/* =========================================================================
+          SECTION 2. 세 번째 첨부 파일 기반 큼직한 배너
+          - "매장내 관리부터 매장외 관리까지 사장님의 구매 업무를 덜어드릴게요"
+         ========================================================================= */}
+      <section id="banner" className="w-full bg-[#fcfcfc] py-24 sm:py-32 lg:py-40 px-6 sm:px-12 lg:px-20 border-b border-gray-200 relative overflow-hidden">
+        {/* 은은한 배경 장식 요소 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-r from-blue-100/40 via-indigo-50/30 to-emerald-100/40 blur-3xl pointer-events-none rounded-full" />
+        
+        <div className="max-w-5xl mx-auto text-center space-y-8 sm:space-y-10 relative z-10">
+          
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white border border-gray-200/80 shadow-xs text-xs sm:text-sm font-bold text-gray-700">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span>셀프바이어의 약속</span>
           </div>
-          <p className="text-xs text-gray-500 mb-4">
-            엄격한 위생 검증 및 콜드체인 설비를 보유한 우수 직거래 납품 파트너
+
+          {/* 큼직한 메인 타이포그래피 (3번째 유첨 파일 원문 정확 반영) */}
+          <div className="space-y-3 sm:space-y-4">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-tight">
+              매장내 관리부터
+            </h2>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-tight">
+              매장외 관리까지
+            </h2>
+            <p className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-600 tracking-tight leading-tight pt-2 sm:pt-4">
+              사장님의 구매 업무를 덜어드릴게요
+            </p>
+          </div>
+
+          {/* 서브 설명 문구 */}
+          <p className="text-sm sm:text-lg text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed pt-2">
+            발품 팔던 거래처 미팅, 매달 오르는 불투명한 식자재 단가 비교까지.<br className="hidden sm:inline" />
+            품목만 등록하면 셀프바이어가 가장 투명하고 합리적인 직거래를 연결합니다.
           </p>
 
-          {/* 카테고리 필터 탭 */}
-          <div className="flex items-center space-x-2 overflow-x-auto pb-3 scrollbar-none">
-            {["전체", "축산/육류", "농산/채소", "수산물", "유제품", "소스/공산품"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setSupplierTab(tab)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                  supplierTab === tab
-                    ? "bg-gray-900 text-white"
-                    : "bg-white text-gray-600 border border-gray-200 hover:border-gray-400"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+          {/* 시작 버튼 액션 */}
+          <div className="pt-6 sm:pt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/rfq/new"
+              className="px-8 py-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2"
+            >
+              <span>1분 만에 구매 업무 덜어내기</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
 
-          {/* 유통사 추천 카드 3개 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-            {SPONSORED_SUPPLIERS.map((sup) => (
-              <div
-                key={sup.id}
-                className="bg-white rounded-2xl border border-gray-200/90 p-4 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="flex items-center space-x-1.5">
-                        <span className="text-xs font-medium text-gray-400">우수 공급사</span>
-                      </div>
-                      <h3 className="text-base font-extrabold text-gray-900 mt-0.5">
-                        {sup.name}
-                      </h3>
-                    </div>
-                    <div className="flex items-center text-xs text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded-md">
-                      <Star className="w-3.5 h-3.5 fill-current mr-0.5" />
-                      <span>{sup.rating}</span>
-                      <span className="text-gray-400 font-normal ml-1">({sup.reviewCount})</span>
-                    </div>
-                  </div>
-
-                  {/* B2B 식자재 핵심 지표 */}
-                  <div className="grid grid-cols-2 gap-2 mt-3 p-2.5 rounded-xl bg-gray-50 text-[11px]">
-                    <div>
-                      <span className="text-gray-400 block">업력 / 규모</span>
-                      <span className="font-bold text-gray-800">{sup.experience}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-400 block">정기 거래처</span>
-                      <span className="font-bold text-gray-800">{sup.clients}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-400 block">신뢰도</span>
-                      <span className="font-bold text-emerald-600">{sup.trustScore}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-400 block">주문 조건</span>
-                      <span className="font-bold text-gray-800">{sup.moq}</span>
-                    </div>
-                  </div>
-
-                  {/* 배송 안내 */}
-                  <p className="text-[11px] text-gray-600 mt-2.5 flex items-center">
-                    <Truck className="w-3.5 h-3.5 text-indigo-500 mr-1 shrink-0" />
-                    <span className="truncate">{sup.delivery}</span>
-                  </p>
-
-                  {/* 사진 3장 썸네일 */}
-                  <div className="grid grid-cols-3 gap-1.5 mt-3">
-                    {sup.images.map((img, i) => (
-                      <div key={i} className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                        <img src={img} alt="납품 현장" className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* 주력 취급 품목 뱃지 */}
-                  <div className="flex flex-wrap gap-1 mt-3">
-                    {sup.items.map((item, idx) => (
-                      <span
-                        key={idx}
-                        className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center space-x-2">
-                  <Link
-                    href={`/rfq/new?supplier=${sup.id}`}
-                    className="flex-1 py-2 text-center text-xs font-bold rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white transition-colors"
-                  >
-                    단가 견적 요청
-                  </Link>
-                  <Link
-                    href={`/suppliers`}
-                    className="px-3 py-2 text-center text-xs font-semibold rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    상세보기
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* 5. 중소벤처기업부 x 견적식탁 안전 거래 캠페인 배너 (두 번째 사진 대응) */}
-      <section className="max-w-5xl mx-auto px-4 my-8">
-        <div className="rounded-2xl bg-[#EDE9FE] border border-indigo-200/60 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-[#6366F1] flex items-center justify-center text-white shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center space-x-1.5">
-                <span className="text-[11px] font-bold text-indigo-700 bg-indigo-100 px-1.5 py-0.5 rounded">
-                  중소벤처기업부 x 견적식탁
-                </span>
-                <span className="text-[11px] text-gray-500">외식업 상생 프로젝트</span>
+
+      {/* =========================================================================
+          SECTION 3. 서비스소개 (상단 메뉴의 "서비스소개"와 바로 연결)
+         ========================================================================= */}
+      <section id="service" className="w-full py-20 sm:py-28 px-6 sm:px-12 lg:px-20 bg-white">
+        <div className="max-w-6xl mx-auto space-y-16">
+          
+          <div className="text-center space-y-4">
+            <span className="text-xs sm:text-sm font-extrabold text-blue-600 tracking-wider uppercase bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+              SERVICE OVERVIEW
+            </span>
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+              셀프바이어는 어떻게 사장님의 부담을 줄일까요?
+            </h3>
+            <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">
+              미팅과 영업 비용을 없애고, 바이어와 서플라이어를 투명하게 직결하는 3단계 프로세스
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="p-8 rounded-2xl bg-gray-50 border border-gray-200/80 hover:border-blue-300 hover:shadow-md transition-all space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                01
               </div>
-              <h3 className="text-base sm:text-lg font-black text-gray-900 mt-0.5">
-                안전한 식자재 직거래 환경 우리 함께 만들어요 1편
-              </h3>
-              <p className="text-xs text-gray-600 mt-0.5">
-                불공정 단가 일방 인상 방지 서약 및 공급 지연 안심 손해배상 보증제 안내
+              <h4 className="text-xl font-bold text-gray-900">
+                품목 및 사용량 간단 기재
+              </h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                바쁜 사장님이 영업사원과 미팅할 필요 없이, 매장에서 정기적으로 쓰는 품목과 월 사용량만 입력하면 공고가 즉시 시작됩니다.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="p-8 rounded-2xl bg-gray-50 border border-gray-200/80 hover:border-emerald-300 hover:shadow-md transition-all space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                02
+              </div>
+              <h4 className="text-xl font-bold text-gray-900">
+                전문 공급사의 실시간 단가 제안
+              </h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                권역별 납품 경쟁력을 갖춘 공급사가 영업·마케팅 비용 없이 가장 자신 있는 직거래 단가로 투명하게 역제안합니다.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="p-8 rounded-2xl bg-gray-50 border border-gray-200/80 hover:border-indigo-300 hover:shadow-md transition-all space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                03
+              </div>
+              <h4 className="text-xl font-bold text-gray-900">
+                원클릭 견적 비교 & 원가 절감
+              </h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                도착한 여러 공급사의 견적표를 규격·원산지·단가별로 한눈에 비교하고, 매달 수십~수백만 원의 식자재 원가를 절감합니다.
               </p>
             </div>
           </div>
-          <Link
-            href="/supplier-join"
-            className="px-4 py-2 rounded-xl bg-white text-xs font-bold text-[#6366F1] border border-indigo-200 hover:bg-indigo-50 shadow-xs whitespace-nowrap"
-          >
-            안심 보증제 알아보기 →
-          </Link>
+
+          {/* 하단 요약 배너 */}
+          <div className="p-8 rounded-2xl bg-gradient-to-r from-gray-900 to-gray-800 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+            <div className="space-y-1 text-center md:text-left">
+              <p className="text-lg font-bold">지금 바로 셀프바이어에서 시작해보세요</p>
+              <p className="text-xs sm:text-sm text-gray-300">
+                구매자는 무료 견적 비교, 공급사는 무료 거래처 발굴이 가능합니다.
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/rfq/new"
+                className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all"
+              >
+                BUYER 시작하기
+              </Link>
+              <Link
+                href="/supplier/register-quote"
+                className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm transition-all"
+              >
+                SUPPLIER 시작하기
+              </Link>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* 6. 지금 필요한 식자재, 한 번에 견적 받기 카드들 (두 번째 사진 대응) */}
-      <section className="max-w-5xl mx-auto px-4 pb-16">
-        <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-4">
-          지금 필요한 식자재, 한 번에 견적 받기
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            {
-              title: "신선육 안정 공급",
-              desc: "국내산 한돈/한우 & 수입 우삼겹",
-              count: "육류 14종 패키지",
-              image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=300&auto=format&fit=crop&q=80",
-              href: "/rfq/new?category=meat",
-            },
-            {
-              title: "매일 새벽 직배송",
-              desc: "가락시장 경매 야채 & 깐마늘",
-              count: "채소·농산 22종",
-              image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop&q=80",
-              href: "/rfq/new?category=vege",
-            },
-            {
-              title: "정통 양식/파스타",
-              desc: "유제품, 파르미지아노, 엑스트라버진",
-              count: "유제품 10종",
-              image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=300&auto=format&fit=crop&q=80",
-              href: "/rfq/new?category=dairy",
-            },
-            {
-              title: "원가 절감 공산품",
-              desc: "업소용 대용량 식용유 & 소스류",
-              count: "공산품 35종",
-              image: "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=300&auto=format&fit=crop&q=80",
-              href: "/rfq/new?category=sauce",
-            },
-          ].map((item, idx) => (
-            <Link
-              key={idx}
-              href={item.href}
-              className="group bg-white rounded-2xl border border-gray-200 p-4 hover:border-indigo-400 hover:shadow-md transition-all flex items-center justify-between"
-            >
-              <div>
-                <span className="text-[11px] font-medium text-gray-400 block">{item.title}</span>
-                <h4 className="text-sm font-extrabold text-gray-900 mt-0.5 group-hover:text-[#6366F1] transition-colors">
-                  {item.desc}
-                </h4>
-                <span className="inline-flex items-center text-xs font-semibold text-gray-500 mt-2">
-                  <span>{item.count}</span>
-                  <ChevronRight className="w-3.5 h-3.5 ml-0.5 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
-                </span>
-              </div>
-              <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0 ml-3">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
