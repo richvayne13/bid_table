@@ -607,13 +607,13 @@ export function PilotCompareWorkspace() {
           className="mt-6 bg-white rounded-2xl p-6 sm:p-10 border border-[#E3E8EE] shadow-xs"
         >
           <div className="space-y-2 sm:space-y-3">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black tracking-tight leading-tight text-[#111827]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black tracking-tight leading-tight text-[#111827] break-keep">
               구매할 품목 정보만 기재하면
             </h2>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black tracking-tight leading-tight text-[#111827]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black tracking-tight leading-tight text-[#111827] break-keep">
               <span className="text-blue-600">여러 SUPPLIER</span>로부터 견적을 받고
             </h2>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black tracking-tight leading-tight text-[#111827]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black tracking-tight leading-tight text-[#111827] break-keep">
               가장 합리적인 거래처 선정까지,
             </h2>
           </div>

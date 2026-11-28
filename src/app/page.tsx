@@ -153,10 +153,10 @@ export default function HomePage() {
                 SELFBUYER의 페인 포인트와 이 불편함이 SELFBUYER에서 해소되는 느낌이 들도록
               </p>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-950 leading-tight tracking-tight">
-                구매할 품목 정보만 기재하면<br />
-                <span className="text-blue-600">여러 SUPPLIER</span>로부터 견적을 받고<br />
-                가장 합리적인 거래처 선정까지,
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-950 leading-tight tracking-tight break-keep">
+                구매할 품목 정보만 기재하면<br className="hidden sm:inline" />
+                {" "}<span className="text-blue-600">여러 SUPPLIER</span>로부터 견적을 받고<br className="hidden sm:inline" />
+                {" "}가장 합리적인 거래처 선정까지,
               </h1>
             </div>
 
@@ -167,7 +167,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">
                   1
                 </div>
-                <p className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed break-keep">
                   기존 납품처의 단가인상에 대처할 수 없는 당혹스러움
                 </p>
               </div>
@@ -177,7 +177,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">
                   2
                 </div>
-                <p className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed break-keep">
                   그래서 대체업체를 찾아보았지만, 잘 노출되어 있는 대형 거래처들은 단가의 메리트가 적음
                 </p>
               </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">
                   3
                 </div>
-                <p className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed break-keep">
                   수소문해서 인근의 영세한 업자를 찾더라도, 직접 매장에서 일하는 사장님이 거래처와의 미팅을 하고, 견적서를 받아 직접 견적 비교하기엔 시간적으로 여유가 부족함
                 </p>
               </div>
@@ -197,7 +197,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-sm shadow-xs">
                   4
                 </div>
-                <p className="text-sm sm:text-base text-blue-950 font-bold leading-relaxed">
+                <p className="text-sm sm:text-base text-blue-950 font-bold leading-relaxed break-keep">
                   사용하는 품목과 월간 사용량만 기재되면, 여러 업체로부터 견적을 받아 가장 합리적인 구매를 진행할 수 있게되는 사장님
                 </p>
               </div>
@@ -207,14 +207,14 @@ export default function HomePage() {
             <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row gap-3.5">
               <Link
                 href="/rfq/new"
-                className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-lg shadow-blue-500/20 transition-all hover:scale-102"
+                className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-lg shadow-blue-500/20 transition-all hover:scale-102 whitespace-nowrap shrink-0"
               >
                 <span>품목 등록하고 무료 견적 받기</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/pilot"
-                className="inline-flex items-center justify-center space-x-2 px-7 py-4 rounded-2xl bg-blue-50/70 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-base transition-all"
+                className="inline-flex items-center justify-center space-x-2 px-7 py-4 rounded-2xl bg-blue-50/70 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-base transition-all whitespace-nowrap shrink-0"
               >
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>구매업무 경감 시범 사이트 체험</span>
@@ -257,10 +257,10 @@ export default function HomePage() {
                 SUPPLIER의 페인 포인트와 이 불편함이 SELFBUYER에서 해소되는 느낌이 들도록
               </p>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight">
-                권역별, 업태별 사장님을 한 눈에 확인하고,<br />
-                별도의 미팅없이 견적시 필요한 정보를 열람,<br />
-                <span className="text-emerald-400">자신있는 단가제시</span>로 새로운 거래처 발굴까지
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight break-keep">
+                권역별, 업태별 사장님을 한 눈에 확인하고,<br className="hidden sm:inline" />
+                {" "}별도의 미팅없이 견적시 필요한 정보를 열람,<br className="hidden sm:inline" />
+                {" "}<span className="text-emerald-400">자신있는 단가제시</span>로 새로운 거래처 발굴까지
               </h2>
             </div>
 
@@ -271,7 +271,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold text-sm">
                   1
                 </div>
-                <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed break-keep">
                   합리적인 단가엔 자신있지만, 거래처 발굴이 어려움
                 </p>
               </div>
@@ -281,7 +281,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold text-sm">
                   2
                 </div>
-                <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed break-keep">
                   어쩔수없이 마케팅과 영업에 비용을 씀으로써, 자신있었던 <span className="text-white font-bold">"합리적인 단가"</span>에서 경쟁력을 잃고 있음.
                 </p>
               </div>
@@ -291,7 +291,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold text-sm">
                   3
                 </div>
-                <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed break-keep">
                   여러 매장을 발로 뛰며 방문해도, 연락이 오는 사장님은 50명중 하나
                 </p>
               </div>
@@ -301,7 +301,7 @@ export default function HomePage() {
                 <div className="shrink-0 w-8 h-8 rounded-xl bg-emerald-500 text-zinc-950 flex items-center justify-center font-black text-sm shadow-xs">
                   4
                 </div>
-                <p className="text-sm sm:text-base text-emerald-300 font-bold leading-relaxed">
+                <p className="text-sm sm:text-base text-emerald-300 font-bold leading-relaxed break-keep">
                   SELFBUYER에서 별도의 마케팅과 영업 비용없이 직접 거래처를 찾게 되는 SUPPLIER
                 </p>
               </div>
@@ -311,14 +311,14 @@ export default function HomePage() {
             <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row gap-3.5">
               <Link
                 href="/supplier/register-quote"
-                className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-base shadow-lg shadow-emerald-500/20 transition-all hover:scale-102"
+                className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-base shadow-lg shadow-emerald-500/20 transition-all hover:scale-102 whitespace-nowrap shrink-0"
               >
                 <span>단가 직접 등록하고 거래처 찾기</span>
                 <ArrowRight className="w-4 h-4 text-zinc-950" />
               </Link>
               <Link
                 href="/supplier/rfqs"
-                className="inline-flex items-center justify-center space-x-2 px-7 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-base transition-all border border-white/10"
+                className="inline-flex items-center justify-center space-x-2 px-7 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-base transition-all border border-white/10 whitespace-nowrap shrink-0"
               >
                 <span>외식 매장 견적 공고함 열람</span>
               </Link>
@@ -357,29 +357,29 @@ export default function HomePage() {
                     <Store className="w-3.5 h-3.5" />
                     <span>BUYER (외식업 사장님)</span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-950 leading-snug">
-                    구매할 품목 정보만 기재하면<br />
-                    <span className="text-blue-600">여러 SUPPLIER</span>로부터 견적을 받고<br />
-                    가장 합리적인 거래처 선정까지
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-950 leading-snug break-keep">
+                    구매할 품목 정보만 기재하면<br className="hidden sm:inline" />
+                    {" "}<span className="text-blue-600">여러 SUPPLIER</span>로부터 견적을 받고<br className="hidden sm:inline" />
+                    {" "}가장 합리적인 거래처 선정까지
                   </h3>
                 </div>
 
                 <div className="space-y-2.5 text-xs sm:text-sm">
                   <div className="p-3 rounded-xl bg-gray-50 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-gray-200 text-gray-700 flex items-center justify-center font-bold shrink-0">1</span>
-                    <span className="text-gray-700">기존 납품처의 단가인상에 대처할 수 없는 당혹스러움</span>
+                    <span className="text-gray-700 break-keep">기존 납품처의 단가인상에 대처할 수 없는 당혹스러움</span>
                   </div>
                   <div className="p-3 rounded-xl bg-gray-50 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-gray-200 text-gray-700 flex items-center justify-center font-bold shrink-0">2</span>
-                    <span className="text-gray-700">노출된 대형 거래처는 단가 메리트가 적음</span>
+                    <span className="text-gray-700 break-keep">노출된 대형 거래처는 단가 메리트가 적음</span>
                   </div>
                   <div className="p-3 rounded-xl bg-gray-50 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-gray-200 text-gray-700 flex items-center justify-center font-bold shrink-0">3</span>
-                    <span className="text-gray-700">영세한 업자와의 미팅 및 비교 시간 부족</span>
+                    <span className="text-gray-700 break-keep">영세한 업자와의 미팅 및 비교 시간 부족</span>
                   </div>
                   <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">4</span>
-                    <span className="text-blue-900 font-bold">품목과 사용량만으로 최적 거래처 자동 발굴</span>
+                    <span className="text-blue-900 font-bold break-keep">품목과 사용량만으로 최적 거래처 자동 발굴</span>
                   </div>
                 </div>
               </div>
@@ -387,7 +387,7 @@ export default function HomePage() {
               <div className="pt-6">
                 <Link
                   href="/rfq/new"
-                  className="w-full inline-flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md"
+                  className="w-full inline-flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md whitespace-nowrap shrink-0"
                 >
                   <span>품목 등록하고 무료 견적 받기</span>
                   <ArrowRight className="w-4 h-4" />
@@ -403,29 +403,29 @@ export default function HomePage() {
                     <Truck className="w-3.5 h-3.5 text-emerald-400" />
                     <span>SUPPLIER (납품·유통업체)</span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-snug">
-                    권역별 사장님을 한 눈에 확인하고,<br />
-                    미팅없이 견적시 필요한 정보를 열람,<br />
-                    <span className="text-emerald-400">자신있는 단가제시</span>로 거래처 발굴
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-snug break-keep">
+                    권역별 사장님을 한 눈에 확인하고,<br className="hidden sm:inline" />
+                    {" "}미팅없이 견적시 필요한 정보를 열람,<br className="hidden sm:inline" />
+                    {" "}<span className="text-emerald-400">자신있는 단가제시</span>로 거래처 발굴
                   </h3>
                 </div>
 
                 <div className="space-y-2.5 text-xs sm:text-sm">
                   <div className="p-3 rounded-xl bg-white/5 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold shrink-0">1</span>
-                    <span className="text-zinc-200">합리적인 단가엔 자신있지만, 거래처 발굴이 어려움</span>
+                    <span className="text-zinc-200 break-keep">합리적인 단가엔 자신있지만, 거래처 발굴이 어려움</span>
                   </div>
                   <div className="p-3 rounded-xl bg-white/5 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold shrink-0">2</span>
-                    <span className="text-zinc-200">마케팅과 영업 비용으로 가격 경쟁력 상실</span>
+                    <span className="text-zinc-200 break-keep">마케팅과 영업 비용으로 가격 경쟁력 상실</span>
                   </div>
                   <div className="p-3 rounded-xl bg-white/5 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-zinc-700 text-zinc-200 flex items-center justify-center font-bold shrink-0">3</span>
-                    <span className="text-zinc-200">발로 뛰어도 응답률은 50곳 중 1곳</span>
+                    <span className="text-zinc-200 break-keep">발로 뛰어도 응답률은 50곳 중 1곳</span>
                   </div>
                   <div className="p-3 rounded-xl bg-emerald-950/50 border border-emerald-500/50 flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded bg-emerald-500 text-zinc-950 flex items-center justify-center font-bold shrink-0">4</span>
-                    <span className="text-emerald-300 font-bold">마케팅 비용 없이 직접 거래처를 찾는 유통사</span>
+                    <span className="text-emerald-300 font-bold break-keep">마케팅 비용 없이 직접 거래처를 찾는 유통사</span>
                   </div>
                 </div>
               </div>
@@ -433,7 +433,7 @@ export default function HomePage() {
               <div className="pt-6">
                 <Link
                   href="/supplier/register-quote"
-                  className="w-full inline-flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm shadow-md"
+                  className="w-full inline-flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm shadow-md whitespace-nowrap shrink-0"
                 >
                   <span>단가 직접 등록하고 거래처 찾기</span>
                   <ArrowRight className="w-4 h-4 text-zinc-950" />
@@ -461,33 +461,33 @@ export default function HomePage() {
           </div>
 
           <div className="space-y-3 sm:space-y-4">
-            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-tight break-keep">
               매장내 관리부터
             </h2>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-tight break-keep">
               매장외 관리까지
             </h2>
-            <p className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-600 tracking-tight leading-tight pt-2 sm:pt-4">
+            <p className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-600 tracking-tight leading-tight pt-2 sm:pt-4 break-keep">
               사장님의 구매 업무를 덜어드릴게요
             </p>
           </div>
 
-          <p className="text-sm sm:text-lg text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed pt-2">
+          <p className="text-sm sm:text-lg text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed pt-2 break-keep">
             발품 팔던 거래처 미팅, 매달 오르는 불투명한 식자재 단가 비교까지.<br className="hidden sm:inline" />
-            품목만 등록하면 셀프바이어가 가장 투명하고 합리적인 직거래를 연결합니다.
+            {" "}품목만 등록하면 셀프바이어가 가장 투명하고 합리적인 직거래를 연결합니다.
           </p>
 
           <div className="pt-6 sm:pt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/rfq/new"
-              className="px-8 py-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2"
+              className="px-8 py-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2 whitespace-nowrap shrink-0"
             >
               <span>1분 만에 구매 업무 덜어내기</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="/pilot"
-              className="px-8 py-4 rounded-2xl bg-white hover:bg-gray-50 text-blue-600 border-2 border-blue-600 font-bold text-base sm:text-lg shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center space-x-2"
+              className="px-8 py-4 rounded-2xl bg-white hover:bg-gray-50 text-blue-600 border-2 border-blue-600 font-bold text-base sm:text-lg shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center space-x-2 whitespace-nowrap shrink-0"
             >
               <Sparkles className="w-5 h-5 text-blue-600" />
               <span>시범 사이트에서 즉시 체험하기</span>

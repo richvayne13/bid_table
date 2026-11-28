@@ -58,88 +58,88 @@ export function Navbar() {
             <BidTableLogo size="md" />
 
             {/* Desktop Navigation: 서비스소개 / BUYER / SUPPLIER */}
-            <nav className="hidden md:flex items-center space-x-8 text-[15px] font-semibold text-gray-700">
+            <nav className="hidden xl:flex items-center space-x-6 text-[15px] font-semibold text-gray-700 whitespace-nowrap">
               <Link
                 href="/#service"
                 onClick={(e) => handleNavModeClick(e, "service")}
-                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold"
+                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold whitespace-nowrap shrink-0"
               >
                 서비스소개
               </Link>
               <Link
                 href="/#buyer"
                 onClick={(e) => handleNavModeClick(e, "buyer")}
-                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-blue-50/60"
+                className="transition-colors hover:text-blue-600 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-blue-50/60 whitespace-nowrap shrink-0"
               >
                 <span>BUYER</span>
-                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium border border-blue-200">
+                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium border border-blue-200 whitespace-nowrap">
                   매장 사장님
                 </span>
               </Link>
               <Link
                 href="/#supplier"
                 onClick={(e) => handleNavModeClick(e, "supplier")}
-                className="transition-colors hover:text-zinc-900 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-zinc-100"
+                className="transition-colors hover:text-zinc-900 hover:scale-105 transform text-gray-700 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-zinc-100 whitespace-nowrap shrink-0"
               >
                 <span>SUPPLIER</span>
-                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-medium border border-zinc-200">
+                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-medium border border-zinc-200 whitespace-nowrap">
                   공급·유통사
                 </span>
               </Link>
               <Link
                 href="/pilot"
-                className="transition-colors hover:bg-indigo-100 text-indigo-700 font-bold flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200/80 text-xs"
+                className="transition-colors hover:bg-indigo-100 text-indigo-700 font-bold flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200/80 text-xs whitespace-nowrap shrink-0"
               >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                <span>시범체험(Pilot)</span>
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                <span>시범체험 (Pilot)</span>
               </Link>
             </nav>
           </div>
 
           {/* Right Action Links */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 whitespace-nowrap">
             {currentUser ? (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 shrink-0 whitespace-nowrap">
                 {currentUser.role === "ADMIN" && (
                   <Link
                     href="/admin/members"
-                    className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all shadow-xs"
+                    className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all shadow-xs shrink-0 whitespace-nowrap"
                   >
-                    <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+                    <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span>회원명부 엑셀</span>
                   </Link>
                 )}
                 <Link
                   href="/mypage"
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs sm:text-sm font-bold transition-all"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs sm:text-sm font-bold transition-all shrink-0 whitespace-nowrap"
                 >
-                  <User className="w-4 h-4 text-blue-600" />
-                  <span className="max-w-[100px] truncate">{currentUser.name}</span>
+                  <User className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span className="whitespace-nowrap">{currentUser.name}</span>
                 </Link>
 
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition-colors flex items-center space-x-1"
+                  className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition-colors flex items-center space-x-1 shrink-0 whitespace-nowrap"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
+                  <LogOut className="w-3.5 h-3.5 shrink-0" />
                   <span className="hidden sm:inline">로그아웃</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 whitespace-nowrap">
                 <Link
                   href="/login"
-                  className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-blue-600 px-2 py-1.5 transition-colors"
+                  className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-blue-600 px-2 py-1.5 transition-colors whitespace-nowrap"
                 >
                   로그인
                 </Link>
                 <Link
                   href="/#buyer"
                   onClick={(e) => handleNavModeClick(e, "buyer")}
-                  className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5 shrink-0" />
                   <span>시작하기</span>
                 </Link>
               </div>
@@ -148,7 +148,7 @@ export function Navbar() {
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              className="xl:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
